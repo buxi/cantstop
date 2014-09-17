@@ -1,0 +1,86 @@
+
+
+SpielKontroller
+  *1. Brett legen 
+  1.1 Spieler generieren nach den Anzahl (2-4) (aus Spring Config)
+  *2. Markierungsteine verteilen
+  3. Spielerreihe bestimmen (aus Spring Config)
+  *4. Erster Spieler bestimmen (aus Spring Config)
+  ------------------------
+  5. Spielzug mit aktuellem Spieler starten 
+       * 1. Wurfel und Bergsteiger an Spieler geben
+       Spielmanager								
+         warten auf Werfen	(STATUS=BEVOR_WERFEN)
+         RegelManager aktivieren mit WerfenErgebnis
+         						
+         mögliche Aktionen von RegelManager bekommen 
+         Aktionen an Spieler ermöglichen
+           oder Spielzug enden
+         warten auf Aktion des Spielers
+		 RegelManager.Aktion prüfen
+		 falsche Aktion verweigern zurück zum Warten auf SpielerAktion
+		 richtige Aktion durchsetzen
+  6. Spielzug enden
+  7. Spiel enden oder geh zu 5.nächster Spieler bestimmen
+  
+    
+  Spieler
+  	Aktionen 
+  	  - werfen (STATUS=GEWORFEN)
+  	  - Paarung auswählen
+  	  - Bergsteiger setzen
+  	  - Bergsteiger bewegen
+  	  - Basislager anlegen (Markierungsteine stellen) / Spielzug enden
+  	
+  RegelManager
+    - Werfen auswerten
+    - valid Paarungen bestimmen (Paarung - Aktionen)
+    - mögliche Aktionen bestimmen
+    - Aktion prüfen
+    
+    
+    Paarung - Aktion bestimmen
+      wenn gleiche Weg gewurfelt ist (8-8) -> isDoppel=true (DoppelAktion), ansonsten 2 Aktionen
+       
+      Weg ist frei und BS ist darauf -> beweg BS mit 1 oder 2
+        oder
+      Weg ist frei und es gibt noch freier BS -> 
+         ist Markierungstein darauf -> stell BS weiter auf 1. oder 2 
+           oder
+         stell BS auf 1. oder 2. SeilPunkt
+    
+      ansonsten keine Aktion
+      
+      
+ Gleich gewürfelt
+   8 8
+   Stellungen
+     Freie Bergsteiger: 3
+     gestellte Bergsteiger: 0 
+     Markierungsteine auf den Wege: -  
+     Freie Wege: alle
+     gesperrte Wege: - 
+   Mögliche Aktionen: 1 BS auf SP:8.2 setzen
+   
+   Stellungen
+     Freie Bergsteiger: 2
+     gestellte Bergsteiger: 1 (SP:8.2) 
+     Markierungsteine auf den Wege: -  
+     Freie Wege: alle
+     gesperrte Wege: - 
+   Mögliche Aktionen: 1 BS auf SP:8.4 bewegen
+   
+     
+   
+ Brett auflegen (Steine, Bergsteiger)
+     
+ 
+ Testen Wege
+ 7,H-|[GBRS]|F,[GBRS]|F,......
+ 
+      
+      
+      
+      
+      
+      

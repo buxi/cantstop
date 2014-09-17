@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	
+	xmlns:util="http://www.springframework.org/schema/util"
+	
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	">
+
+	<!-- Factory beans -->
+ 	<bean id="wurfelFactory" class="de.buxi.cantstop.spielobjekte.WurfelFactory"/>
+ 	
+ 	<bean id="spielFactory" class="de.buxi.cantstop.spielobjekte.SpielFactory"/>
+ 	
+ 	<!-- immer neue Wurfel generieren, deswegen prototyp -->
+ 	<bean id="normalWurfel" scope="prototype" factory-bean="wurfelFactory" factory-method="createNormalWurfel">
+ 		<constructor-arg name="seite" value="6"/>
+ 	</bean>
+ 	
+ 	<!-- generiert 4 Stuck 6 seitiger Wurfel fur Speil -->
+ 	<bean id="normalWurfelSet" factory-bean="wurfelFactory" factory-method="createNormalWurfelSet">
+ 		<constructor-arg name="seite" value="6"/>
+ 		<constructor-arg name="anzahl" value="4"/>
+ 	</bean>
+ 	
+ 	<!-- wurfelManafer mit 4 normalen Wurfel  -->
+	<bean id="wurfelManager" class="de.buxi.cantstop.spielobjekte.WurfelManager" >
+		<constructor-arg ref="normalWurfelSet"/>
+	</bean>
+	
+	<!-- 10 Stuck BLAU Markierungstein -->
+	<bean id="blauMarkierungSteine" factory-bean="spielFactory" factory-method="createMarkierungSteine">
+ 		<constructor-arg name="anzahl" value="10"/>
+ 		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="BLAU"/>
+ 	</bean>
+
+	<!-- 10 Stuck SCHWARTZ Markierungstein -->
+	<bean id="schwartzMarkierungSteine" factory-bean="spielFactory" factory-method="createMarkierungSteine">
+ 		<constructor-arg name="anzahl" value="10"/>
+ 		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="SCHWARTZ"/>
+ 	</bean>
+
+	<!-- 10 Stuck GELB Markierungstein -->
+	<bean id="gelbMarkierungSteine" factory-bean="spielFactory" factory-method="createMarkierungSteine">
+ 		<constructor-arg name="anzahl" value="10"/>
+ 		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="GELB"/>
+ 	</bean>
+
+	<!-- 10 Stuck ROT Markierungstein -->
+	<bean id="rotMarkierungSteine" factory-bean="spielFactory" factory-method="createMarkierungSteine">
+ 		<constructor-arg name="anzahl" value="10"/>
+ 		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="ROT"/>
+ 	</bean>
+
+	<!-- 3 Stuck Bergsteiger 
+	TODO nur wegen Test ist es prototype -->
+	<bean id="bergSteigers" scope="prototype" factory-bean="spielFactory" factory-method="createBergsteigers">
+ 		<constructor-arg name="anzahl" value="3"/>
+ 	</bean>
+
+	<bean id="RotSpieler" class="de.buxi.cantstop.spielobjekte.Spieler">
+		<constructor-arg name="name" value="Barbi"/>
+		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="ROT"/>
+	</bean>
+
+	<bean id="BlauSpieler" class="de.buxi.cantstop.spielobjekte.Spieler">
+		<constructor-arg name="name" value="Tibi"/>
+		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="BLAU"/>
+	</bean>
+
+	<!-- TODO nur wegen Test ist es prototype  -->
+ 	<bean id="spielKontroller" scope="prototype" class="de.buxi.cantstop.spielobjekte.SpielKontroller">
+ 		<constructor-arg name="spielers">
+ 			<util:map key-type="de.buxi.cantstop.spielobjekte.Farbe">
+ 				<entry key="BLAU"  value-ref="BlauSpieler"/>
+ 				<entry key="ROT"  value-ref="RotSpieler"/>
+ 			</util:map>
+ 		</constructor-arg>
+ 		<constructor-arg name="brett" ref="neuBrett"/>
+ 		<constructor-arg name="wurfelManager" ref="wurfelManager"/>
+ 		<constructor-arg name="markierungSteine">
+ 			<util:map key-type="de.buxi.cantstop.spielobjekte.Farbe">
+ 			 	<entry key="SCHWARTZ"  value-ref="schwartzMarkierungSteine"/>
+ 			 	<entry key="GELB"  value-ref="gelbMarkierungSteine"/>
+ 			 	<entry key="BLAU"  value-ref="blauMarkierungSteine"/>
+ 			 	<entry key="ROT"  value-ref="rotMarkierungSteine"/>
+ 			</util:map>
+ 		</constructor-arg> 
+ 		<constructor-arg name="bergSteigers" ref="bergSteigers"/>
+ 	</bean> 
+
+	<!-- Brett Einstellungen -->
+	<bean id="neuBrett" factory-bean="spielFactory" factory-method="createBrett">
+		<constructor-arg name="wegeDefinition">
+			<map>
+				<!-- <HuttenNummer, SeilpunktAnzahl> -->
+				<entry key="2" value="2" />
+				<entry key="3" value="4" />
+				<entry key="4" value="6" />
+				<entry key="5" value="8" />
+				<entry key="6" value="10" />
+				<entry key="7" value="12" />
+				<entry key="8" value="10" />
+				<entry key="9" value="8" />
+				<entry key="10" value="6" />
+				<entry key="11" value="4" />
+				<entry key="12" value="2" />
+			</map>
+		</constructor-arg>
+	</bean>
+	
+	<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
+	<!-- TEST beans -->
+	<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
+	<bean id="RotTestSpieler" scope="prototype" class="de.buxi.cantstop.spielobjekte.Spieler">
+		<constructor-arg name="name" value="Barbi"/>
+		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="ROT"/>
+	</bean>
+
+	<bean id="BlauTestSpieler" scope="prototype" class="de.buxi.cantstop.spielobjekte.Spieler">
+		<constructor-arg name="name" value="Tibi"/>
+		<constructor-arg name="farbe" type="de.buxi.cantstop.spielobjekte.Farbe" value="BLAU"/>
+	</bean>
+
+	<bean id="testSpielKontroller" scope="prototype" class="de.buxi.cantstop.spielobjekte.SpielKontroller">
+ 		<constructor-arg name="spielers">
+ 			<util:map key-type="de.buxi.cantstop.spielobjekte.Farbe">
+ 				<entry key="BLAU"  value-ref="BlauTestSpieler"/>
+ 				<entry key="ROT"  value-ref="RotTestSpieler"/>
+ 			</util:map>
+ 		</constructor-arg>
+ 		<constructor-arg name="brett" ref="kleinBrett"/>
+ 		<constructor-arg name="wurfelManager" ref="wurfelManager"/>
+ 		<constructor-arg name="markierungSteine">
+ 			<util:map key-type="de.buxi.cantstop.spielobjekte.Farbe">
+ 			 	<entry key="SCHWARTZ"  value-ref="schwartzMarkierungSteine"/>
+ 			 	<entry key="GELB"  value-ref="gelbMarkierungSteine"/>
+ 			 	<entry key="BLAU"  value-ref="blauMarkierungSteine"/>
+ 			 	<entry key="ROT"  value-ref="rotMarkierungSteine"/>
+ 			</util:map>
+ 		</constructor-arg> 
+ 		<constructor-arg name="bergSteigers" ref="bergSteigers"/>
+ 	</bean> 
+ 	
+	<!-- Brett fuer Testen, immer neu generieren -->
+	<bean id="kleinBrett" scope="prototype" factory-bean="spielFactory" factory-method="createBrett">
+		<constructor-arg name="wegeDefinition">
+			<map>
+				<!-- <HuttenNummer, SeilpunktAnzahl> -->
+				<entry key="2" value="1" />
+				<entry key="3" value="1" />
+				<entry key="4" value="1" />
+				<entry key="5" value="1" />
+				<entry key="6" value="1" />
+				<entry key="7" value="1" />
+				<entry key="8" value="1" />
+				<entry key="9" value="1" />
+				<entry key="10" value="1" />
+				<entry key="11" value="1" />
+				<entry key="12" value="1" />
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>
