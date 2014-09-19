@@ -6,6 +6,8 @@ package de.buxi.cantstop.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author buxi
  *
@@ -130,12 +132,23 @@ public class Player {
 
 	public String display() {
 		StringBuffer builder = new StringBuffer();
-		builder.append(name);
+		builder.append(StringUtils.rightPad(name, 7));
 		builder.append("(");
-		builder.append(color);
+		builder.append(StringUtils.rightPad(color.toString(), 6));
 		builder.append(")");
-		builder.append(climbers==null?"            ":climbers);
-		builder.append(markers);
+		
+		StringBuffer climbersStr = new StringBuffer();
+		for (Climber climber : climbers) {
+			climbersStr.append(climber.display());
+		}
+		builder.append(StringUtils.center(climbersStr.toString(), 6));
+		
+		StringBuffer markersStr = new StringBuffer();
+		for (Marker marker : markers) {
+			markersStr.append(marker.display());
+		}
+		builder.append(StringUtils.leftPad(markersStr.toString(), 6));
+
 		return builder.toString();
 	}
 

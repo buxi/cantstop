@@ -248,6 +248,13 @@ public class BoardTest extends SpringLoaderSuperClass{
 		assertEquals("3 RED Markers should be removed", 3, removedMarkers.get(Color.RED).size());
 		assertEquals("3 BLAU Markers should be removed", 3, removedMarkers.get(Color.BLUE).size());
 		
-		assertFalse("Black not plays", removedMarkers.containsKey(Color.BLACK));
+		assertFalse("Green not plays", removedMarkers.containsKey(Color.GREEN));
+	}
+	public void testFindLongestWay() {
+		Board board = (Board)ac.getBean("smallBoard");
+		assertEquals("On smallboard there is only ways with 1 ropepoint", 1, board.findLongestWay());
+		
+		Board gameBoard = (Board)ac.getBean("gameBoard");
+		assertEquals("On gameBoard longest way has 12 rope point", 12, gameBoard.findLongestWay());
 	}
 }

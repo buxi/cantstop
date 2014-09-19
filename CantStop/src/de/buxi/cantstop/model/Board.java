@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Board {
 	/**
 	 * All 11 Way of the Board
@@ -36,6 +38,54 @@ public class Board {
 	}
 	
 	public String display() {
+		StringBuilder result = new StringBuilder();
+		int longestWayLength = findLongestWay();
+		for (int ropePointNum = -2; ropePointNum < longestWayLength ; ropePointNum++ ) {
+			for (int wayNum = 0; wayNum < ways.size(); wayNum++ ) {
+				//result.append("--------------------------------------------\n");
+				Way way = ways.get(wayNum);
+				if (ropePointNum == -2) {
+					// displaying Hut/Weg number
+					result.append(StringUtils.center(Integer.toString(way.getNumber()), 6));
+				}
+				
+				// displaying Hut
+				if (ropePointNum == -1) {
+					// displaying Hut
+					Hut hut = way.getHut();
+					result.append(hut.display());
+				}
+
+				// displaying RopePoints
+				if (ropePointNum >= 0 ) {
+					List<RopePoint> ropePoints = way.getRopePoints();
+					int ropePointIndex = ropePoints.size() - 1 - ropePointNum ; 
+					if ( ropePointIndex < ropePoints.size() && ropePointIndex >= 0) {
+						RopePoint ropePoint = ropePoints.get(ropePointIndex);
+						result.append(ropePoint.display());
+					}
+					else {
+						result.append(StringUtils.center("", 6));
+					}
+				}
+			}
+			result.append("\n");
+		}
+		return result.toString();
+	}
+	
+	protected int findLongestWay() {
+		int maxLength = ways.get(0).getRopePoints().size();
+		for (int i = 1; i < ways.size(); i++ ) {
+			int actualLength = ways.get(i).getRopePoints().size();
+			if (actualLength > maxLength) {
+				maxLength = actualLength;
+			}
+		}
+		return maxLength;
+	}
+
+	public String displayOld() {
 		String spaces = "                                                                ";
 		StringBuilder result = new StringBuilder();
 		for (int i = ways.size()-1; i >= 0; i--) {
@@ -51,7 +101,7 @@ public class Board {
 			result.append(" H(");
 			Climber climber = way.getHut().getClimber();
 			if (climber!=null) {
-				result.append("BS");
+				result.append("X");
 			}
 			Marker marker = way.getHut().getMarker();
 			if (marker!=null) {
@@ -66,7 +116,7 @@ public class Board {
 				result.append(" (");
 				climber = ropePoint.getClimber();
 				if (climber!=null) {
-					result.append("BS");
+					result.append("X");
 				}
 				Collection<Marker> markers = ropePoint.getMarkers();
 				for (Marker marker2 : markers) {

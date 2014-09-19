@@ -5,6 +5,9 @@ package de.buxi.cantstop.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author buxi
@@ -66,5 +69,21 @@ public class RopePoint extends AbstractRopePoint {
 			}
 		}
 		return false;
+	}
+	
+	public String display() {
+		StringBuffer result = new StringBuffer();
+		result.append("(");
+		if (this.getClimber() != null) {
+			result.append(this.getClimber().display());
+		}
+		Collection<Marker> markers = this.getMarkers();
+		for (Marker marker2 : markers) {
+			result.append(marker2.display());
+		}
+		
+		result.append(")");
+		
+		return StringUtils.center(result.toString(), 6);
 	}
 }

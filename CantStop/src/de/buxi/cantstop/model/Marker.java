@@ -46,17 +46,22 @@ public class Marker {
 		return true;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		//builder.append("Marker [color=");
+		builder.append("Marker [color=");
+		builder.append(color);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	public String display() {
+		StringBuilder builder = new StringBuilder();
 		builder.append(color.toString().charAt(0));
-		//builder.append("]");
 		return builder.toString();
 	} 
-	
-	
 }

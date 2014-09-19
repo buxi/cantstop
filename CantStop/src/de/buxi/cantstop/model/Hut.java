@@ -3,6 +3,8 @@
  */
 package de.buxi.cantstop.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author buxi
  *
@@ -48,5 +50,20 @@ public class Hut extends AbstractRopePoint {
 			throw new RopePointInvalidUsageException("RopePoint not marked");
 		}
 		this.marker = null;
+	}
+	
+	public String display() {
+		StringBuffer result = new StringBuffer();
+		// displaying Hut
+		result.append(" H(");
+		if (getClimber() != null) {
+			result.append(getClimber().display());
+		}
+		Marker marker = this.getMarker();
+		if (marker!=null) {
+			result.append(marker.getColor());
+		}
+		result.append(") ");
+		return StringUtils.center(result.toString(), 6);
 	}
 }

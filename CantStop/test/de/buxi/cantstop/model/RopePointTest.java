@@ -122,6 +122,6 @@ public class RopePointTest {
 		ropePoint.mark(new Marker(Color.BLUE));
 		assertTrue("marked with blue",ropePoint.isMarkerForColor(Color.BLUE));
 		
-		assertFalse("marked with blue",ropePoint.isMarkerForColor(Color.BLACK));
+		assertFalse("marked with blue",ropePoint.isMarkerForColor(Color.GREEN));
 	}
 }

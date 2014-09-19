@@ -39,10 +39,10 @@
  		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
  	</bean>
 
-	<!-- 10 piece BLACK Marker -->
+	<!-- 10 piece GREEN Marker -->
 	<bean id="blackMarkers" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
- 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLACK"/>
+ 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="GREEN"/>
  	</bean>
 
 	<!-- 10 piece YELLOW Marker -->
@@ -68,6 +68,17 @@
 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="RED"/>
 	</bean>
 
+	<bean id="YellowPlayer" class="de.buxi.cantstop.model.Player">
+		<constructor-arg name="name" value="Joska"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="YELLOW"/>
+	</bean>
+
+	<bean id="GreenPlayer" class="de.buxi.cantstop.model.Player">
+		<constructor-arg name="name" value="Judit"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="GREEN"/>
+	</bean>
+
+
 	<bean id="BluePlayer" class="de.buxi.cantstop.model.Player">
 		<constructor-arg name="name" value="Tibi"/>
 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
@@ -79,13 +90,16 @@
  			<util:map key-type="de.buxi.cantstop.model.Color">
  				<entry key="BLUE"  value-ref="BluePlayer"/>
  				<entry key="RED"  value-ref="RedPlayer"/>
+ 				<entry key="GREEN"  value-ref="GreenPlayer"/>
+ 				<entry key="YELLOW"  value-ref="YellowPlayer"/>
+ 				
  			</util:map>
  		</constructor-arg>
- 		<constructor-arg name="board" ref="newBoard"/>
+ 		<constructor-arg name="board" ref="gameBoard"/>
  		<constructor-arg name="diceManager" ref="diceManager"/>
  		<constructor-arg name="markers">
  			<util:map key-type="de.buxi.cantstop.model.Color">
- 			 	<entry key="BLACK"  value-ref="blackMarkers"/>
+ 			 	<entry key="GREEN"  value-ref="blackMarkers"/>
  			 	<entry key="YELLOW"  value-ref="yellowMarkers"/>
  			 	<entry key="BLUE"  value-ref="blueMarkers"/>
  			 	<entry key="RED"  value-ref="redMarkers"/>
@@ -95,10 +109,10 @@
  	</bean> 
 
 	<!-- Board settings -->
-	<bean id="newBoard" factory-bean="gameFactory" factory-method="createBoard">
+	<bean id="gameBoard" factory-bean="gameFactory" factory-method="createBoard">
 		<constructor-arg name="wayDefinitions">
 			<map>
-				<!-- <HutnNumber, RopePointAnnumber> -->
+				<!-- <HutsNumber, RopePointAnnumber> -->
 				<entry key="2" value="2" />
 				<entry key="3" value="4" />
 				<entry key="4" value="6" />
@@ -138,7 +152,7 @@
  		<constructor-arg name="diceManager" ref="diceManager"/>
  		<constructor-arg name="markers">
  			<util:map key-type="de.buxi.cantstop.model.Color">
- 			 	<entry key="BLACK"  value-ref="blackMarkers"/>
+ 			 	<entry key="GREEN"  value-ref="blackMarkers"/>
  			 	<entry key="YELLOW"  value-ref="yellowMarkers"/>
  			 	<entry key="BLUE"  value-ref="blueMarkers"/>
  			 	<entry key="RED"  value-ref="redMarkers"/>

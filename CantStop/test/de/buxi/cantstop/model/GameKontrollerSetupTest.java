@@ -93,7 +93,7 @@ public class GameKontrollerSetupTest extends SpringLoaderSuperClass{
 		Map<Color, Collection<Marker>> markereCollection = gameController.getAllMarkers();
 		assertNotNull("Marker is null", markereCollection);
 		assertNull("10 BLUE marker missing", markereCollection.get(Color.BLUE));
-		assertEquals("10 BLACK marker missing", 10, markereCollection.get(Color.BLACK).size());
+		assertEquals("10 GREEN marker missing", 10, markereCollection.get(Color.GREEN).size());
 		assertEquals("10 YELLOW marker missing", 10, markereCollection.get(Color.YELLOW).size());
 		assertNull("10 RED marker missing", markereCollection.get(Color.RED));
 		

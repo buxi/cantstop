@@ -45,7 +45,7 @@ public class GameKontrollerTest extends SpringLoaderSuperClass{
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		// distribute Markers
 		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
-		playerMarkers.put(Color.BLACK, GameFactory.createMarkersStatic(3, Color.BLACK));
+		playerMarkers.put(Color.GREEN, GameFactory.createMarkersStatic(3, Color.GREEN));
 		gameController.distributeMarkers(playerMarkers);
 	}
 

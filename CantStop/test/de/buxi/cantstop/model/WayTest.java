@@ -49,7 +49,7 @@ public class WayTest extends SpringLoaderSuperClass {
 		way3.getHut().mark(new Marker(Color.BLUE));
 		assertTrue("Way is marked", way3.isBlockedByPlayer(Color.BLUE));
 		
-		assertFalse("Way is marked with BLUE", way3.isBlockedByPlayer(Color.BLACK));
+		assertFalse("Way is marked with BLUE", way3.isBlockedByPlayer(Color.GREEN));
 	}
 
 	/**
