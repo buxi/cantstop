@@ -13,9 +13,9 @@
 	">
 
 	<!-- Factory beans -->
- 	<bean id="diceFactory" class="de.buxi.cantstop.spielobjekte.DiceFactory"/>
+ 	<bean id="diceFactory" class="de.buxi.cantstop.model.DiceFactory"/>
  	
- 	<bean id="gameFactory" class="de.buxi.cantstop.spielobjekte.GameFactory"/>
+ 	<bean id="gameFactory" class="de.buxi.cantstop.model.GameFactory"/>
  	
  	<!-- always new Dice generated, therefore prototyp -->
  	<bean id="normalDice" scope="prototype" factory-bean="diceFactory" factory-method="createNormalDice">
@@ -29,32 +29,32 @@
  	</bean>
  	
  	<!-- diceManager with 4 normal Dices  -->
-	<bean id="diceManager" class="de.buxi.cantstop.spielobjekte.DiceManager" >
+	<bean id="diceManager" class="de.buxi.cantstop.model.DiceManager" >
 		<constructor-arg ref="normalDiceSet"/>
 	</bean>
 	
 	<!-- 10 piece BLUE Marker -->
 	<bean id="blueMarkers" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
- 		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="BLUE"/>
+ 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
  	</bean>
 
 	<!-- 10 piece BLACK Marker -->
 	<bean id="blackMarkers" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
- 		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="BLACK"/>
+ 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLACK"/>
  	</bean>
 
 	<!-- 10 piece YELLOW Marker -->
 	<bean id="yellowMarkers" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
- 		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="YELLOW"/>
+ 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="YELLOW"/>
  	</bean>
 
 	<!-- 10 piece RED Marker -->
 	<bean id="redMarkers" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
- 		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="RED"/>
+ 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="RED"/>
  	</bean>
 
 	<!-- 3 piece Climber 
@@ -63,20 +63,20 @@
  		<constructor-arg name="number" value="3"/>
  	</bean>
 
-	<bean id="RedPlayer" class="de.buxi.cantstop.spielobjekte.Player">
+	<bean id="RedPlayer" class="de.buxi.cantstop.model.Player">
 		<constructor-arg name="name" value="Barbi"/>
-		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="RED"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="RED"/>
 	</bean>
 
-	<bean id="BluePlayer" class="de.buxi.cantstop.spielobjekte.Player">
+	<bean id="BluePlayer" class="de.buxi.cantstop.model.Player">
 		<constructor-arg name="name" value="Tibi"/>
-		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="BLUE"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
 	</bean>
 
 	<!-- TODO only because the Test is prototype  -->
- 	<bean id="gameController" scope="prototype" class="de.buxi.cantstop.spielobjekte.GameController">
+ 	<bean id="gameController" scope="prototype" class="de.buxi.cantstop.model.GameController">
  		<constructor-arg name="players">
- 			<util:map key-type="de.buxi.cantstop.spielobjekte.Color">
+ 			<util:map key-type="de.buxi.cantstop.model.Color">
  				<entry key="BLUE"  value-ref="BluePlayer"/>
  				<entry key="RED"  value-ref="RedPlayer"/>
  			</util:map>
@@ -84,7 +84,7 @@
  		<constructor-arg name="board" ref="newBoard"/>
  		<constructor-arg name="diceManager" ref="diceManager"/>
  		<constructor-arg name="markers">
- 			<util:map key-type="de.buxi.cantstop.spielobjekte.Color">
+ 			<util:map key-type="de.buxi.cantstop.model.Color">
  			 	<entry key="BLACK"  value-ref="blackMarkers"/>
  			 	<entry key="YELLOW"  value-ref="yellowMarkers"/>
  			 	<entry key="BLUE"  value-ref="blueMarkers"/>
@@ -117,19 +117,19 @@
 	<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
 	<!-- TEST beans -->
 	<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
-	<bean id="RedTestPlayer" scope="prototype" class="de.buxi.cantstop.spielobjekte.Player">
+	<bean id="RedTestPlayer" scope="prototype" class="de.buxi.cantstop.model.Player">
 		<constructor-arg name="name" value="Barbi"/>
-		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="RED"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="RED"/>
 	</bean>
 
-	<bean id="BlueTestPlayer" scope="prototype" class="de.buxi.cantstop.spielobjekte.Player">
+	<bean id="BlueTestPlayer" scope="prototype" class="de.buxi.cantstop.model.Player">
 		<constructor-arg name="name" value="Tibi"/>
-		<constructor-arg name="color" type="de.buxi.cantstop.spielobjekte.Color" value="BLUE"/>
+		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
 	</bean>
 
-	<bean id="testGameController" scope="prototype" class="de.buxi.cantstop.spielobjekte.GameController">
+	<bean id="testGameController" scope="prototype" class="de.buxi.cantstop.model.GameController">
  		<constructor-arg name="players">
- 			<util:map key-type="de.buxi.cantstop.spielobjekte.Color">
+ 			<util:map key-type="de.buxi.cantstop.model.Color">
  				<entry key="BLUE"  value-ref="BlueTestPlayer"/>
  				<entry key="RED"  value-ref="RedTestPlayer"/>
  			</util:map>
@@ -137,7 +137,7 @@
  		<constructor-arg name="board" ref="smallBoard"/>
  		<constructor-arg name="diceManager" ref="diceManager"/>
  		<constructor-arg name="markers">
- 			<util:map key-type="de.buxi.cantstop.spielobjekte.Color">
+ 			<util:map key-type="de.buxi.cantstop.model.Color">
  			 	<entry key="BLACK"  value-ref="blackMarkers"/>
  			 	<entry key="YELLOW"  value-ref="yellowMarkers"/>
  			 	<entry key="BLUE"  value-ref="blueMarkers"/>
