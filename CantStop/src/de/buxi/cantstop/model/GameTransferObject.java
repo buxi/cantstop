@@ -18,11 +18,10 @@ public class GameTransferObject {
 	public GameState gameState;
 	public Player actualPlayer;
 	public List<TwoDicesPair> possiblePairs;
-	public Collection<TwoDicesPair> wrongPairs;
 	public String boardDisplay;
 	public int actualPlayerNumber;
 	public List<Player> playerList;
 	public Collection<Dice> dices;
 	public String errorMessage;
-	
+	public List<TwoDicesPair> choosablePairs;
 }

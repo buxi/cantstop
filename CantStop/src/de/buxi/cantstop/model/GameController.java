@@ -205,7 +205,7 @@ public class GameController {
 			// TODO GameEnde Condition
 			if (usedHuts.size() == 3) {
 				this.gameState = GameState.GAME_WIN;
-				this.errorMessage="Game won";
+				this.errorMessage="STATE_GAME_WIN";
 				return;
 			}
 		}
@@ -271,6 +271,18 @@ public class GameController {
 		List<TwoDicesPair> possiblePairs = diceManager.getAllPossiblePairs();
 		// decorate with choosable Information
 		return addChoosableInformation(possiblePairs);
+	}
+	
+	//TODO UNITTEST ?
+	public List<TwoDicesPair> getPairsToChoose() throws DiceNotThrownException, InvalidWayNumberException {
+		List<TwoDicesPair> possiblePairs = this.getPossiblePairs();
+		List<TwoDicesPair> choosablePairs = new ArrayList<TwoDicesPair>();
+		for (TwoDicesPair twoDicesPair : possiblePairs) {
+			if (!PairChoiceInfo.NOTCHOOSABLE.equals(twoDicesPair.getPairChoiceInfo())) {
+				choosablePairs.add(twoDicesPair);
+			}
+		}
+		return choosablePairs;
 	}
 	
 	/**
@@ -350,7 +362,7 @@ public class GameController {
 		if (!isTherePossiblePair(this.getPossiblePairs())) {
 			// GameRound must be finished
 			this.gameState=GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;
-			this.errorMessage = "no choosable pair";
+			this.errorMessage = "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED";
 			doEndGameRound();
 		}
 	}
@@ -373,7 +385,7 @@ public class GameController {
 	}
 
 	/**
-	 * @return
+	 * @return true is tehere is minimum one CHOOSABLE or WITHWAYINFO pair
 	 * @throws DiceNotThrownException
 	 * @throws InvalidWayNumberException
 	 */
@@ -422,16 +434,12 @@ public class GameController {
 	 * @throws IllegalWayWahlenException
 	 */
 	protected void pairExecute(TwoDicesPair chosenPair, int chosenWayNumber, Player player) throws DiceNotThrownException, RopePointInvalidUsageException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
-		boolean firstExecutionOK = true;
-		boolean executionOK = true;
-		boolean secondExecutionOK = true;
 		if (chosenWayNumber>0) {
 			Way way = board.getWayByNumber(chosenWayNumber);
 			try {
 				choseWay(player, way);
 			} catch (NotAvailableClimberException e) {
 				System.out.println(e.toString());
-				executionOK = false;
 			}
 		}
 		else {
@@ -443,36 +451,18 @@ public class GameController {
 				choseWay(player, way1);
 			} catch (NotAvailableClimberException e) {
 				System.out.println(e.toString());
-				firstExecutionOK = false;
 			}
 			try {
 				choseWay(player, way2);
 			} catch (NotAvailableClimberException e) {
+				//TODO Log error
 				System.out.println(e.toString());
-				secondExecutionOK = false;
 			}
 		}
 		
-		if (!executionOK && !firstExecutionOK && !secondExecutionOK) {
-			// wrong input, this pair can not be placed
-			this.errorMessage = "WRONG_PAIR_CHOSEN";
-
-			/*//  wrong pairs system muss entfert werden von hier aus
-			this.falschePairungen.add(gewahltePairung);
-			Collection<TwoDicesPair> mp = getPossiblePairs();
-			mp.removeAll(wrongPairs);
-			if (mp.size() == 0) {
-				this.spielStatus = GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;
-				doGamezugBeenden();
-			}
-			//  bis hier
-			*/
-		} else {
-			// minimum one Pair successful
-			this.gameState=GameState.IN_ROUND;
-			errorMessage = "Pair used:" + chosenPair;
-		}
-	
+		// minimum one Pair successful
+		this.gameState=GameState.IN_ROUND;
+		errorMessage = "STATE_PAIR_USED";
 	}
 
 	/**
@@ -518,17 +508,10 @@ public class GameController {
 		to.playerList = this.getPlayerInOrder();
 		to.errorMessage = this.errorMessage;
 		to.possiblePairs = null;
-		to.wrongPairs = null;
 		to.dices = null;
-		if (GameState.DICES_THROWN.equals(gameState) || 
-			GameState.WRONG_PAIR_CHOSEN.equals(gameState)	) {
+		if (GameState.DICES_THROWN.equals(gameState) ) {
 			to.possiblePairs = this.getPossiblePairs();
-			if (GameState.WRONG_PAIR_CHOSEN.equals(gameState) && 
-				to.possiblePairs != null && this.wrongPairs!=null ) {
-				// TODO lehet megis mukodik, ellenorizni!!!! not funktioniert, removeAll should be deep check machen
-				to.possiblePairs.removeAll(this.wrongPairs);
-			}
-			to.wrongPairs = this.wrongPairs;
+			to.choosablePairs = this.getPairsToChoose();
 			to.dices = this.getDices();
 		}
 		return to;

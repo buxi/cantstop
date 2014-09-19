@@ -348,5 +348,4 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(5,6,6,6), PairChoiceInfo.NOTCHOOSABLE));
 		checkTestPattern(gameController, testPatternList);
 	}
-
 }

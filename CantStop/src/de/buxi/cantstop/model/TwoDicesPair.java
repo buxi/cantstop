@@ -71,7 +71,17 @@ public class TwoDicesPair {
 		builder.append(")");
 		return builder.toString();
 	}
-
+	
+	public String display() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("(");
+		builder.append(firstPair);
+		builder.append(",");
+		builder.append(secondPair);
+		builder.append(")");
+		return builder.toString();
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
