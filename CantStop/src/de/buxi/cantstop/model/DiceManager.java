@@ -3,13 +3,18 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author buxi
  *
  */
-public class DiceManager {
+public class DiceManager implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2229098432462786519L;
 	private List<Dice> dices;
 	private Player owner; 
 

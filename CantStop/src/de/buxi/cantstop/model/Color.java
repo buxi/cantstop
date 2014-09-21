@@ -1,6 +1,8 @@
 package de.buxi.cantstop.model;
 
-public enum Color {
+import java.io.Serializable;
+
+public enum Color implements Serializable{
 	YELLOW, 
 	GREEN, 
 	RED, 

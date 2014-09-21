@@ -3,13 +3,19 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author buxi
  *
  */
-public class Hut extends AbstractRopePoint {
+public class Hut extends AbstractRopePoint implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4498262962137650609L;
 	private Marker marker;
 	private int wayNumber;
 	

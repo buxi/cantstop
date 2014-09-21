@@ -3,11 +3,13 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
+
 /**
  * @author buxi
  *
  */
-public enum GameState {
+public enum GameState implements Serializable {
 	INIT, 
 	IN_GAME, 
 	IN_ROUND, 

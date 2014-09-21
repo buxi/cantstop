@@ -3,11 +3,13 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
+
 /**
  * @author buxi
  *
  */
-public enum PairChoiceInfo {
+public enum PairChoiceInfo implements Serializable{
 	/*
 	 * default, choosable
 	 */

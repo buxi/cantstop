@@ -1,5 +1,6 @@
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.Set;
  * @author buxi
  *
  */
-public class GameController {
+public class GameController implements Serializable{
 			
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
 	private Map<Color, Player> playerMap;

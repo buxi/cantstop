@@ -1,12 +1,18 @@
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * @author buxi
  * Representation of an abstract Dice
  */
-public class DiceImpl implements Dice {
+public class DiceImpl implements Dice, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4259022213227837523L;
+
 	/**
 	 * the diceValue after a throw 
 	 */

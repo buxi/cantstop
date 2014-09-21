@@ -3,7 +3,15 @@
  */
 package de.buxi.cantstop;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +43,7 @@ import de.buxi.cantstop.model.TwoDicesPair;
 public class CantStopMainConsolApp {
 	private ApplicationContext context;
 	private Locale locale;
+	private GameController gameController;
 	
 	private static final Locale defaultLocale = Locale.ENGLISH;
 	private static final String[] pairChoose =new String[]{"A", "B", "C"};
@@ -43,6 +52,7 @@ public class CantStopMainConsolApp {
 	private CantStopMainConsolApp() {
 		locale = defaultLocale;
 		context = new ClassPathXmlApplicationContext("cantstopGameBeans.xml");
+		gameController = (GameController)context.getBean("gameController");
 	}
 	
 	private String getMessage(String key) {
@@ -72,7 +82,7 @@ public class CantStopMainConsolApp {
 	private void doGame() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, NotAvailableClimberException, NullClimberException {
 		// TODO log exceptions
 		
-		GameController gameController = (GameController)context.getBean("gameController");
+		
 		String action = "";
 		GameTransferObject gameControllerTO = null;
 		gameController.doGameStarten();
@@ -98,7 +108,13 @@ public class CantStopMainConsolApp {
 			case "3":
 				changeLocale();
 				break;
-
+			case "4":
+				saveState();
+				break;
+			case "5": 
+				loadState();
+				action = "";
+				continue;
 			case "A" :
 			case "a" :
 			case "B" :
@@ -117,7 +133,7 @@ public class CantStopMainConsolApp {
 						gameControllerTO.choosablePairs.size()>0 && 
 						chosenPairNum < gameControllerTO.choosablePairs.size()
 						) {
-					TwoDicesPair chosenPair = gameControllerTO.possiblePairs.get(chosenPairNum);
+					TwoDicesPair chosenPair = gameControllerTO.choosablePairs.get(chosenPairNum);
 					int wayNumber = getWayNumberFromUser(chosenPair);
 					gameController.doExecutePairs(chosenPair, wayNumber);
 					gameControllerTO = gameController.doGetTransferObject();
@@ -201,6 +217,47 @@ public class CantStopMainConsolApp {
 	    System.out.println(getMessage("GAME_EXIT"));
 	}
 
+	private void loadState() {
+		InputStream fis = null;
+
+		try {
+			fis = new FileInputStream("saved.dat");
+			ObjectInputStream o = new ObjectInputStream(fis);
+			GameController savedGameController = (GameController) o.readObject();
+			this.gameController = savedGameController;
+			System.out.println("Saved state loaded");
+		} catch (IOException e) {
+			System.err.println(e);
+		} catch (ClassNotFoundException e) {
+			System.err.println(e);
+		} finally {
+			try {
+				fis.close();
+			} catch (Exception e) {
+			}
+		}
+		
+	}
+
+	private void saveState() {
+		OutputStream fos = null;
+
+		try {
+			fos = new FileOutputStream("saved.dat");
+			ObjectOutputStream o = new ObjectOutputStream(fos);
+			o.writeObject( this.gameController);
+			System.out.println("State saved");
+		} catch (IOException e) {
+			System.err.println(e);
+		} finally {
+			try {
+				fos.close();
+			} catch (Exception e) {
+			}
+		}
+
+	}
+
 	/**
 	 * 
 	 */
@@ -213,20 +270,20 @@ public class CantStopMainConsolApp {
 		System.out.println(getMessage("LOCALE_CHANGED", new Object[]{locale}));
 	}
 	/**
-	 * @param gewaehltePairung
+	 * @param chosenPair
 	 * @return
 	 * @throws DiceNotThrownException
 	 */
-	protected int getWayNumberFromUser(TwoDicesPair gewaehltePairung)
+	protected int getWayNumberFromUser(TwoDicesPair chosenPair)
 			throws DiceNotThrownException {
 		int wayNumber = -1;
-		if (PairChoiceInfo.WITHWAYINFO.equals(gewaehltePairung.getPairChoiceInfo())) {
+		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo())) {
 			do {
 				Scanner in = new Scanner(System.in);
-			    System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{gewaehltePairung.getFirstPair().getSum(), gewaehltePairung.getSecondPair().getSum()}));
+			    System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
 			    wayNumber = in.nextInt();      
 			    System.out.println(getMessage("WAYNUMBER_ENTERED", new Object[]{wayNumber}));
-			} while (wayNumber != gewaehltePairung.getFirstPair().getSum() && wayNumber != gewaehltePairung.getSecondPair().getSum());
+			} while (wayNumber != chosenPair.getFirstPair().getSum() && wayNumber != chosenPair.getSecondPair().getSum());
 		}
 		return wayNumber;
 	}

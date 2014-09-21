@@ -4,11 +4,17 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
+
 /**
  * @author buxi
  * TODO TO is a must http://www.oracle.com/technetwork/articles/javaee/transferobject-139757.html
  */
-public class TwoDicesPair {
+public class TwoDicesPair implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -430115296077172544L;
 	private DicePair firstPair;
 	private DicePair secondPair;
 	private PairChoiceInfo pairChoiceInfo;

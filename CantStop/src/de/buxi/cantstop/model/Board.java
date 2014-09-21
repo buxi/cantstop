@@ -1,5 +1,6 @@
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,7 +9,11 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Board {
+public class Board implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -115852410389547183L;
 	/**
 	 * All 11 Way of the Board
 	 */

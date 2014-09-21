@@ -3,11 +3,17 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
+
 /**
  * @author buxi
  *
  */
-public class DicePair {
+public class DicePair implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5667577105783332407L;
 	private Dice first;
 	private Dice second;
 	

@@ -1,6 +1,12 @@
 package de.buxi.cantstop.model;
 
-public class Marker {
+import java.io.Serializable;
+
+public class Marker implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6012552362823161046L;
 	private Color color;
 
 	/**

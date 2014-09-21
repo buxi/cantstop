@@ -3,6 +3,7 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -12,7 +13,11 @@ import org.apache.commons.lang3.StringUtils;
  * @author buxi
  *
  */
-public class Player {
+public class Player implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4829560351701437044L;
 	private String name;
 	private Color color;
 	private Collection<Marker>markers;

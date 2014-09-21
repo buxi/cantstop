@@ -3,6 +3,7 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
  * RopePoint can hold a climber and more marker
  *
  */
-public class RopePoint extends AbstractRopePoint {
+public class RopePoint extends AbstractRopePoint implements Serializable {
 	
 	private Collection<Marker> markers;
 	

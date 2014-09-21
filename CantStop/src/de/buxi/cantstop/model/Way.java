@@ -3,13 +3,19 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author buxi
  *
  */
-public class Way {
+public class Way implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7997417237396507724L;
+
 	/**
 	 * for numbering: from 2 to 12
 	 */

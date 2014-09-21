@@ -1,7 +1,9 @@
 package de.buxi.cantstop.model;
 
-public class Climber {
+import java.io.Serializable;
 
+public class Climber implements Serializable{
+	private static final long serialVersionUID = 4637305808600310379L;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
