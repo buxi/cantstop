@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.buxi.cantstop;
+package de.buxi.cantstop.ui.console;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,8 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -84,16 +82,14 @@ public class CantStopMainConsolApp {
 		
 		
 		String action = "";
-		GameTransferObject gameControllerTO = null;
-		gameController.doGameStarten();
-		gameController.doStartGameRound();
+		GameTransferObject gameControllerTO = gameController.doGameStart();
+		gameControllerTO = gameController.doStartGameRound();
 	    do {
 	    	gameControllerTO = gameController.doGetTransferObject();
 	    	switch (action) {
 			case "1": 
 				if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
-					gameController.doEndGameRound();
-					gameControllerTO = gameController.doGetTransferObject();
+					gameControllerTO = gameController.doEndGameRound();
 				}
 				else {
 					System.out.println(getMessage("FINISH_ROUND_NOT_ALLOWED"));
@@ -101,8 +97,7 @@ public class CantStopMainConsolApp {
 				break;
 			
 			case "2":
-				gameController.doThrow();
-				gameControllerTO = gameController.doGetTransferObject();
+				gameControllerTO = gameController.doThrowDices();
 				break;
 			
 			case "3":
@@ -135,8 +130,7 @@ public class CantStopMainConsolApp {
 						) {
 					TwoDicesPair chosenPair = gameControllerTO.choosablePairs.get(chosenPairNum);
 					int wayNumber = getWayNumberFromUser(chosenPair);
-					gameController.doExecutePairs(chosenPair, wayNumber);
-					gameControllerTO = gameController.doGetTransferObject();
+					gameControllerTO = gameController.doExecutePairs(chosenPair, wayNumber);
 				}
 				break;
 			default:
@@ -203,7 +197,7 @@ public class CantStopMainConsolApp {
 	    	}
 	    	
 	    	if (GameState.GAME_WIN.equals(gameControllerTO.gameState)) {
-	    		System.out.println(getMessage("STATE_GAME_WIN", new Object[]{gameController.getActualPlayer().getName()} ));
+	    		System.out.println(getMessage("STATE_GAME_WIN", new Object[]{gameControllerTO.actualPlayer.getName()} ));
 	    		break;
 	    	}
 	    	Scanner in = new Scanner(System.in);
@@ -219,10 +213,10 @@ public class CantStopMainConsolApp {
 
 	private void loadState() {
 		InputStream fis = null;
-
+		ObjectInputStream o = null;
 		try {
 			fis = new FileInputStream("saved.dat");
-			ObjectInputStream o = new ObjectInputStream(fis);
+			o = new ObjectInputStream(fis);
 			GameController savedGameController = (GameController) o.readObject();
 			this.gameController = savedGameController;
 			System.out.println("Saved state loaded");
@@ -233,18 +227,19 @@ public class CantStopMainConsolApp {
 		} finally {
 			try {
 				fis.close();
+				o.close();
 			} catch (Exception e) {
 			}
 		}
-		
 	}
 
 	private void saveState() {
 		OutputStream fos = null;
+		ObjectOutputStream o = null;
 
 		try {
 			fos = new FileOutputStream("saved.dat");
-			ObjectOutputStream o = new ObjectOutputStream(fos);
+			o = new ObjectOutputStream(fos);
 			o.writeObject( this.gameController);
 			System.out.println("State saved");
 		} catch (IOException e) {
@@ -252,10 +247,10 @@ public class CantStopMainConsolApp {
 		} finally {
 			try {
 				fos.close();
+				o.close();
 			} catch (Exception e) {
 			}
 		}
-
 	}
 
 	/**

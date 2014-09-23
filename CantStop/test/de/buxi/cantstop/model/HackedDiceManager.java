@@ -16,6 +16,11 @@ import de.buxi.cantstop.model.DiceNotGivenException;
  */
 public class HackedDiceManager extends DiceManager {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8774801520742909944L;
+
 	public HackedDiceManager(List<Dice> dices)
 			throws DiceNotGivenException {
 		super(dices);

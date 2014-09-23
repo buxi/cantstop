@@ -1,0 +1,10 @@
+package de.buxi.cantstop.model;
+
+public interface GameService {
+	public GameTransferObject doEndGameRound() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException;
+	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException;
+	public GameTransferObject doGameStart() throws DiceNotThrownException, InvalidWayNumberException;
+	public GameTransferObject doGetTransferObject() throws DiceNotThrownException, InvalidWayNumberException ;
+	public GameTransferObject doStartGameRound() throws DiceNotThrownException, InvalidWayNumberException;
+	public GameTransferObject doThrowDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException;
+}

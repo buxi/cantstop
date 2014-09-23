@@ -17,8 +17,12 @@ import java.util.Set;
  * @author buxi
  *
  */
-public class GameController implements Serializable{
+public class GameController implements Serializable, GameService{
 			
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6919670618517317954L;
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
 	private Map<Color, Player> playerMap;
 	private List<Player> playerOrder;  
@@ -175,21 +179,27 @@ public class GameController implements Serializable{
 	/**
 	 * starts a new round of the game
 	 * distributes the free climbers to the aktual player
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
 	 */
-	public void doStartGameRound() {
+	public GameTransferObject doStartGameRound() throws DiceNotThrownException, InvalidWayNumberException {
 		checkGameStatus(Arrays.asList(GameState.IN_GAME));
 		distributeFreeClimbers();
 		this.gameState = GameState.IN_ROUND;
+		return this.doGetTransferObject();
 	}
 	
 	/**
+	 * @return 
 	 * @throws RopePointInvalidUsageException 
 	 * @throws NoMarkerIsAvailableException 
 	 * @throws NoClimberOnWayException 
 	 * @throws InvalidClimberMovementException 
 	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
 	 */
-	public void doEndGameRound() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException {
+	public GameTransferObject doEndGameRound() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND, GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED));
 		// marks the climbers
 		Player actualPlayer = getActualPlayer();
@@ -207,13 +217,14 @@ public class GameController implements Serializable{
 			if (usedHuts.size() == 3) {
 				this.gameState = GameState.GAME_WIN;
 				this.errorMessage="STATE_GAME_WIN";
-				return;
+				return this.doGetTransferObject();
 			}
 		}
 		
 		this.nextPlayer();
 		distributeFreeClimbers();
 		this.gameState = GameState.IN_ROUND;
+		return this.doGetTransferObject();
 	}
 	
 	/**
@@ -246,12 +257,16 @@ public class GameController implements Serializable{
 	}
 	/**
 	 * determine first player and gives DiceManager
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
 	 */
-	public void doGameStarten() {
+	public GameTransferObject doGameStart() throws DiceNotThrownException, InvalidWayNumberException {
 		checkGameStatus(Arrays.asList(GameState.INIT));
 		this.gameState = GameState.IN_GAME;
 		determineFirstPlayer();
 		diceManager.giveDices(getActualPlayer());
+		return this.doGetTransferObject();
 	}
 
 	
@@ -346,6 +361,7 @@ public class GameController implements Serializable{
 	}
 
 	/**
+	 * @return 
 	 * @throws InvalidWayNumberException 
 	 * @throws DiceNotThrownException 
 	 * @throws InvalidClimberMovementException 
@@ -353,7 +369,7 @@ public class GameController implements Serializable{
 	 * @throws RopePointInvalidUsageException 
 	 * @throws NoMarkerIsAvailableException 
 	 */
-	public void doThrow() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
+	public GameTransferObject doThrowDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND));
 		this.errorMessage = "";
 		diceManager.throwAllDices();
@@ -366,6 +382,7 @@ public class GameController implements Serializable{
 			this.errorMessage = "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED";
 			doEndGameRound();
 		}
+		return this.doGetTransferObject();
 	}
 	
 	/**
@@ -375,7 +392,7 @@ public class GameController implements Serializable{
 	 */
 	protected void testDoThrow(DiceManager diceManager) throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
 		this.setDiceManager(diceManager);
-		doThrow();
+		doThrowDices();
 	}
 	/**
 	 * JUST FOR TESTING
@@ -405,8 +422,9 @@ public class GameController implements Serializable{
 	/**
 	 * TODO UNITTEST
 	 * @param wayNumber 
+	 * @return 
 	 */
-	public void doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
+	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
 		checkGameStatus(Arrays.asList(GameState.DICES_THROWN));
 		this.errorMessage = "";
 		if (!this.getPossiblePairs().contains(chosenPair)) {
@@ -421,6 +439,7 @@ public class GameController implements Serializable{
 		}
 
 		pairExecute(chosenPair, wayNumber, getActualPlayer());
+		return this.doGetTransferObject();
 	}
 	/**
 	 * moves climber

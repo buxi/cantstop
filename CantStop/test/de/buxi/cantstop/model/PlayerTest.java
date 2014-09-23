@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.buxi.cantstop.model.Climber;
