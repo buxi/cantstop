@@ -21,7 +21,7 @@ import de.buxi.cantstop.model.Marker;
 import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.Way;
 
-public class GameKontrollerSetupTest extends SpringLoaderSuperClass{
+public class GameControllerSetupTest extends SpringLoaderSuperClass{
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

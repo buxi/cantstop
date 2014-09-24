@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.buxi.cantstop.service.GameService;
+
 /**
  * Dieses Objekt kontrolliert das gesamte Game
  * Regeln sind hier geprüft und durchgesetzt
@@ -17,7 +19,7 @@ import java.util.Set;
  * @author buxi
  *
  */
-public class GameController implements Serializable, GameService{
+public class GameController implements Serializable{
 			
 	/**
 	 * 
@@ -84,10 +86,10 @@ public class GameController implements Serializable, GameService{
 	}
 
 	/**
-	 * place the players in standar order
+	 * place the players in standard order
 	 */
 	private void determinePlayerOrderStandard() {
-		//tested in GameKontrollerSetupTest
+		//tested in GameControllerSetupTest
 		Set<Entry<Color, Player>> players = playerMap.entrySet();
 		int i = 0;
 		for (Entry<Color, Player> entry : players) {
@@ -183,7 +185,7 @@ public class GameController implements Serializable, GameService{
 	 * @throws InvalidWayNumberException 
 	 * @throws DiceNotThrownException 
 	 */
-	public GameTransferObject doStartGameRound() throws DiceNotThrownException, InvalidWayNumberException {
+	public GameTransferObject doStartGameTurn() throws DiceNotThrownException, InvalidWayNumberException {
 		checkGameStatus(Arrays.asList(GameState.IN_GAME));
 		distributeFreeClimbers();
 		this.gameState = GameState.IN_ROUND;
@@ -199,7 +201,7 @@ public class GameController implements Serializable, GameService{
 	 * @throws InvalidWayNumberException 
 	 * @throws DiceNotThrownException 
 	 */
-	public GameTransferObject doEndGameRound() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
+	public GameTransferObject doEndGameTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND, GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED));
 		// marks the climbers
 		Player actualPlayer = getActualPlayer();
@@ -380,7 +382,7 @@ public class GameController implements Serializable, GameService{
 			// GameRound must be finished
 			this.gameState=GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;
 			this.errorMessage = "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED";
-			doEndGameRound();
+			doEndGameTurn();
 		}
 		return this.doGetTransferObject();
 	}

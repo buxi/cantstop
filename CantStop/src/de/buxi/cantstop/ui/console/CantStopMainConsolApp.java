@@ -3,13 +3,6 @@
  */
 package de.buxi.cantstop.ui.console;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +14,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.DiceNotThrownException;
-import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.model.InvalidClimberMovementException;
@@ -34,23 +26,24 @@ import de.buxi.cantstop.model.PairChoiceInfo;
 import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
+import de.buxi.cantstop.service.GameService;
+import de.buxi.cantstop.service.GameServicesConsole;
 /**
  * @author buxi
  *
  */
 public class CantStopMainConsolApp {
-	private ApplicationContext context;
-	private Locale locale;
-	private GameController gameController;
-	
-	private static final Locale defaultLocale = Locale.ENGLISH;
+	private GameService gameServices;
 	private static final String[] pairChoose =new String[]{"A", "B", "C"};
 	private static final String SPACE = " ";
+	private Locale locale;
+	private static final Locale defaultLocale = Locale.ENGLISH;
+	private ApplicationContext context; 
 	
 	private CantStopMainConsolApp() {
 		locale = defaultLocale;
 		context = new ClassPathXmlApplicationContext("cantstopGameBeans.xml");
-		gameController = (GameController)context.getBean("gameController");
+		gameServices = new GameServicesConsole(context);
 	}
 	
 	private String getMessage(String key) {
@@ -82,14 +75,14 @@ public class CantStopMainConsolApp {
 		
 		
 		String action = "";
-		GameTransferObject gameControllerTO = gameController.doGameStart();
-		gameControllerTO = gameController.doStartGameRound();
+		GameTransferObject gameControllerTO = gameServices.startGame();
+		gameControllerTO = gameServices.startTurn();
 	    do {
-	    	gameControllerTO = gameController.doGetTransferObject();
+	    	gameControllerTO = gameServices.getAllGameInformation();
 	    	switch (action) {
 			case "1": 
 				if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
-					gameControllerTO = gameController.doEndGameRound();
+					gameControllerTO = gameServices.finishTurn();
 				}
 				else {
 					System.out.println(getMessage("FINISH_ROUND_NOT_ALLOWED"));
@@ -97,17 +90,20 @@ public class CantStopMainConsolApp {
 				break;
 			
 			case "2":
-				gameControllerTO = gameController.doThrowDices();
+				gameControllerTO = gameServices.throwDices();
 				break;
 			
 			case "3":
 				changeLocale();
+				System.out.println(getMessage("LOCALE_CHANGED", new Object[]{locale}));
 				break;
 			case "4":
-				saveState();
+				gameServices.saveState();
+				System.out.println("State saved");
 				break;
 			case "5": 
-				loadState();
+				gameServices.loadState();
+				System.out.println("Saved state loaded");
 				action = "";
 				continue;
 			case "A" :
@@ -130,7 +126,7 @@ public class CantStopMainConsolApp {
 						) {
 					TwoDicesPair chosenPair = gameControllerTO.choosablePairs.get(chosenPairNum);
 					int wayNumber = getWayNumberFromUser(chosenPair);
-					gameControllerTO = gameController.doExecutePairs(chosenPair, wayNumber);
+					gameControllerTO = gameServices.executePairs(chosenPair, wayNumber);
 				}
 				break;
 			default:
@@ -211,59 +207,6 @@ public class CantStopMainConsolApp {
 	    System.out.println(getMessage("GAME_EXIT"));
 	}
 
-	private void loadState() {
-		InputStream fis = null;
-		ObjectInputStream o = null;
-		try {
-			fis = new FileInputStream("saved.dat");
-			o = new ObjectInputStream(fis);
-			GameController savedGameController = (GameController) o.readObject();
-			this.gameController = savedGameController;
-			System.out.println("Saved state loaded");
-		} catch (IOException e) {
-			System.err.println(e);
-		} catch (ClassNotFoundException e) {
-			System.err.println(e);
-		} finally {
-			try {
-				fis.close();
-				o.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	private void saveState() {
-		OutputStream fos = null;
-		ObjectOutputStream o = null;
-
-		try {
-			fos = new FileOutputStream("saved.dat");
-			o = new ObjectOutputStream(fos);
-			o.writeObject( this.gameController);
-			System.out.println("State saved");
-		} catch (IOException e) {
-			System.err.println(e);
-		} finally {
-			try {
-				fos.close();
-				o.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	protected void changeLocale() {
-		if (Locale.GERMAN.equals(locale)) {
-			locale = Locale.ENGLISH;
-		} else {
-			locale = Locale.GERMAN;
-		}
-		System.out.println(getMessage("LOCALE_CHANGED", new Object[]{locale}));
-	}
 	/**
 	 * @param chosenPair
 	 * @return
@@ -282,5 +225,15 @@ public class CantStopMainConsolApp {
 		}
 		return wayNumber;
 	}
-
+	/**
+	 * 
+	 */
+	public void changeLocale() {
+		if (Locale.GERMAN.equals(locale)) {
+			locale = Locale.ENGLISH;
+		} else {
+			locale = Locale.GERMAN;
+		}
+	}
+	
 }
