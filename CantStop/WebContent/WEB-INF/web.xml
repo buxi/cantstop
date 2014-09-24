@@ -14,7 +14,10 @@
   </servlet-mapping>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/cantstop-service.xml</param-value>
+    <param-value>
+    	/WEB-INF/cantstop-service.xml
+    	/WEB-INF/cantstop-model.xml
+    </param-value>
   </context-param>
   <listener>
     <listener-class>

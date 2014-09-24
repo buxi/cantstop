@@ -1,5 +1,7 @@
 package de.buxi.cantstop.web;
 
+import de.buxi.cantstop.model.DiceNotThrownException;
+import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.service.GameService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +15,10 @@ import org.springframework.ui.Model;
 @RequestMapping("/play")
 public class CantstopController {
 	private GameService gameService;
-	private int queries;
 
 	@Autowired
 	public CantstopController(GameService gameService) {
 		this.gameService = gameService;
-		this.queries = 0;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -28,8 +28,13 @@ public class CantstopController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String sumbitForm(@RequestParam("courtName") String courtName,
 			Model model) {
-		//model.addAttribute("reservations", reservations);
-		model.addAttribute("queries", queries);
-		return "reservationQuery";
+		
+		try {
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		} catch (DiceNotThrownException | InvalidWayNumberException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "play";
 	}
 }

@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import de.buxi.cantstop.service.GameService;
-
 /**
  * Dieses Objekt kontrolliert das gesamte Game
  * Regeln sind hier geprüft und durchgesetzt

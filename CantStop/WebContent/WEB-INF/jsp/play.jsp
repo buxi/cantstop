@@ -27,5 +27,6 @@ Court Name
 </tr>
 </c:forEach>
 </table>
+Game state:${gameInfo.gameState}
 </body>
 </html>

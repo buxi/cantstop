@@ -27,7 +27,6 @@ import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
 import de.buxi.cantstop.service.GameService;
-import de.buxi.cantstop.service.GameServicesConsole;
 /**
  * @author buxi
  *

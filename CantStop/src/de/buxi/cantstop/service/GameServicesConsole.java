@@ -10,21 +10,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
-import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.model.InvalidClimberMovementException;
 import de.buxi.cantstop.model.InvalidWayNumberException;
@@ -32,8 +19,6 @@ import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
 import de.buxi.cantstop.model.NullClimberException;
-import de.buxi.cantstop.model.PairChoiceInfo;
-import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
 /**

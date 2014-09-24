@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import org.springframework.context.ApplicationContext;
 import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
@@ -29,8 +28,9 @@ import de.buxi.cantstop.model.TwoDicesPair;
 public class GameServicesWeb implements GameService {
 	private GameController gameController;
 	
-	public GameServicesWeb(ApplicationContext context) {
-		gameController = (GameController)context.getBean("gameController");
+	public GameServicesWeb(GameController gameController) {
+		super();
+		this.gameController = gameController;
 	}
 	
 	@Override
