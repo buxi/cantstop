@@ -43,7 +43,7 @@ public class CantStopMainConsolApp {
 	private CantStopMainConsolApp() {
 		locale = defaultLocale;
 		context = new ClassPathXmlApplicationContext("cantstopGameBeans.xml");
-		gameServices = new GameServicesConsole(context);
+		gameServices = (GameService)context.getBean("gameServices");
 	}
 	
 	private String getMessage(String key) {

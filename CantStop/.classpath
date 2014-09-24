@@ -5,18 +5,23 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5.jar"/>
-	<classpathentry kind="lib" path="libs/spring-core-4.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/spring-context-4.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/spring-context-support-4.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/spring-beans-4.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="libs/spring-expression-4.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/spring-test-4.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="libs/spring-aop-4.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="libs/commons-lang3-3.3.2.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/home/buxi/development/commons-lang3-3.3.2/commons-lang3-3.3.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jstl.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-aop-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-beans-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-context-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-context-support-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-core-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-expression-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-web-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-webmvc-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/standard.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

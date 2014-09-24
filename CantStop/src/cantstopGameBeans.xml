@@ -85,7 +85,11 @@
 		<constructor-arg name="name" value="Tibi"/>
 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
 	</bean>
-
+	
+	<bean id="gameServices" class="de.buxi.cantstop.service.GameServicesConsole">
+		<constructor-arg name="gameController" ref="gameController"/>
+	</bean>
+	
 	<!-- TODO only because the Test is prototype  -->
  	<bean id="gameController" scope="prototype" class="de.buxi.cantstop.model.GameController">
  		<constructor-arg name="players">
