@@ -4,7 +4,7 @@
 <title>Welcome</title>
 </head>
 <body>
-<h2>Welcome to Court Reservation System</h2>
-Today is <fmt:formatDate value="${today}" pattern="yyyy-MM-dd" />.
+<h2>Welcome to Can't Stop</h2>
+<img alt="" src="/images/cantstop.jpg">
 </body>
 </html>
