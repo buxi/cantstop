@@ -72,14 +72,14 @@ public class Player implements Serializable{
 	}
 
 	/**
-	 * @param add climbers zu ClimberList
+	 * @param add climbers to ClimberList
 	 */
 	public void addClimbers(Collection<Climber> newClimbers) {
 		this.climbers.addAll(newClimbers) ;
 	}
 	
 	/**
-	 * @param add climbers zu ClimberList
+	 * @param add climbers to ClimberList
 	 */
 	public Collection<Climber> removeClimbers() {
 		Collection<Climber> oldClimbers = this.climbers;

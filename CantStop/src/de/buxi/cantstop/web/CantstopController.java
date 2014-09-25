@@ -22,7 +22,13 @@ public class CantstopController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public void setupForm() {
+	public void setupForm(Model model) {
+		try {
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		} catch (DiceNotThrownException | InvalidWayNumberException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

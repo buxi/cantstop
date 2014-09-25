@@ -12,6 +12,9 @@ import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
 
 public interface GameService {
+	public static final int MAX_PLAYERS = 4;
+	public static final int MIN_PLAYERS = 2;
+	
 	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException;
 	public GameTransferObject startTurn() throws DiceNotThrownException, InvalidWayNumberException;
 	public GameTransferObject finishGame();
@@ -24,4 +27,6 @@ public interface GameService {
 	
 	public void saveState();
 	public void loadState();
+	
+	public String addPlayer(String playerName) throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException;
 }

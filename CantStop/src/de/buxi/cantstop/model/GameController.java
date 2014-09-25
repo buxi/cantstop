@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.buxi.cantstop.service.TooManyPlayerException;
+
 /**
- * Dieses Objekt kontrolliert das gesamte Game
- * Regeln sind hier geprüft und durchgesetzt
- * Es ist ein Singleton
+ * It controls the whole game
  * @author buxi
  *
  */
@@ -25,7 +25,7 @@ public class GameController implements Serializable{
 	private static final long serialVersionUID = -6919670618517317954L;
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
 	private Map<Color, Player> playerMap;
-	private List<Player> playerOrder;  
+	private List<Player> playersInOrder;  
 	private Board board;
 	private DiceManager diceManager;
 	private Map<Color, Collection<Marker>> allMarkers;
@@ -48,7 +48,7 @@ public class GameController implements Serializable{
 			List<Climber> climbers) {
 		super();
 		this.playerMap = players;
-		this.playerOrder = new ArrayList<Player>(4);
+		this.playersInOrder = new ArrayList<Player>(4);
 		determineFirstPlayer();
 		determinePlayerOrderStandard();  
 		//this.playerFactory = playerFactory;
@@ -59,7 +59,7 @@ public class GameController implements Serializable{
 		
 		// distributes Markers
 		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
-		for (Player player: playerOrder) {
+		for (Player player: playersInOrder) {
 			playerMarkers.put(player.getColor(), this.allMarkers.get(player.getColor()));
 			this.allMarkers.remove(player.getColor());
 		}
@@ -88,10 +88,11 @@ public class GameController implements Serializable{
 	 */
 	private void determinePlayerOrderStandard() {
 		//tested in GameControllerSetupTest
+		this.playersInOrder = new ArrayList<Player>(4);
 		Set<Entry<Color, Player>> players = playerMap.entrySet();
 		int i = 0;
 		for (Entry<Color, Player> entry : players) {
-			playerOrder.add(entry.getValue());
+			playersInOrder.add(entry.getValue());
 			entry.getValue().setOrder(i);
 			i++; 
 		}
@@ -105,7 +106,7 @@ public class GameController implements Serializable{
 		for (Color markerColor : markers.keySet()) {
 			Player player = this.playerMap.get(markerColor);
 			if (player == null ) {
-				throw new PlayerNotFoundException(markerColor + " Player no found");
+				throw new PlayerNotFoundException(markerColor + " Player not found");
 			}
 			player.addMarkers(markers.get(player.getColor()));
 		}
@@ -147,10 +148,10 @@ public class GameController implements Serializable{
 	}
 	
 	/**
-	 * @return the playerOrder
+	 * @return the playersInOrder
 	 */
-	public List<Player> getPlayerInOrder() {
-		return playerOrder;
+	public List<Player> getPlayersInOrder() {
+		return playersInOrder;
 	}
 	
 	/**
@@ -169,7 +170,7 @@ public class GameController implements Serializable{
 	}
 	
 	/**
-	 * gives the free climbers to the aktual player
+	 * gives the free climbers to the actual player
 	 */
 	protected void distributeFreeClimbers() {
 		this.getActualPlayer().addClimbers(this.getClimbers());
@@ -233,7 +234,7 @@ public class GameController implements Serializable{
 	protected void nextPlayer() {
 		Player oldPlayer = getActualPlayer(); 
 		this.actualPlayerNumber++;
-		if (actualPlayerNumber > playerOrder.size()-1) {
+		if (actualPlayerNumber > playersInOrder.size()-1) {
 			actualPlayerNumber = 0;
 		}
 		diceManager.giveDices(getActualPlayer());
@@ -244,7 +245,7 @@ public class GameController implements Serializable{
 	 * @return actual Player
 	 */
 	public Player getActualPlayer() {
-		return playerOrder.get(this.actualPlayerNumber);
+		return playersInOrder.get(this.actualPlayerNumber);
 	}
 	
 	/**
@@ -525,7 +526,7 @@ public class GameController implements Serializable{
 		to.actualPlayer = this.getActualPlayer();
 		to.boardDisplay = this.getBoard().display();
 		to.actualPlayerNumber = this.getActualPlayerNumber();
-		to.playerList = this.getPlayerInOrder();
+		to.playerList = this.getPlayersInOrder();
 		to.errorMessage = this.errorMessage;
 		to.possiblePairs = null;
 		to.dices = null;
@@ -535,5 +536,28 @@ public class GameController implements Serializable{
 			to.dices = this.getDices();
 		}
 		return to;
+	}
+
+	
+	/**
+	 * Adds a player to the player list
+	 * @param playerName
+	 * @return playerId currently the orderId 
+	 * @throws TooManyPlayerException
+	 */
+	public String doAddPlayer(String playerName) throws TooManyPlayerException {
+		Collection<Color> remainingColorSet = this.allMarkers.keySet();
+		remainingColorSet.removeAll(this.getPlayerMap().keySet());
+		if (remainingColorSet.isEmpty()) {
+			throw new TooManyPlayerException("No available color");
+		}
+		Color[] remainingColors = remainingColorSet.toArray(new Color[0]);
+		Color playerColor = remainingColors[0];
+		List<Player> players = getPlayersInOrder();
+		int playerId = players.size()+1;
+		Player newPlayer = new Player(playerId, playerName, playerColor);
+		playerMap.put(playerColor, newPlayer);
+		determinePlayerOrderStandard();
+		return Integer.toString(playerId);
 	}
 }

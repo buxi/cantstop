@@ -153,7 +153,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 		diceManager.throwAllDices();
 		List<TwoDicesPair> paaren = diceManager.getAllPossiblePairs();
 		List<TwoDicesPair> decoratedPairs = gameController.addChoosableInformation(paaren);
-		assertFalse("keine choosablee Pairung", gameController.isTherePossiblePair(decoratedPairs));
+		assertFalse("keine choosablee Pair", gameController.isTherePossiblePair(decoratedPairs));
 	}
 	
 	@Test

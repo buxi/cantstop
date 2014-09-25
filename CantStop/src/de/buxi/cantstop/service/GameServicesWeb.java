@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+
 import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
@@ -110,6 +111,16 @@ public class GameServicesWeb implements GameService {
 				o.close();
 			} catch (Exception e) {
 			}
+		}
+	}
+
+	@Override
+	public String addPlayer(String playerName) throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException {
+		if (this.getAllGameInformation().playerList.size() > GameService.MAX_PLAYERS) {
+			throw new TooManyPlayerException("Too many player");
+		}
+		else {
+			return gameController.doAddPlayer(playerName);
 		}
 	}
 }

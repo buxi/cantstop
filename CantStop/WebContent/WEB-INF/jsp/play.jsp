@@ -2,31 +2,25 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
-<title>Reservation Query</title>
+<title>Playroom</title>
 </head>
 <body>
-Queries: <c:out value="${queries}"/>
-<form method="post">
-Court Name
-<input type="text" name="courtName" value="${courtName}" />
-<input type="submit" value="Query" />
-</form>
+Actual players:
 <table border="1">
 <tr>
-<th>Court Name</th>
-<th>Date</th>
-<th>Hour</th>
-<th>Player</th>
+<th>Id</th>
+<th>Name</th>
+<th>Color</th>
 </tr>
-<c:forEach items="${reservations}" var="reservation">
+<c:forEach items="${gameInfo.playerList}" var="player">
 <tr>
-<td>${reservation.courtName}</td>
-<td><fmt:formatDate value="${reservation.date}" pattern="yyyy-MM-dd" /></td>
-<td>${reservation.hour}</td>
-<td>${reservation.player.name}</td>
+<td>${player.order}</td>
+<td>${player.name}</td>
+<td>${player.color}</td>
 </tr>
 </c:forEach>
 </table>
 Game state:${gameInfo.gameState}
+New playerId:${newPlayerId}
 </body>
 </html>

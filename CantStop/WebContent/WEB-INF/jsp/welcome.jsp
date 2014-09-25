@@ -5,6 +5,12 @@
 </head>
 <body>
 <h2>Welcome to Can't Stop</h2>
-<img alt="" src="resources/images/cantstop.jpg">
+<img alt="" width="200" src="resources/images/cantstop.jpg">
+<form method="post">
+Enter your name:
+<input type="text" name="playerName" value="${playerName}" />
+<input type="submit" value="Start Game" />
+</form>
+
 </body>
 </html>

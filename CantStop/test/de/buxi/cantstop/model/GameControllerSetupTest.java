@@ -32,25 +32,25 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 	}
 
 	/**
-	 * Test Gamepreparation Boeard, Climbers, Players, Markers, etc
+	 * Test Game preparation Board, Climbers, Players, Markers, etc
 	 */
 	@Test
 	public void testGameController() {
 		GameController gameController = (GameController)ac.getBean("gameController");
 	
-		List<Player> players = gameController.getPlayerInOrder();
-		assertNotNull("Player is null", players);
+		List<Player> players = gameController.getPlayersInOrder();
+		assertNotNull("Players is null", players);
 		assertTrue("Playernumber must be between 2 and 4", players.size()>=2 && players.size()<=4);
 		//test determinePlayerOrderStandard()
 		for (Player player : players) {
 			int playerOrder = player.getOrder();
-			assertEquals("Player with "+playerOrder+" should be in proper Position in PlayerOrder", player, gameController.getPlayerInOrder().get(playerOrder));
+			assertEquals("Player with "+playerOrder+" should be in proper Position in PlayerOrder", player, gameController.getPlayersInOrder().get(playerOrder));
 		}
 		
 		//test determineFirstrPlayer()
 		assertEquals("actual PlayerNumber must be 0", 0, gameController.getActualPlayerNumber());
 		
-		// RED und BLUE Steine sind distributet
+		// RED and BLUE Markers are distributed
 		assertEquals("10 markers with Player ", 10, players.get(0).getMarkers().size());
 		assertEquals("10 markers with Player ", 10, players.get(1).getMarkers().size());
 		

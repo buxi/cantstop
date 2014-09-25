@@ -27,19 +27,19 @@ GameKontroller
   Player
   	Aktionen 
   	  - throwDice (STATUS=GEWORFEN)
-  	  - Pairung auswählen
+  	  - Pair auswählen
   	  - Climber setzen
   	  - Climber moveen
   	  - Basislager anlegen (Markers placeen) / Gamezug enden
   	
   RegelManager
     - Throw ausvalueen
-    - valid Pairungen determineen (Pairung - Aktionen)
+    - valid Pairen determineen (Pair - Aktionen)
     - mögliche Aktionen determineen
     - Aktion prüfen
     
     
-    Pairung - Aktion determineen
+    Pair - Aktion determineen
       wenn samee Way gedicet ist (8-8) -> isDoppel=true (DoppelAktion), ansonsten 2 Aktionen
        
       Way ist free und BS ist darauf -> move BS mit 1 oder 2
