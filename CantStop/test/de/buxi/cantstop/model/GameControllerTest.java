@@ -2,6 +2,7 @@ package de.buxi.cantstop.model;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,20 +61,21 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		gameController.distributeMarkers(playerMarkers);
 		
 		Player playerBLAU = gameController.getPlayer(Color.BLUE);
-		assertEquals("BLUE Player should have 3 Markers", 13, playerBLAU.getMarkers().size());
+		assertEquals("BLUE Player should have 3 Markers", 3, playerBLAU.getMarkers().size());
 		Player playerRED = gameController.getPlayer(Color.RED);
-		assertEquals("RED Player should hvae 3 Markers", 13, playerRED.getMarkers().size());
+		assertEquals("RED Player should have 3 Markers", 3, playerRED.getMarkers().size());
 	}
 
 	@Test
-	public void testActualPlayer() {
+	public void testActualPlayer() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
 		Player aktuellePlayer = gameController.getActualPlayer();
 		assertEquals("actual Player should be actualPlayerNumber have", gameController.getActualPlayerNumber(), aktuellePlayer.getOrder());
 	}
 
 	@Test
-	public void testNextPlayer() throws DiceNotThrownException, InvalidWayNumberException {
+	public void testNextPlayer() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn(); // distribute Climbers too 
@@ -96,22 +98,16 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test
-	public void testDistributeClimber() {
+	public void testDistributeClimber() throws Exception{
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
 		gameController.distributeFreeClimbers();
 		assertEquals("actual Player should be have all 3 Climbers", 3, gameController.getActualPlayer().getClimbers().size());
 		assertEquals("gameController should have 0 Climber", 0, gameController.getClimbers().size());
 	}
 
-	@Test(expected=InvalidGameStateException.class)
-	public void testStartGameRoundWithInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
-		GameController gameController = (GameController)ac.getBean("testGameController");
-		gameController.distributeFreeClimbers();
-		gameController.doStartGameTurn();
-	}
-
 	@Test
-	public void testStartGameRound() throws DiceNotThrownException, InvalidWayNumberException {
+	public void testStartGameRound() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.distributeFreeClimbers();
@@ -121,24 +117,14 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		assertEquals("INIT State", GameState.IN_ROUND, gameController.getGameStatus());
 	}
 	@Test(expected=InvalidGameStateException.class)
-	public void testDoStartGameRoundInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
+	public void testDoStartGameRoundInvalidState() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
-		gameController.distributeFreeClimbers();
 		gameController.doStartGameTurn();
-		assertEquals("actual Player should be have all 3 Climbers", 3, gameController.getActualPlayer().getClimbers().size());
-		assertEquals("gameController should have 0 Climber", 0, gameController.getClimbers().size());
 		assertEquals("IN_ROUND State expected", GameState.IN_ROUND, gameController.getGameStatus());
-	}
-
-	@Test(expected=InvalidGameStateException.class)
-	public void testDoStartGameRoundWithInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
-		GameController gameController = (GameController)ac.getBean("testGameController");
-		gameController.distributeFreeClimbers();
-		gameController.doStartGameTurn();
 	}
 	
 	@Test
-	public void testDoThrowPositiv() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
+	public void testDoThrowPositiv() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.distributeFreeClimbers();
@@ -153,14 +139,15 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test(expected=InvalidGameStateException.class)
-	public void testDoThrowInvalidState() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
+	public void testDoThrowInvalidState() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
 		gameController.distributeFreeClimbers();
 		gameController.doThrowDices();
 	}
 	
 	@Test
-	public void testDoThrowNegativ() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NullClimberException, NotAvailableClimberException {
+	public void testDoThrowNegativ() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -180,7 +167,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 
 	@Test
-	public void testDoGameRoundFinishedWaysNoOtherWahl() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoGameRoundFinishedWaysNoOtherWahl() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -206,7 +193,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test
-	public void testDoGameRoundBeendenPlayerGemacht() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoGameRoundBeendenPlayerGemacht() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -239,7 +226,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test
-	public void testDoGameRoundBeendenGameWON() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoGameRoundBeendenGameWON() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -278,22 +265,35 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test
-	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException {
+	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		assertEquals("First Player should be determined", GameController.DEFAULT_FIRST_PLAYER_NUM, gameController.getActualPlayerNumber());
 		assertEquals("IN_GAME State", GameState.IN_GAME, gameController.getGameStatus());
+		
+		List<Player> players = new ArrayList<Player>(gameController.getPlayerMap().values());
+		// RED and BLUE Markers are distributed
+		assertEquals("10 markers with Player ", 10, players.get(0).getMarkers().size());
+		assertEquals("10 markers with Player ", 10, players.get(1).getMarkers().size());
+			
+		// test player order
+		for (Player player : players) {
+			int playerOrder = player.getOrder();
+			assertEquals("Player with " + playerOrder
+					+ " should be in proper Position in PlayerOrder", player,
+					gameController.getPlayersInOrder().get(playerOrder));
+		}
 	}
 
 	@Test(expected=InvalidGameStateException.class)
-	public void testDoGameStartInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
+	public void testDoGameStartInvalidState() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doGameStart();
 	}
 	
 	@Test
-	public void testDoPairInputCheckWithValidWaehlbarPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoPairInputCheckWithValidWaehlbarPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -304,7 +304,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test(expected=InvalidWayNumberException.class)
-	public void testDoPairInputCheckWithInValidWayNumber() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoPairInputCheckWithInValidWayNumber() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -320,7 +320,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 
 	@Test(expected=InvalidPairsException.class)
-	public void testDoPairInputCheckWithInValidPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoPairInputCheckWithInValidPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -335,7 +335,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test()
-	public void testDoPairInputCheckWithValidAberNeuPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+	public void testDoPairInputCheckWithValidAberNeuPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -375,4 +375,15 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		assertEquals("3 players should be there (2 was preloaded)", 4, players.size());
 		gameController.doAddPlayer("too many");
 	}
+
+	@Test
+	public void testDeterminePlayerOrderStandard() {
+		fail("too simple to test, no real logic in it");
+	}	
+
+	@Test
+	public void testDetermineFirstPlayer() {
+		fail("too simple to test, no real logic in it");
+	}	
+
 }

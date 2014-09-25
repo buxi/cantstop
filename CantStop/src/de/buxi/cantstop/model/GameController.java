@@ -24,6 +24,8 @@ public class GameController implements Serializable{
 	 */
 	private static final long serialVersionUID = -6919670618517317954L;
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
+	public static final int MINIMUM_PLAYER_NUMBER = 2;
+	public static final int MAXIMUM_PLAYER_NUMBER = 4;
 	private Map<Color, Player> playerMap;
 	private List<Player> playersInOrder;  
 	private Board board;
@@ -49,22 +51,10 @@ public class GameController implements Serializable{
 		super();
 		this.playerMap = players;
 		this.playersInOrder = new ArrayList<Player>(4);
-		determineFirstPlayer();
-		determinePlayerOrderStandard();  
-		//this.playerFactory = playerFactory;
 		this.board = board;
 		this.diceManager = diceManager;
 		this.allMarkers = markers;
 		this.climbers = climbers;
-		
-		// distributes Markers
-		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
-		for (Player player: playersInOrder) {
-			playerMarkers.put(player.getColor(), this.allMarkers.get(player.getColor()));
-			this.allMarkers.remove(player.getColor());
-		}
-		distributeMarkers(playerMarkers);
-
 		this.gameState = GameState.INIT;
 		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
 	}
@@ -86,7 +76,7 @@ public class GameController implements Serializable{
 	/**
 	 * place the players in standard order
 	 */
-	private void determinePlayerOrderStandard() {
+	public void determinePlayerOrderStandard() {
 		//tested in GameControllerSetupTest
 		this.playersInOrder = new ArrayList<Player>(4);
 		Set<Entry<Color, Player>> players = playerMap.entrySet();
@@ -261,11 +251,25 @@ public class GameController implements Serializable{
 	 * @return 
 	 * @throws InvalidWayNumberException 
 	 * @throws DiceNotThrownException 
+	 * @throws NotEnoughPlayerException 
 	 */
-	public GameTransferObject doGameStart() throws DiceNotThrownException, InvalidWayNumberException {
+	public GameTransferObject doGameStart() throws  InvalidWayNumberException, NotEnoughPlayerException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.INIT));
-		this.gameState = GameState.IN_GAME;
+		if (this.playerMap.keySet().size() < GameController.MINIMUM_PLAYER_NUMBER) {
+			throw new NotEnoughPlayerException("Not enough player");
+		}
 		determineFirstPlayer();
+		determinePlayerOrderStandard(); 
+		// distributes Markers
+		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
+		for (Player player: playersInOrder) {
+			playerMarkers.put(player.getColor(), this.allMarkers.get(player.getColor()));
+			this.allMarkers.remove(player.getColor());
+		}
+		distributeMarkers(playerMarkers);
+
+		this.gameState = GameState.IN_GAME;
+		 
 		diceManager.giveDices(getActualPlayer());
 		return this.doGetTransferObject();
 	}

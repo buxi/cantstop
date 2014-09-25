@@ -19,6 +19,7 @@ import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
@@ -35,7 +36,7 @@ public class GameServicesWeb implements GameService {
 	}
 	
 	@Override
-	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException {
+	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
 		return gameController.doGameStart();
 	}
 
@@ -116,7 +117,7 @@ public class GameServicesWeb implements GameService {
 
 	@Override
 	public String addPlayer(String playerName) throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException {
-		if (this.getAllGameInformation().playerList.size() > GameService.MAX_PLAYERS) {
+		if (this.getAllGameInformation().playerList.size() > GameController.MAXIMUM_PLAYER_NUMBER) {
 			throw new TooManyPlayerException("Too many player");
 		}
 		else {

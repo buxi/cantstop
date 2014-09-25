@@ -63,6 +63,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testNOTCHOOSABLE_H2M_H3M_H4M_1_1_1_2() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
 		//Player has 3 BS
@@ -81,6 +84,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testNOTCHOOSABLE_W2BS_W3BS_W4BS_2_3_3_3() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
 		
@@ -96,6 +102,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testNOTCHOOSABLE_H2BS_W3BS_W4BS_1_1_1_2() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(4,5)));
 		BoardTestHelper.markHuts(board, new ArrayList<Integer>(Arrays.asList(2)), Color.BLUE);
@@ -111,6 +120,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testWITHWAYINFO_W2BS_W3BS_2_2_2_3() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3)));
 		//Player have 1 BS
@@ -130,6 +142,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testCHOOSABLE_W2BS_W3BS_2_2_1_3() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException { GameController gameController = (GameController)ac.getBean("testGameController");
 		Board board = gameController.getBoard();
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3)));
 		//Player have 1 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber())));
@@ -145,6 +160,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testIsThereChoosablePairs_W2BS_W3BS_W4BS_2_3_4_5() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3,4)));
 				
@@ -159,6 +177,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void testIsThereChoosablePairs() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3)));
 		//Player have 1 BS
@@ -198,6 +219,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_H2M_H3M_H6BS_H7BS_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.markHuts(board, new ArrayList<Integer>(Arrays.asList(2,3)), Color.BLUE);
 		BoardTestHelper.placeClimbersOnTheWayAllInHut(board, new ArrayList<Integer>(Arrays.asList(6,7)));
@@ -221,6 +245,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_H2M_H3M_H6BS_W7BS_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.markHuts(board, new ArrayList<Integer>(Arrays.asList(2,3)), Color.BLUE);
 		BoardTestHelper.placeClimbersOnTheWayAllInHut(board, new ArrayList<Integer>(Arrays.asList(6)));
@@ -245,6 +272,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_EmptyBoard_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		//Player has 3 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber(), new Climber(), new Climber())));
 				
@@ -265,6 +295,9 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_OneBS_OnTheBoard_W2BS_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2)));
 		//Player has 2 BS
@@ -287,6 +320,8 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_2BS_OnTheBoard_W2BS_W3BS_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3)));
 		//Player have 1 BS 
@@ -318,6 +353,12 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
 	@Test
 	public void test_3BS_OnTheBoard_W2BS_W3BS_W4BS_MassTest() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, InvalidTestParametersException, DiceNotThrownException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
+		gameController.determinePlayerOrderStandard();
+		gameController.determineFirstPlayer();
+
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3,4)));
 				

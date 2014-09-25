@@ -21,6 +21,7 @@ import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.PairChoiceInfo;
 import de.buxi.cantstop.model.Player;
@@ -65,11 +66,11 @@ public class CantStopMainConsolApp {
 	 * @throws NullClimberException 
 	 * @throws NoClimberOnWayException 
 	 */
-	public static void main(String[] args) throws DiceNotThrownException, RopePointInvalidUsageException, NoMarkerIsAvailableException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NullClimberException, NoClimberOnWayException {
+	public static void main(String[] args) throws Exception {
 		CantStopMainConsolApp mainApp = new CantStopMainConsolApp();
 		mainApp.doGame();
 	}
-	private void doGame() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, NotAvailableClimberException, NullClimberException {
+	private void doGame() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		// TODO log exceptions
 		
 		

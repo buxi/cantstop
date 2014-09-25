@@ -2,6 +2,7 @@ package de.buxi.cantstop.model;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 	@Before
 	public void setUp() throws Exception {
 	}
+	
+	
 
 	/**
 	 * Test Game preparation Board, Climbers, Players, Markers, etc
@@ -38,21 +41,9 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 	public void testGameController() {
 		GameController gameController = (GameController)ac.getBean("gameController");
 	
-		List<Player> players = gameController.getPlayersInOrder();
+		List<Player> players = new ArrayList<Player>(gameController.getPlayerMap().values());
 		assertNotNull("Players is null", players);
-		assertTrue("Playernumber must be between 2 and 4", players.size()>=2 && players.size()<=4);
-		//test determinePlayerOrderStandard()
-		for (Player player : players) {
-			int playerOrder = player.getOrder();
-			assertEquals("Player with "+playerOrder+" should be in proper Position in PlayerOrder", player, gameController.getPlayersInOrder().get(playerOrder));
-		}
-		
-		//test determineFirstrPlayer()
-		assertEquals("actual PlayerNumber must be 0", 0, gameController.getActualPlayerNumber());
-		
-		// RED and BLUE Markers are distributed
-		assertEquals("10 markers with Player ", 10, players.get(0).getMarkers().size());
-		assertEquals("10 markers with Player ", 10, players.get(1).getMarkers().size());
+		assertTrue("Playernumber must be between 2 and 4", players.size() >= GameController.MINIMUM_PLAYER_NUMBER && players.size() <= GameController.MAXIMUM_PLAYER_NUMBER);
 		
 		Board board = gameController.getBoard();
 		assertNotNull("Board is null", board);
@@ -81,7 +72,6 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 		assertEquals("Way 12, Hut + 2 RopePoint", 12, ways.get(10).getNumber());
 		assertEquals("Way 12, Hut + 2 RopePoint", 2, ways.get(10).getRopePoints().size());
 		
-		
 		DiceManager diceManager = gameController.getDiceManager();
 		assertNotNull("DiceManager is null", diceManager);
 		List<Dice>dices = diceManager.getDices();
@@ -90,12 +80,12 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 			assertEquals(6,  dice.getSideNumber());
 		}
 		
-		Map<Color, Collection<Marker>> markereCollection = gameController.getAllMarkers();
-		assertNotNull("Marker is null", markereCollection);
-		assertNull("10 BLUE marker missing", markereCollection.get(Color.BLUE));
-		assertEquals("10 GREEN marker missing", 10, markereCollection.get(Color.GREEN).size());
-		assertEquals("10 YELLOW marker missing", 10, markereCollection.get(Color.YELLOW).size());
-		assertNull("10 RED marker missing", markereCollection.get(Color.RED));
+		Map<Color, Collection<Marker>> markersCollection = gameController.getAllMarkers();
+		assertNotNull("Marker is null", markersCollection);
+		assertEquals("10 BLUE marker missing", 10, markersCollection.get(Color.BLUE).size());
+		assertEquals("10 RED marker missing", 10, markersCollection.get(Color.RED).size());
+		assertEquals("10 GREEN marker missing", 10, markersCollection.get(Color.GREEN).size());
+		assertEquals("10 YELLOW marker missing", 10, markersCollection.get(Color.YELLOW).size());
 		
 		List<Climber> climbers = gameController.getClimbers();
 		assertNotNull("Climber is null", climbers);

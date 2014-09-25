@@ -7,15 +7,13 @@ import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
 
 public interface GameService {
-	public static final int MAX_PLAYERS = 4;
-	public static final int MIN_PLAYERS = 2;
-	
-	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException;
+	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException;
 	public GameTransferObject startTurn() throws DiceNotThrownException, InvalidWayNumberException;
 	public GameTransferObject finishGame();
 	public GameTransferObject finishTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException;
