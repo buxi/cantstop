@@ -5,6 +5,6 @@
 </head>
 <body>
 <h2>Welcome to Can't Stop</h2>
-<img alt="" src="/images/cantstop.jpg">
+<img alt="" src="resources/images/cantstop.jpg">
 </body>
 </html>
