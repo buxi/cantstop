@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -527,9 +528,13 @@ public class GameController implements Serializable{
 	public GameTransferObject doGetTransferObject() throws DiceNotThrownException, InvalidWayNumberException {
 		GameTransferObject to = new GameTransferObject();
 		to.gameState = this.gameState;
-		to.actualPlayer = this.getActualPlayer();
+		to.actualPlayer = null;
+		to.actualPlayerNumber = -1;
+		if (!GameState.INIT.equals(gameState) ) {
+			to.actualPlayer = this.getActualPlayer();
+			to.actualPlayerNumber = this.getActualPlayerNumber();
+		}
 		to.boardDisplay = this.getBoard().display();
-		to.actualPlayerNumber = this.getActualPlayerNumber();
 		to.playerList = this.getPlayersInOrder();
 		to.errorMessage = this.errorMessage;
 		to.possiblePairs = null;
@@ -546,22 +551,34 @@ public class GameController implements Serializable{
 	/**
 	 * Adds a player to the player list
 	 * @param playerName
-	 * @return playerId currently the orderId 
+	 * @return playerId (currently the orderId) 
 	 * @throws TooManyPlayerException
 	 */
 	public String doAddPlayer(String playerName) throws TooManyPlayerException {
-		Collection<Color> remainingColorSet = this.allMarkers.keySet();
-		remainingColorSet.removeAll(this.getPlayerMap().keySet());
-		if (remainingColorSet.isEmpty()) {
-			throw new TooManyPlayerException("No available color");
-		}
-		Color[] remainingColors = remainingColorSet.toArray(new Color[0]);
-		Color playerColor = remainingColors[0];
+		// TODO id should be generated in a better way (for example with Spring)
+		Color playerColor = getAFreeColor();
 		List<Player> players = getPlayersInOrder();
 		int playerId = players.size()+1;
 		Player newPlayer = new Player(playerId, playerName, playerColor);
 		playerMap.put(playerColor, newPlayer);
 		determinePlayerOrderStandard();
 		return Integer.toString(playerId);
+	}
+
+	/**
+	 * used in game init phase
+	 * returns a free color, which is not allocated to any players 
+	 * @return a not allocated Color
+	 * @throws TooManyPlayerException when there is no free Color left 
+	 */
+	protected Color getAFreeColor() throws TooManyPlayerException {
+		Collection<Color> remainingColorSet = new HashSet<Color>(this.allMarkers.keySet());
+		remainingColorSet.removeAll(this.getPlayerMap().keySet());
+		if (remainingColorSet.isEmpty()) {
+			throw new TooManyPlayerException("No available color");
+		}
+		Color[] remainingColors = remainingColorSet.toArray(new Color[0]);
+		Color playerColor = remainingColors[0];
+		return playerColor;
 	}
 }

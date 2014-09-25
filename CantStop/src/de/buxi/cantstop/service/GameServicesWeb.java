@@ -11,6 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
@@ -30,6 +32,7 @@ import de.buxi.cantstop.model.TwoDicesPair;
 public class GameServicesWeb implements GameService {
 	private GameController gameController;
 	
+	@Autowired
 	public GameServicesWeb(GameController gameController) {
 		super();
 		this.gameController = gameController;

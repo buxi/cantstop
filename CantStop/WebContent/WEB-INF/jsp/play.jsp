@@ -21,6 +21,32 @@ Actual players:
 </c:forEach>
 </table>
 Game state:${gameInfo.gameState}
-New playerId:${newPlayerId}
+New playerId:${playerId}
+${gameInfo.gameState=='INIT'}
+<div>
+	<form action="do.finishgame" method="post">
+	<input type="hidden" name="playerId" value="${playerId}" />
+	<input type="submit" value="Finish game" />
+	</form>
+<c:choose>
+<c:when test="${gameInfo.gameState=='INIT'}">
+	<form action="do.gamestart" method="post">
+	<input type="hidden" name="playerId" value="${playerId}" />
+	<input type="submit" value="Start Game" />
+	</form>
+</c:when>
+<c:when test="${gameInfo.gameState=='IN_ROUND'}">
+	<form action="do.finishturn" method="post">
+	<input type="hidden" name="playerId" value="${playerId}" />
+	<input type="submit" value="Finish turn" />
+	</form>
+
+	<form action="do.throw" method="post">
+	<input type="hidden" name="playerId" value="${playerId}" />
+	<input type="submit" value="Throw" />
+	</form>
+</c:when>
+</c:choose>
+</div>
 </body>
 </html>
