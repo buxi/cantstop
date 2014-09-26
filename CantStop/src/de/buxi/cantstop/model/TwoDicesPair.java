@@ -49,7 +49,7 @@ public class TwoDicesPair implements Serializable {
 	 * @return the sum of the first pair
 	 * @throws DiceNotThrownException
 	 */
-	protected int getSecondSum() throws DiceNotThrownException {
+	public int getSecondSum() throws DiceNotThrownException {
 		return this.secondPair.getSum();
 	}
 
@@ -57,7 +57,7 @@ public class TwoDicesPair implements Serializable {
 	 * @return the sum of the first pair
 	 * @throws DiceNotThrownException
 	 */
-	protected int getFirstSum() throws DiceNotThrownException {
+	public int getFirstSum() throws DiceNotThrownException {
 		return this.firstPair.getSum();
 	}
 
@@ -161,6 +161,16 @@ public class TwoDicesPair implements Serializable {
 	 */
 	public void setPairChoiceInfo(PairChoiceInfo pairChoiceInfo) {
 		this.pairChoiceInfo = pairChoiceInfo;
+	}
+
+
+	public String generateId() {
+		StringBuffer id = new StringBuffer();
+		id.append(this.getFirstPair().getFirst().getDiceValue());
+		id.append(this.getFirstPair().getSecond().getDiceValue());
+		id.append(this.getSecondPair().getFirst().getDiceValue());
+		id.append(this.getSecondPair().getSecond().getDiceValue());
+		return id.toString();
 	}
 
 }

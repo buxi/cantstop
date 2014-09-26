@@ -23,7 +23,9 @@ public class CantstopController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "play" })
-	public String setupForm(Model model) throws GameException {
+	public String setupForm(@RequestParam("playerId") String playerId,Model model) throws GameException {
+		log.info("do.gamestart:Incoming playerId:" + playerId);
+		model.addAttribute("playerId", playerId);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "play";
 	}
@@ -32,7 +34,7 @@ public class CantstopController {
 	public String doGameStart(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		gameService.startGame();
-		log.info("Incoming playerId:" + playerId);
+		log.info("do.gamestart:Incoming playerId:" + playerId);
 		model.addAttribute("gameInfo", gameService.startTurn());
 		model.addAttribute("playerId", playerId);
 		return "play";
@@ -41,7 +43,7 @@ public class CantstopController {
 	@RequestMapping({ "do.finishgame" })
 	public String doFinishGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		log.info("Incoming playerId:" + playerId);
+		log.info("do.finishgame:Incoming playerId:" + playerId);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
 		return "gameover";
@@ -50,12 +52,12 @@ public class CantstopController {
 	@RequestMapping({ "do.finishturn" })
 	public String doFinishTurn(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		log.info("Incoming playerId:" + playerId);
-		if (gameService.getAllGameInformation().getActualPlayerId() == playerId) {
+		log.info("do.finishturn:Incoming playerId:" + playerId);
+		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
 			model.addAttribute("gameInfo", gameService.finishTurn());
 		}
 		else {
-			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.toString());
+			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
@@ -65,12 +67,29 @@ public class CantstopController {
 	@RequestMapping({ "do.throw" })
 	public String doThrowDices(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		log.info("Incoming playerId:" + playerId);
-		if (gameService.getAllGameInformation().getActualPlayerId() == playerId) {
+		log.info("do.throw: Incoming playerId:" + playerId);
+		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
 			model.addAttribute("gameInfo", gameService.throwDices());
 		}
 		else {
-			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.toString());
+			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+		}
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		model.addAttribute("playerId", playerId);
+		return "play";
+	}
+	
+	@RequestMapping({ "do.executePair" })
+	public String doExecutePair(@RequestParam("playerId") String playerId,
+			@RequestParam("chosenPairId") String chosenPairId, 
+			@RequestParam("wayNumber") String wayNumber, 
+			Model model) throws GameException {
+		log.info("do.throw: Incoming playerId:" + playerId + "; chosenPairId:" + chosenPairId + "; wayNumber:"+wayNumber);
+		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
+			model.addAttribute("gameInfo", gameService.executePairs(chosenPairId, Integer.valueOf(wayNumber)));
+		}
+		else {
+			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);

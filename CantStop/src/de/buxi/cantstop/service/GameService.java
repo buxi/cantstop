@@ -12,7 +12,7 @@ public interface GameService {
 	public GameTransferObject getAllGameInformation() throws GameException;
 	
 	public GameTransferObject throwDices() throws GameException;
-	public GameTransferObject executePairs(TwoDicesPair chosenPair, int wayNumber) throws GameException;
+	public GameTransferObject executePairs(String chosenPairId, int wayNumber) throws GameException;
 	
 	public void saveState();
 	public void loadState();

@@ -78,7 +78,42 @@ public class Board implements Serializable {
 		}
 		return result.toString();
 	}
-	
+
+	public String displayHTML() {
+		// TODO customTag should be implemented to create Board HTML version
+		StringBuilder result = new StringBuilder();
+		int longestWayLength = findLongestWay();
+		result.append("<table border=1>");
+		for (int ropePointNum = -1; ropePointNum < longestWayLength ; ropePointNum++ ) {
+			result.append("<tr>");
+			for (int wayNum = 0; wayNum < ways.size(); wayNum++ ) {
+				Way way = ways.get(wayNum);
+				
+				// displaying Hut
+				if (ropePointNum == -1) {
+					// displaying Hut
+					Hut hut = way.getHut();
+					result.append("<td align=center> "+Integer.toString(way.getNumber()) +"<br>" +hut.display()+"</td>");
+				}
+
+				// displaying RopePoints
+				if (ropePointNum >= 0 ) {
+					List<RopePoint> ropePoints = way.getRopePoints();
+					int ropePointIndex = ropePoints.size() - 1 - ropePointNum ; 
+					result.append("<td align=center>");
+					if ( ropePointIndex < ropePoints.size() && ropePointIndex >= 0) {
+						RopePoint ropePoint = ropePoints.get(ropePointIndex);
+						result.append(ropePoint.display());
+					}
+					result.append("</td>");
+				}
+			}
+			result.append("</tr>");
+		}
+		result.append("</table");
+		return result.toString();
+	}
+
 	protected int findLongestWay() {
 		int maxLength = ways.get(0).getRopePoints().size();
 		for (int i = 1; i < ways.size(); i++ ) {

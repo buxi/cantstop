@@ -5,6 +5,7 @@ package de.buxi.cantstop.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author buxi
@@ -24,6 +25,16 @@ public class GameTransferObject {
 	public Collection<Dice> dices;
 	public String errorMessage;
 	public List<TwoDicesPair> choosablePairs;
+	public String boardDisplayHTML;
+	public Map<String, TwoDicesPair> choosablePairsWithId;
+
+	/**
+	 * @return the choosablePairsWithId
+	 */
+	public Map<String, TwoDicesPair> getChoosablePairsWithId() {
+		return choosablePairsWithId;
+	}
+	
 	/**
 	 * @return the gameState
 	 */
@@ -59,6 +70,12 @@ public class GameTransferObject {
 	 */
 	public void setPossiblePairs(List<TwoDicesPair> possiblePairs) {
 		this.possiblePairs = possiblePairs;
+	}
+	/**
+	 * @return the boardDisplay
+	 */
+	public String getBoardDisplayHTML() {
+		return boardDisplayHTML;
 	}
 	/**
 	 * @return the boardDisplay

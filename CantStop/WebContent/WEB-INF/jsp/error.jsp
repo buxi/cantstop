@@ -6,6 +6,12 @@
 </head>
 <body>
 <h2>Error occured</h2>
-Error message: ${errorMsg}
+Error message: ${exception}<br>
+
+${exception.message }<br>
+<c:forEach items="${exception.stackTrace}" var="element">
+	${element }
+</c:forEach>
+
 </body>
 </html>

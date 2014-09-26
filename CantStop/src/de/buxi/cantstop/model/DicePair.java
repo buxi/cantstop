@@ -37,6 +37,22 @@ public class DicePair implements Serializable{
 	}
 
 
+	/**
+	 * @return the first
+	 */
+	public Dice getFirst() {
+		return first;
+	}
+
+
+	/**
+	 * @return the second
+	 */
+	public Dice getSecond() {
+		return second;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

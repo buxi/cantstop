@@ -6,6 +6,6 @@
 </head>
 <body>
 <h2>Game Error occured</h2>
-Error message: ${errorMsg}
+Error message: ${exception}
 </body>
 </html>

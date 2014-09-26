@@ -307,6 +307,15 @@ public class GameController implements Serializable{
 		return choosablePairs;
 	}
 	
+	public Map<String, TwoDicesPair> getPairsToChooseWithId() throws DiceNotThrownException, InvalidWayNumberException {
+		Map<String, TwoDicesPair> result = new HashMap<String, TwoDicesPair>();
+		List<TwoDicesPair> possiblePairs = this.getPairsToChoose();
+		for (TwoDicesPair twoDicesPair : possiblePairs) {
+			result.put(twoDicesPair.generateId(), twoDicesPair);
+		}
+		return result;
+	}
+	
 	/**
 	 * Decorate the pairs with PairChoiceInfo
 	 * @param possiblePairs
@@ -535,13 +544,17 @@ public class GameController implements Serializable{
 			to.actualPlayerNumber = this.getActualPlayerNumber();
 		}
 		to.boardDisplay = this.getBoard().display();
+		to.boardDisplayHTML = this.getBoard().displayHTML();
 		to.playerList = this.getPlayersInOrder();
 		to.errorMessage = this.errorMessage;
 		to.possiblePairs = null;
+		to.choosablePairs = null;
+		to.choosablePairsWithId = null;
 		to.dices = null;
 		if (GameState.DICES_THROWN.equals(gameState) ) {
 			to.possiblePairs = this.getPossiblePairs();
 			to.choosablePairs = this.getPairsToChoose();
+			to.choosablePairsWithId = this.getPairsToChooseWithId();
 			to.dices = this.getDices();
 		}
 		return to;
@@ -561,6 +574,7 @@ public class GameController implements Serializable{
 		Player newPlayer = new Player(playerId, playerName, playerColor);
 		playerMap.put(playerColor, newPlayer);
 		determinePlayerOrderStandard();
+		actualPlayerNumber = playerId;
 		return Integer.toString(playerId);
 	}
 

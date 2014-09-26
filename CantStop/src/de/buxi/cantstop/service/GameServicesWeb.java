@@ -99,9 +99,15 @@ public class GameServicesWeb implements GameService {
 	}
 
 	@Override
-	public GameTransferObject executePairs(TwoDicesPair chosenPair,	int wayNumber) throws GameException {
+	public GameTransferObject executePairs(String chosenPairId,	int wayNumber) throws GameException {
 		try {
-			return gameController.doExecutePairs(chosenPair, wayNumber);
+			if (gameController.getPairsToChooseWithId().containsKey(chosenPairId)) {
+				return gameController.doExecutePairs(gameController.getPairsToChooseWithId().get(chosenPairId), wayNumber);	
+			} 
+			else {
+				throw new GameException("Invalid pairId:" +chosenPairId);
+			}
+			
 		} catch (InvalidWayNumberException | DiceNotThrownException | RopePointInvalidUsageException | NotAvailableClimberException | InvalidClimberMovementException | NoMarkerIsAvailableException | NullClimberException | NoClimberOnWayException e) {
 			log.error(e.toString());
 			throw new GameException(e);

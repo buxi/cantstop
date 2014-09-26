@@ -68,13 +68,14 @@ public class CantStopMainConsolApp {
 		log.info("Game turn started");
 	    do {
 	    	gameControllerTO = gameServices.getAllGameInformation();
+	    	StringBuffer messages = new StringBuffer(); 
 	    	switch (action) {
 			case "1": 
 				if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
 					gameControllerTO = gameServices.finishTurn();
 				}
 				else {
-					System.out.println(getMessage("FINISH_ROUND_NOT_ALLOWED"));
+					messages.append(getMessage("FINISH_ROUND_NOT_ALLOWED"));
 				}
 				break;
 			
@@ -84,15 +85,15 @@ public class CantStopMainConsolApp {
 			
 			case "3":
 				changeLocale();
-				System.out.println(getMessage("LOCALE_CHANGED", new Object[]{locale}));
+				messages.append(getMessage("LOCALE_CHANGED", new Object[]{locale}));
 				break;
 			case "4":
 				gameServices.saveState();
-				System.out.println("State saved");
+				messages.append("State saved");
 				break;
 			case "5": 
 				gameServices.loadState();
-				System.out.println("Saved state loaded");
+				messages.append("Saved state loaded");
 				action = "";
 				continue;
 			case "A" :
@@ -123,10 +124,12 @@ public class CantStopMainConsolApp {
 			default:
 				break;
 			} 
-
+	    	/* BUILDING SCREEN START */
+	    	System.out.println(messages.toString());
 			if (StringUtils.isNoneEmpty(gameControllerTO.errorMessage)) {
 				System.out.println(getMessage("GAME_MESSAGE", new Object[]{getMessage(gameControllerTO.errorMessage)}));
 			}
+			
 	    	System.out.print(getMessage("GAME_STATUS"));
 	    	System.out.println(getMessage("STATE_"+gameControllerTO.gameState.toString()));
 
@@ -171,6 +174,7 @@ public class CantStopMainConsolApp {
 				}
 		    	System.out.println();
 	    	}
+	    	
 	    	if (choosablePairNumber>0) {
 	    		System.out.print(getMessage("CHOOSE_A_PAIR"));
 	    		System.out.print(SPACE + pairChoose[0]);
@@ -182,11 +186,13 @@ public class CantStopMainConsolApp {
 	    		}
 	    		System.out.println();
 	    	}
-	    	
 	    	if (GameState.GAME_WIN.equals(gameControllerTO.gameState)) {
 	    		System.out.println(getMessage("STATE_GAME_WIN", new Object[]{gameControllerTO.actualPlayer.getName()} ));
 	    		break;
 	    	}
+	    	/* BUILDING SCREEN END */
+
+	    	// Getting input from User
 	    	Scanner in = new Scanner(System.in);
 	    	if (!GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
 	    		System.out.println(getMessage("ENTER_ACTION_NUMBER"));
@@ -195,6 +201,7 @@ public class CantStopMainConsolApp {
 		    System.out.println(getMessage("ENTERED_ACTION", new Object[]{action}));
 		    gameControllerTO = null;
 	    } while (!"0".equals(action));
+	    
 	    System.out.println(getMessage("GAME_EXIT"));
 	}
 
