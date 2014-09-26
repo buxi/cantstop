@@ -7,7 +7,7 @@ package de.buxi.cantstop.model;
  * @author buxi
  * DiceValue can not be checked before throw
  */
-public class DiceNotThrownException extends Exception {
+public class DiceNotThrownException extends RuntimeException {
 
 	/**
 	 * 

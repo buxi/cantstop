@@ -15,20 +15,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.buxi.cantstop.model.Dice;
-import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.InvalidClimberMovementException;
-import de.buxi.cantstop.model.InvalidWayNumberException;
-import de.buxi.cantstop.model.NoClimberOnWayException;
-import de.buxi.cantstop.model.NoMarkerIsAvailableException;
-import de.buxi.cantstop.model.NotAvailableClimberException;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
-import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.PairChoiceInfo;
 import de.buxi.cantstop.model.Player;
-import de.buxi.cantstop.model.RopePointInvalidUsageException;
 import de.buxi.cantstop.model.TwoDicesPair;
+import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 /**
  * @author buxi
@@ -41,7 +33,7 @@ public class CantStopMainConsolApp {
 	private Locale locale;
 	private static final Locale defaultLocale = Locale.ENGLISH;
 	private ApplicationContext context; 
-	private Log log = LogFactory.getLog(CantStopMainConsolApp.class);
+	private static Log log = LogFactory.getLog(CantStopMainConsolApp.class);
 			
 	private CantStopMainConsolApp() {
 		locale = defaultLocale;
@@ -58,17 +50,6 @@ public class CantStopMainConsolApp {
 		return context.getMessage(key, parameters, locale);
 	}
 
-	/**
-	 * @param args
-	 * @throws DiceNotThrownException 
-	 * @throws RopePointInvalidUsageException 
-	 * @throws NoMarkerIsAvailableException 
-	 * @throws NotAvailableClimberException 
-	 * @throws InvalidWayNumberException 
-	 * @throws InvalidClimberMovementException 
-	 * @throws NullClimberException 
-	 * @throws NoClimberOnWayException 
-	 */
 	public static void main(String[] args) {
 		CantStopMainConsolApp mainApp = new CantStopMainConsolApp();
 		try {
@@ -76,12 +57,11 @@ public class CantStopMainConsolApp {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.toString());
+			log.error(e);
 		}
 	}
-	private void doGame() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
-		// TODO log exceptions
-		
-		
+	
+	private void doGame() throws GameException{
 		String action = "";
 		GameTransferObject gameControllerTO = gameServices.startGame();
 		gameControllerTO = gameServices.startTurn();
@@ -220,16 +200,15 @@ public class CantStopMainConsolApp {
 
 	/**
 	 * @param chosenPair
-	 * @return
-	 * @throws DiceNotThrownException
+	 * @return way number chosen from user
 	 */
-	protected int getWayNumberFromUser(TwoDicesPair chosenPair)
-			throws DiceNotThrownException {
+	protected int getWayNumberFromUser(TwoDicesPair chosenPair) {
 		int wayNumber = -1;
 		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo())) {
 			do {
 				Scanner in = new Scanner(System.in);
-			    System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
+					System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
+				
 			    wayNumber = in.nextInt();      
 			    System.out.println(getMessage("WAYNUMBER_ENTERED", new Object[]{wayNumber}));
 			} while (wayNumber != chosenPair.getFirstPair().getSum() && wayNumber != chosenPair.getSecondPair().getSum());

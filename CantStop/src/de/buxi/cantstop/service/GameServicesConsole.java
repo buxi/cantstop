@@ -11,6 +11,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
@@ -29,6 +32,7 @@ import de.buxi.cantstop.model.TwoDicesPair;
  */
 public class GameServicesConsole implements GameService {
 	private GameController gameController;
+	private Log log = LogFactory.getLog(GameServicesConsole.class);
 	
 	/**
 	 * @param gameController
@@ -39,13 +43,24 @@ public class GameServicesConsole implements GameService {
 	}
 
 	@Override
-	public GameTransferObject startGame() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
-		return gameController.doGameStart();
+	public GameTransferObject startGame() throws GameException {
+		try {
+			return gameController.doGameStart();
+		} catch (InvalidWayNumberException | NotEnoughPlayerException
+				| DiceNotThrownException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
 
 	@Override
-	public GameTransferObject startTurn() throws DiceNotThrownException, InvalidWayNumberException {
-		return gameController.doStartGameTurn();
+	public GameTransferObject startTurn() throws GameException {
+		try {
+			return gameController.doStartGameTurn();
+		} catch (DiceNotThrownException | InvalidWayNumberException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
 
 	@Override
@@ -55,29 +70,60 @@ public class GameServicesConsole implements GameService {
 	}
 
 	@Override
-	public GameTransferObject finishTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
-		return gameController.doEndGameTurn();
+	public GameTransferObject finishTurn() throws GameException {
+		try {
+			return gameController.doEndGameTurn();
+		} catch (NoMarkerIsAvailableException | RopePointInvalidUsageException
+				| NoClimberOnWayException | InvalidClimberMovementException
+				| InvalidWayNumberException | DiceNotThrownException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
 
 	@Override
-	public GameTransferObject getAllGameInformation() throws DiceNotThrownException, InvalidWayNumberException {
-		return gameController.doGetTransferObject();
+	public GameTransferObject getAllGameInformation() throws GameException {
+		try {
+			return gameController.doGetTransferObject();
+		} catch (DiceNotThrownException | InvalidWayNumberException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
 
 	@Override
-	public GameTransferObject throwDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
-		return gameController.doThrowDices();
+	public GameTransferObject throwDices() throws GameException {
+		try {
+			return gameController.doThrowDices();
+		} catch (DiceNotThrownException | InvalidWayNumberException
+				| NoMarkerIsAvailableException | RopePointInvalidUsageException
+				| NoClimberOnWayException | InvalidClimberMovementException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
 
 	@Override
 	public GameTransferObject executePairs(TwoDicesPair chosenPair,
-			int wayNumber) throws DiceNotThrownException,
-			RopePointInvalidUsageException, NotAvailableClimberException,
-			InvalidWayNumberException, InvalidClimberMovementException,
-			NoMarkerIsAvailableException, NullClimberException,
-			NoClimberOnWayException {
-		return gameController.doExecutePairs(chosenPair, wayNumber);
+			int wayNumber) throws GameException {
+		try {
+			return gameController.doExecutePairs(chosenPair, wayNumber);
+		} catch (DiceNotThrownException | RopePointInvalidUsageException
+				| NotAvailableClimberException | InvalidWayNumberException
+				| InvalidClimberMovementException
+				| NoMarkerIsAvailableException | NullClimberException
+				| NoClimberOnWayException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
 	}
+	
+	@Override
+	public String addPlayer(String playerName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public void loadState() {
 		InputStream fis = null;
 		ObjectInputStream o = null;
@@ -116,12 +162,5 @@ public class GameServicesConsole implements GameService {
 			} catch (Exception e) {
 			}
 		}
-	}
-
-	@Override
-	public String addPlayer(String playerName) throws TooManyPlayerException,
-			DiceNotThrownException, InvalidWayNumberException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

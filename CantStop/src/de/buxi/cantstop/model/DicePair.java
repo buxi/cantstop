@@ -30,10 +30,9 @@ public class DicePair implements Serializable{
 
 
 	/**
-	 * @return Sum der Valuee der Würfel
-	 * @throws DiceNotThrownException
+	 * @return sum of values of dice
 	 */
-	public int getSum() throws DiceNotThrownException{
+	public int getSum() {
 		return first.getDiceValue() + second.getDiceValue();
 	}
 

@@ -87,9 +87,8 @@ public class NormalDiceValueTest  extends SpringLoaderSuperClass{
 	/**
 	 * @param targetValue 
 	 * @return
-	 * @throws DiceNotThrownException
 	 */
-	private int throwDiceOntoX(int targetValue) throws DiceNotThrownException {
+	private int throwDiceOntoX(int targetValue) {
 		dice.reset();
 		int number = 0;
 		int i = maxthrows; 

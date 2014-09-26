@@ -24,7 +24,7 @@ public class DiceTestHelper {
 	 * @throws InvalidTestParametersException 
 	 * @throws DiceNotThrownException 
 	 */
-	public static List<Dice> generateXpreSetNormalDice(List<Integer> valuee) throws InvalidTestParametersException, DiceNotThrownException {
+	public static List<Dice> generateXpreSetNormalDice(List<Integer> valuee) throws InvalidTestParametersException {
 		if (valuee == null) {
 			throw new InvalidTestParametersException();
 		}

@@ -64,7 +64,7 @@ public class DiceImpl implements Dice, Serializable {
 	 * @see de.buxi.cantstop.model.Dice#getDiceValue()
 	 */
 	@Override
-	public int getDiceValue() throws DiceNotThrownException {
+	public int getDiceValue() {
 		if (!isThrown()) { 
 			throw new DiceNotThrownException(); 
 		}

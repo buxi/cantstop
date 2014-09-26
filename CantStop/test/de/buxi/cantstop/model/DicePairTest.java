@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.DiceFactory;
-import de.buxi.cantstop.model.DiceNotThrownException;
 
 public class DicePairTest {
 
@@ -16,7 +15,7 @@ public class DicePairTest {
 	}
 
 	@Test
-	public void testEqualsObject() throws DiceNotThrownException {
+	public void testEqualsObject() {
 		Dice dice1 = DiceFactory.createNormalDiceStatic(6);
 		Dice dice2 = DiceFactory.createNormalDiceStatic(6);
 		

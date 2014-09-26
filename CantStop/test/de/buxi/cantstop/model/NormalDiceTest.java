@@ -27,7 +27,7 @@ public class NormalDiceTest extends SpringLoaderSuperClass {
 	}
 
 	@Test
-	public void testThrow() throws DiceNotThrownException {
+	public void testThrow() {
 		Dice dice = (Dice) ac.getBean("normalDice");
 		dice.throwDice();
 		assertEquals("After throw should be thrown", dice.isThrown(), true);
