@@ -20,9 +20,9 @@ Actual players:
 </tr>
 </c:forEach>
 </table>
-Game state:${gameInfo.gameState}
-New playerId:${playerId}
-${gameInfo.gameState=='INIT'}
+Game state:${gameInfo.gameState}<br>
+PlayerId:${playerId}<br>
+Error message ${errorMsg}<br>
 <div>
 	<form action="do.finishgame" method="post">
 	<input type="hidden" name="playerId" value="${playerId}" />

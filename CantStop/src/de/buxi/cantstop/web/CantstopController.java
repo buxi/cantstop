@@ -32,6 +32,7 @@ public class CantstopController {
 	public String doGameStart(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		gameService.startGame();
+		log.info("Incoming playerId:" + playerId);
 		model.addAttribute("gameInfo", gameService.startTurn());
 		model.addAttribute("playerId", playerId);
 		return "play";
@@ -40,6 +41,7 @@ public class CantstopController {
 	@RequestMapping({ "do.finishgame" })
 	public String doFinishGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
+		log.info("Incoming playerId:" + playerId);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
 		return "gameover";
@@ -48,16 +50,29 @@ public class CantstopController {
 	@RequestMapping({ "do.finishturn" })
 	public String doFinishTurn(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		model.addAttribute("gameInfo", gameService.finishTurn());
+		log.info("Incoming playerId:" + playerId);
+		if (gameService.getAllGameInformation().getActualPlayerId() == playerId) {
+			model.addAttribute("gameInfo", gameService.finishTurn());
+		}
+		else {
+			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.toString());
+		}
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
 		return "play";
-
 	}
 
 	@RequestMapping({ "do.throw" })
 	public String doThrowDices(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		model.addAttribute("gameInfo", gameService.throwDices());
+		log.info("Incoming playerId:" + playerId);
+		if (gameService.getAllGameInformation().getActualPlayerId() == playerId) {
+			model.addAttribute("gameInfo", gameService.throwDices());
+		}
+		else {
+			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.toString());
+		}
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
 		return "play";
 	}

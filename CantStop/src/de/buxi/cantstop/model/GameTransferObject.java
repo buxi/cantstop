@@ -132,6 +132,9 @@ public class GameTransferObject {
 	public void setChoosablePairs(List<TwoDicesPair> choosablePairs) {
 		this.choosablePairs = choosablePairs;
 	}
+	public String getActualPlayerId() {
+		return Integer.toString(actualPlayerNumber);
+	}
 	
 	
 }

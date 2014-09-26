@@ -36,9 +36,10 @@ public class WelcomeController {
 		}
 		else {
 			 playerId = gameService.addPlayer(playerName);
+			 log.info("New player generated with id:" + playerId);
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
-		model.addAttribute("newPlayerId", playerId);
+		model.addAttribute("playerId", playerId);
 		return "play";
 	}
 }

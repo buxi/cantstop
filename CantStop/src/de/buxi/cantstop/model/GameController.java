@@ -557,8 +557,7 @@ public class GameController implements Serializable{
 	public String doAddPlayer(String playerName) throws TooManyPlayerException {
 		// TODO id should be generated in a better way (for example with Spring)
 		Color playerColor = getAFreeColor();
-		List<Player> players = getPlayersInOrder();
-		int playerId = players.size()+1;
+		int playerId = playerMap.keySet().size();
 		Player newPlayer = new Player(playerId, playerName, playerColor);
 		playerMap.put(playerColor, newPlayer);
 		determinePlayerOrderStandard();
