@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -39,7 +41,8 @@ public class CantStopMainConsolApp {
 	private Locale locale;
 	private static final Locale defaultLocale = Locale.ENGLISH;
 	private ApplicationContext context; 
-	
+	private Log log = LogFactory.getLog(CantStopMainConsolApp.class);
+			
 	private CantStopMainConsolApp() {
 		locale = defaultLocale;
 		context = new ClassPathXmlApplicationContext("cantstopGameBeans.xml");
@@ -66,9 +69,14 @@ public class CantStopMainConsolApp {
 	 * @throws NullClimberException 
 	 * @throws NoClimberOnWayException 
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		CantStopMainConsolApp mainApp = new CantStopMainConsolApp();
-		mainApp.doGame();
+		try {
+			mainApp.doGame();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.toString());
+		}
 	}
 	private void doGame() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
 		// TODO log exceptions
@@ -77,6 +85,7 @@ public class CantStopMainConsolApp {
 		String action = "";
 		GameTransferObject gameControllerTO = gameServices.startGame();
 		gameControllerTO = gameServices.startTurn();
+		log.info("Game turn started");
 	    do {
 	    	gameControllerTO = gameServices.getAllGameInformation();
 	    	switch (action) {
@@ -113,18 +122,20 @@ public class CantStopMainConsolApp {
 			case "C" :
 			case "c" :
 				int chosenPairNum = 0;
-				if (action.equals('a') || action.equals('A')) {
+				if ("a".equals(action) || "A".equals(action)) {
 					chosenPairNum = 0;
-				} else if (action.equals('b') || action.equals('B')){
+				} else if ("b".equals(action) || "B".equals(action)){
 					chosenPairNum = 1;
-				} else if (action.equals('c') || action.equals('B')){
+				} else if ("c".equals(action) || "C".equals(action)){
 					chosenPairNum = 2;
 				}
 				if (GameState.DICES_THROWN.equals(gameControllerTO.gameState) && 
-						gameControllerTO.choosablePairs.size()>0 && 
+						gameControllerTO.choosablePairs.size() > 0 && 
 						chosenPairNum < gameControllerTO.choosablePairs.size()
 						) {
+					log.debug("chosenPairNum:"+chosenPairNum);
 					TwoDicesPair chosenPair = gameControllerTO.choosablePairs.get(chosenPairNum);
+					log.debug("chosenPair:"+chosenPair);
 					int wayNumber = getWayNumberFromUser(chosenPair);
 					gameControllerTO = gameServices.executePairs(chosenPair, wayNumber);
 				}
