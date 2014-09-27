@@ -12,10 +12,13 @@ PlayerId:${playerId}<br>
 Error message: ${errorMsg}<br>
 Game messages: ${gameInfo.errorMessage}
 <s:message code="GAME_STATUS"/>  <s:message code="STATE_${gameInfo.gameState}"/> <br>
+<a href="http://localhost:8080/CantStop/play?playerId=0">P1</a>
+<a href="http://localhost:8080/CantStop/play?playerId=1">P2</a>
+<a href="http://localhost:8080/CantStop/play?playerId=2">P3</a>
+<a href="http://localhost:8080/CantStop/play?playerId=3">P4</a>
 
 <!--  display board -->
-
-${gameInfo.boardDisplayHTML}
+<jsp:include page="board.jsp"/>
 
 
 <!-- display players  -->
@@ -29,6 +32,7 @@ ${gameInfo.boardDisplayHTML}
 					</c:if> 
 				</td>
 				<td bgcolor="${player.color}">${player.name} (${player.order})</td>
+				<!-- display markers -->
 				<td> 
 					<table border="0"><tr>
 						<c:forEach items="${player.markers}" var="marker">
@@ -36,6 +40,15 @@ ${gameInfo.boardDisplayHTML}
 						</c:forEach>					
 					</tr></table>
 				</td>
+				<!-- display climbers -->
+				<td> 
+					<table border="0"><tr>
+						<c:forEach items="${player.climbers}" var="climber">
+							<td><img height=15 src="resources/images/climber.png"></td>
+						</c:forEach>					
+					</tr></table>
+				</td>
+
 			</tr>
 		</c:forEach>
 	</table>

@@ -557,6 +557,7 @@ public class GameController implements Serializable{
 			to.choosablePairsWithId = this.getPairsToChooseWithId();
 			to.dices = this.getDices();
 		}
+		to.board = this.getBoard();
 		return to;
 	}
 

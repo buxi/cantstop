@@ -27,6 +27,14 @@ public class GameTransferObject {
 	public List<TwoDicesPair> choosablePairs;
 	public String boardDisplayHTML;
 	public Map<String, TwoDicesPair> choosablePairsWithId;
+	public Board board;
+
+	/**
+	 * @return the board
+	 */
+	public Board getBoard() {
+		return board;
+	}
 
 	/**
 	 * @return the choosablePairsWithId

@@ -79,13 +79,13 @@ public class Board implements Serializable {
 		return result.toString();
 	}
 
-	public String displayHTML() {
+	public String displayHTMLOld() {
 		// TODO customTag should be implemented to create Board HTML version
 		StringBuilder result = new StringBuilder();
 		int longestWayLength = findLongestWay();
 		result.append("<table border=1>");
 		for (int ropePointNum = -1; ropePointNum < longestWayLength ; ropePointNum++ ) {
-			result.append("<tr>");
+			result.append("\n<tr id="+ropePointNum +">");
 			for (int wayNum = 0; wayNum < ways.size(); wayNum++ ) {
 				Way way = ways.get(wayNum);
 				
@@ -93,24 +93,26 @@ public class Board implements Serializable {
 				if (ropePointNum == -1) {
 					// displaying Hut
 					Hut hut = way.getHut();
-					result.append("<td align=center> "+Integer.toString(way.getNumber()) +"<br>" +hut.display()+"</td>");
+					result.append("\n<td id="+wayNum+" rowspan="+ Math.abs(way.getNumber()-7)*2 +" align=center> "+Integer.toString(way.getNumber()) +"<br>" +hut.display()+"</td>");
 				}
 
 				// displaying RopePoints
 				if (ropePointNum >= 0 ) {
 					List<RopePoint> ropePoints = way.getRopePoints();
 					int ropePointIndex = ropePoints.size() - 1 - ropePointNum ; 
-					result.append("<td align=center>");
+					
 					if ( ropePointIndex < ropePoints.size() && ropePointIndex >= 0) {
+						result.append("\n<td id="+wayNum +" align=center>");
 						RopePoint ropePoint = ropePoints.get(ropePointIndex);
 						result.append(ropePoint.display());
+						result.append("</td>");
 					}
-					result.append("</td>");
+					
 				}
 			}
 			result.append("</tr>");
 		}
-		result.append("</table");
+		result.append("</table>");
 		return result.toString();
 	}
 
@@ -124,7 +126,51 @@ public class Board implements Serializable {
 		}
 		return maxLength;
 	}
+	public String displayHTML() {
+		StringBuilder result = new StringBuilder();
+		result.append("<table ><tr>");
+		for (int i =0 ; i< ways.size(); i++) {
+			result.append("<td><table border=1>");
+			
+			// displaying Hut
+			result.append("\n<tr><td>");
+			Way way = ways.get(i);
+			result.append(way.getNumber());
+			Climber climber = way.getHut().getClimber();
+			if (climber!=null) {
+				result.append("X");
+			}
+			Marker marker = way.getHut().getMarker();
+			if (marker!=null) {
+				result.append(marker.getColor());
+			}
+			result.append("</td></tr>");
+			// displaying RopePoints
+			
+			List<RopePoint> ropePoints = way.getRopePoints();
+			for (int j = ropePoints.size()-1; j >= 0; j--) {
+				result.append("<tr><td>&nbsp;");
+				RopePoint ropePoint = ropePoints.get(j);
+				climber = ropePoint.getClimber();
+				if (climber!=null) {
+					result.append("X");
+				}
+				Collection<Marker> markers = ropePoint.getMarkers();
+				for (Marker marker2 : markers) {
+					result.append(marker2.getColor());
+				}
+				
+				result.append("</td></tr>");
+			}
 
+			result.append("</table></td>");
+			result.append("\n");
+		}
+		result.append("</tr></table>");
+
+		return result.toString();
+	}
+	
 	public String displayOld() {
 		String spaces = "                                                                ";
 		StringBuilder result = new StringBuilder();

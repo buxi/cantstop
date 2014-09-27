@@ -23,8 +23,8 @@ public class CantstopController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "play" })
-	public String setupForm(@RequestParam("playerId") String playerId,Model model) throws GameException {
-		log.info("do.gamestart:Incoming playerId:" + playerId);
+	public String setupForm(@RequestParam("playerId") String playerId, Model model) throws GameException {
+		//log.info("do.gamestart:Incoming playerId:" + playerId);
 		model.addAttribute("playerId", playerId);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "play";
