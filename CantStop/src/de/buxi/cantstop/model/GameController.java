@@ -449,9 +449,9 @@ public class GameController implements Serializable{
 	}
 	
 	/**
-	 * TODO UNITTEST
-	 * @param wayNumber 
-	 * @return 
+	 * Executing the chosen pair(with chosen wayNumber) on board
+	 * @param wayNumber if a way should be chosen
+	 * @return transfer object
 	 */
 	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
 		checkGameStatus(Arrays.asList(GameState.DICES_THROWN));
@@ -523,24 +523,25 @@ public class GameController implements Serializable{
 	 * if there is a marker on the way then places the climber after the marker 
 	 * if there is already a climber on the way then moves it forward (also in the hut)
 	 * @param player
-	 * @param way1
+	 * @param way
 	 * @throws NotAvailableClimberException
 	 */
-	protected void choseWay(Player player, Way way1)
+	protected void choseWay(Player player, Way way)
 			throws RopePointInvalidUsageException,
 			NotAvailableClimberException, InvalidClimberMovementException, NullClimberException {
-		if (way1.isFree()) {
-			if (!way1.isClimberOnRope()) {
+		// fixing bug2
+		if (way.isFree() && !way.isClimberInHut()) {
+			if (!way.isClimberOnRope() ) {
 				// no climber on the way
-				if (way1.isMarkerOnRope(player.getColor())) {
-					way1.placeClimberAfterMarker(player.getOneClimber(), player.getColor());
+				if (way.isMarkerOnRope(player.getColor())) {
+					way.placeClimberAfterMarker(player.getOneClimber(), player.getColor());
 				} else {
-					way1.placeClimberOntoFirstRopePoint(player.getOneClimber());	
+					way.placeClimberOntoFirstRopePoint(player.getOneClimber());	
 				}
 				
 			} else {
 				// climber on the way
-				way1.moveClimber();
+				way.moveClimber();
 			}
 		}
 	}

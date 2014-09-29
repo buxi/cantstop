@@ -194,7 +194,6 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		assertNotNull("first pair second dice value", lastUsedPairInfo.getChosenPair().getFirstPair().getSecond().getDiceValue());
 		assertNotNull("first pair first dice value", lastUsedPairInfo.getChosenPair().getSecondPair().getFirst().getDiceValue());
 		assertNotNull("secondpair second dice value", lastUsedPairInfo.getChosenPair().getSecondPair().getSecond().getDiceValue());
-		
 	}	
 	
 	@Test
@@ -418,4 +417,95 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		fail("too simple to test, no real logic in it");
 	}	
 
+	/**
+	 * from 8.way red marker was not removed
+	 */
+	@Test
+	public void testBug1() throws Exception {
+		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
+		gameController.doStartGameTurn();
+		Player oldPlayer = gameController.getActualPlayer();
+		// fake the board
+		// player2 places climbers on the ways 2,3,4
+		//place Climber W2BS, W3BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		//place Climber W4BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);
+		// player1 marking lowest ropePointon way 2,3,4 
+		gameController.doEndGameTurn();
+		
+		//------ changing player
+		//player2 places climbers in the huts on way 2,3,4 
+		//place Climber W2BS, W3BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		//place Climber W4BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);
+		
+		// player2 moving W2BS, W3BS into huts
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		Player player2 = gameController.getActualPlayer();
+		gameController.doEndGameTurn();
+		// way 2,3 is blocked by player2
+		// all other markers should be removed 
+		assertNotEquals("Player should be different, because 2 players are playing", oldPlayer, player2 );
+		
+		Way way2 = gameController.getBoard().getWayByNumber(2);
+		assertTrue("way2 Hut should be marked  with "+player2.getColor(), way2.isBlockedByPlayer(player2.getColor()));
+		Way way3 = gameController.getBoard().getWayByNumber(3);
+		assertTrue("way3 Hut should be marked  with "+player2.getColor(), way3.isBlockedByPlayer(player2.getColor()));
+		assertEquals("Player2 should have no Climber", 0, player2.getClimbers().size());
+		assertEquals("Player2 should have 7 Markers", 7, player2.getMarkers().size());
+		Way way4 = gameController.getBoard().getWayByNumber(4);
+		assertTrue("Player2 marker should be on way4", way4.isMarkerOnRope(player2.getColor()));
+		
+		assertFalse("oldplayer marker should have been removed from way2", way2.isMarkerOnRope(oldPlayer.getColor()));
+		assertFalse("oldplayer marker should have been removed from way3", way3.isMarkerOnRope(oldPlayer.getColor()));
+		
+		assertEquals("old Player should have 9 Markers, because player2 was blocking way 2,3", 9, oldPlayer.getMarkers().size());
+	}
+	
+	/**
+	 * 1. we have a marker on way 3 at the bottom
+	 * 2. the same player has a figure next to the hut
+	 * 3. throws 3,3 
+	 * only one figure should be in the hut 
+	 */
+	@Test
+	public void testBug2() throws Exception {
+		GameController gameController = (GameController)ac.getBean("gameController");
+		gameController.doGameStart();
+		gameController.doStartGameTurn();
+		Player player = gameController.getActualPlayer();
+		// fake the board
+		// player2 places climbers on the ways 2,3,4
+		//place Climber W2BS, W3BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		//place Climber W4BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);
+		// player1 marking lowest ropePointon way 2,3,4 
+		gameController.doEndGameTurn();
+		gameController.doEndGameTurn();
+	
+		//place Climber W2BS, W12BS
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,6,6))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		
+		// player2 moving W2BS into hut
+		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,1))));
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		
+		Way way2 = gameController.getBoard().getWayByNumber(2);
+		assertTrue("1 climber should be in the hut",way2.isClimberInHut());
+		assertEquals("Player should have 1 Climber", 1, player.getClimbers().size());
+		assertTrue("player marker should be on way2", way2.isMarkerOnRope(player.getColor()));
+	
+	}
 }

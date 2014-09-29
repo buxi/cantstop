@@ -298,19 +298,27 @@ public class Board implements Serializable {
 	 * @param usedHuts
 	 * @return removed Markers
 	 * @throws InvalidWayNumberException
+	 * @throws RopePointInvalidUsageException 
 	 */
 	public Map<Color, Collection<Marker>> removeMarkersFromBlockedWays(
-			Collection<Hut> usedHuts) throws InvalidWayNumberException {
+			Collection<Hut> usedHuts) throws InvalidWayNumberException, RopePointInvalidUsageException {
 		// Initialize return Map
 		Map<Color, Collection<Marker>> freeMarkers = new HashMap<Color, Collection<Marker>>();
 		for (Hut hut : usedHuts) {
 			Way way = this.getWayByNumber(hut.getWayNumber());
 			for (RopePoint ropePoint : way.getRopePoints()) {
+				List<Marker> markersToRemove = new ArrayList<Marker>(4);
 				for (Marker marker : ropePoint.getMarkers()) {
 					if (!freeMarkers.containsKey(marker.getColor())) {
 						freeMarkers.put(marker.getColor(), new ArrayList<Marker>());
 					}
 					freeMarkers.get(marker.getColor()).add(marker);
+					// collecting removed markers to remove them from ropepoint and avoid concurrent modification exception
+					markersToRemove.add(marker);
+				}
+				// fixing bug1
+				for (Marker removedMarker : markersToRemove) {
+					ropePoint.unmark(removedMarker.getColor());	
 				}
 			}
 		}
