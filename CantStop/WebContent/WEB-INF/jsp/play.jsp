@@ -33,7 +33,7 @@ Game messages: ${gameInfo.errorMessage}
 	
 	<c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
 	<c:set var="lastUsedPairInfo" value="${gameInfo.lastUsedPairInfo }"/>
-	<table border="0">
+	<table border="">
 		<c:forEach items="${gameInfo.playerList}" var="player">
 			<tr>
 				<td>
@@ -44,7 +44,7 @@ Game messages: ${gameInfo.errorMessage}
 				<td bgcolor="${player.color}">${player.name} (${player.order})</td>
 				<!-- display markers -->
 				<td> 
-					<table border="0"><tr>
+					<table border=""><tr>
 						<c:forEach items="${player.markers}" var="marker">
 							<td bgcolor="${marker.color }">&nbsp;&nbsp;&nbsp;</td>
 						</c:forEach>					
@@ -52,7 +52,7 @@ Game messages: ${gameInfo.errorMessage}
 				</td>
 				<!-- display climbers -->
 				<td> 
-					<table border="0"><tr>
+					<table border=""><tr>
 						<c:forEach items="${player.climbers}" var="climber">
 							<td><img height=15 src="resources/images/climber.png"></td>
 						</c:forEach>					
@@ -78,7 +78,7 @@ Game messages: ${gameInfo.errorMessage}
 
 <c:if test="${gameInfo.gameState=='DICES_THROWN'}">
 	<!-- displaying dices -->
-	<table border=0>
+	<table border="">
 		<tr>
 			<td>
 				<s:message code="ACTUAL.THROW"/>
@@ -92,7 +92,7 @@ Game messages: ${gameInfo.errorMessage}
 	</table>
 
 	<!--  displaying pairs to choose -->
-	<table border=0>
+	<table border="">
 		<tr>
 			<td>
 				<s:message code="CHOOSE_A_PAIR"/>
@@ -139,7 +139,7 @@ Game messages: ${gameInfo.errorMessage}
 </c:if>
 
 
-<table border="0">
+<table border="">
 <tr>
 <td><s:message code="ACTIONTITLE"/></td>
 <td>

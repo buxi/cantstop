@@ -64,6 +64,7 @@ public class CantStopMainConsolApp {
 		gameControllerTO = gameServices.startTurn();
 		log.info("Game turn started");
 		Map<String, String> pairIdTranslate = null;
+		Scanner in = new Scanner(System.in);
 	    do {
 	    	gameControllerTO = gameServices.getAllGameInformation();
 	    	StringBuffer messages = new StringBuffer(); 
@@ -193,15 +194,16 @@ public class CantStopMainConsolApp {
 	    	/* BUILDING SCREEN END */
 
 	    	// Getting input from User
-	    	Scanner in = new Scanner(System.in);
+	    	
 	    	if (!GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
 	    		System.out.println(getMessage("ENTER_ACTION_NUMBER"));
 	    	}
 		    action = in.next();      
 		    System.out.println(getMessage("ENTERED_ACTION", new Object[]{action}));
 		    gameControllerTO = null;
+		    
 	    } while (!"0".equals(action));
-	    
+	    in.close();
 	    System.out.println(getMessage("GAME_EXIT"));
 	}
 
@@ -212,13 +214,13 @@ public class CantStopMainConsolApp {
 	protected int getWayNumberFromUser(TwoDicesPair chosenPair) {
 		int wayNumber = -1;
 		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo())) {
+			Scanner in = new Scanner(System.in);
 			do {
-				Scanner in = new Scanner(System.in);
-					System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
-				
+				System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
 			    wayNumber = in.nextInt();      
 			    System.out.println(getMessage("WAYNUMBER_ENTERED", new Object[]{wayNumber}));
 			} while (wayNumber != chosenPair.getFirstPair().getSum() && wayNumber != chosenPair.getSecondPair().getSum());
+		    in.close();
 		}
 		return wayNumber;
 	}
