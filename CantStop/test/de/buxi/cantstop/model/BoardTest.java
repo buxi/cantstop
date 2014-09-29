@@ -44,10 +44,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		
 	}
 
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#getWayByNumber(int)}.
-	 * @throws InvalidWayNumberException 
-	 */
 	@Test
 	public void testGetWayByNumber() throws InvalidWayNumberException {
 		Way way = mock(Way.class);
@@ -58,20 +54,12 @@ public class BoardTest extends SpringLoaderSuperClass{
 		assertEquals("Way 2 should be there", way, resultWay);
 	}
 
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#getWayByNumber(int)}.
-	 * @throws InvalidWayNumberException 
-	 */
 	@Test(expected=InvalidWayNumberException.class)
 	public void testGetWayByNumberNegativ1() throws InvalidWayNumberException {
 		Board board = new Board(null);
 		board.getWayByNumber(1);
 	}
 	
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#getWayByNumber(int)}.
-	 * @throws InvalidWayNumberException 
-	 */
 	@Test(expected=InvalidWayNumberException.class)
 	public void testGetWayByNumberNegativ2() throws InvalidWayNumberException {
 		List<Way> ways = new ArrayList<Way>();
@@ -79,14 +67,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		board.getWayByNumber(1);
 	}
 	
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#markClimbers(de.buxi.cantstop.model.Player)}.
-	 * @throws NullClimberException 
-	 * @throws RopePointInvalidUsageException 
-	 * @throws InvalidWayNumberException 
-	 * @throws NoClimberOnWayException 
-	 * @throws NoMarkerIsAvailableException 
-	 */
 	@Test
 	public void testMarkClimbersAllDown() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
 		Board board = (Board)ac.getBean("smallBoard");
@@ -106,14 +86,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		}
 	}
 
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#markClimbers(de.buxi.cantstop.model.Player)}.
-	 * @throws NullClimberException 
-	 * @throws RopePointInvalidUsageException 
-	 * @throws InvalidWayNumberException 
-	 * @throws NoClimberOnWayException 
-	 * @throws NoMarkerIsAvailableException 
-	 */
 	@Test
 	public void testMarkClimbersAllInHut() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
 		Board board = (Board)ac.getBean("smallBoard");
@@ -133,14 +105,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		}
 	}
 
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#removeClimbers()}.
-	 * @throws NullClimberException 
-	 * @throws RopePointInvalidUsageException 
-	 * @throws InvalidWayNumberException 
-	 * @throws InvalidClimberMovementException 
-	 * @throws NoMarkerIsAvailableException 
-	 */
 	@Test
 	public void testRemoveClimbersFromHuts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, InvalidClimberMovementException {
 		//tests with  small Board
@@ -179,12 +143,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		}
 	}
 	
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#getBesetzteHutnZahl(de.buxi.cantstop.model.Player)}.
-	 * @throws InvalidWayNumberException 
-	 * @throws NullClimberException 
-	 * @throws RopePointInvalidUsageException 
-	 */
 	@Test
 	public void testGetBlockedHuts3Huts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException {
 		//test with small board
@@ -198,12 +156,6 @@ public class BoardTest extends SpringLoaderSuperClass{
 		assertTrue("not all Markers were found", markers.isEmpty());
 	}
 	
-	/**
-	 * Test method for {@link de.buxi.cantstop.model.Board#getBesetzteHutnZahl(de.buxi.cantstop.model.Player)}.
-	 * @throws InvalidWayNumberException 
-	 * @throws NullClimberException 
-	 * @throws RopePointInvalidUsageException 
-	 */
 	@Test
 	public void testGetBlockedeHutsNotBlocked() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException {
 		//test with small board
@@ -211,14 +163,7 @@ public class BoardTest extends SpringLoaderSuperClass{
 		Collection<Hut> huts = board.getBlockedHuts(new Player(1, "1", Color.BLUE));
 		assertTrue("No hut should be blocked", huts.isEmpty());
 	}
-	/**
-	 * @throws NoClimberOnWayException 
-	 * @throws RopePointInvalidUsageException 
-	 * @throws NoMarkerIsAvailableException 
-	 * @throws NullClimberException 
-	 * @throws InvalidWayNumberException 
-	 * 
-	 */
+
 	@Test
 	public void testRemoveMarkersFromBlockedWays() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidWayNumberException, NullClimberException {
 		Board board = (Board)ac.getBean("smallBoard");
@@ -244,6 +189,10 @@ public class BoardTest extends SpringLoaderSuperClass{
 
 		// all RED and BLAU Markers should be removed 
 		Collection<Hut> usedHuts = board.getBlockedHuts(playerYELLOW);
+		assertEquals("3 hut should be blocked", 3, usedHuts.size());
+		for (Hut hut : usedHuts) {
+			assertEquals("hut should be marked with YELLOW", Color.YELLOW, hut.getMarker().getColor());
+		}
 		Map<Color, Collection<Marker>> removedMarkers = board.removeMarkersFromBlockedWays(usedHuts);
 		assertEquals("3 RED Markers should be removed", 3, removedMarkers.get(Color.RED).size());
 		assertEquals("3 BLAU Markers should be removed", 3, removedMarkers.get(Color.BLUE).size());
