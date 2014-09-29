@@ -26,7 +26,6 @@ import de.buxi.cantstop.model.NotAvailableClimberException;
 import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
-import de.buxi.cantstop.model.TwoDicesPair;
 /**
  * @author buxi
  *

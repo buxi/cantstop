@@ -1,7 +1,6 @@
 package de.buxi.cantstop.service;
 
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.TwoDicesPair;
 
 public interface GameService {
 	public GameTransferObject startGame() throws GameException;

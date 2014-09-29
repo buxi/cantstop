@@ -22,7 +22,17 @@ Game messages: ${gameInfo.errorMessage}
 
 
 <!-- display players  -->
+
+	<s:message code="LAST.THROW"/>
+	<c:forEach items="${gameInfo.lastThrow}" var="dice">
+	 	<td> 
+		 	<img width="25" src="resources/images/dice${dice.diceValue}.png"/>
+	 	</td>
+	</c:forEach>
+	
+	
 	<c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
+	<c:set var="lastUsedPairInfo" value="${gameInfo.lastUsedPairInfo }"/>
 	<table border="0">
 		<c:forEach items="${gameInfo.playerList}" var="player">
 			<tr>
@@ -48,7 +58,20 @@ Game messages: ${gameInfo.errorMessage}
 						</c:forEach>					
 					</tr></table>
 				</td>
-
+				<td>
+					<c:if test="${lastUsedPairInfo.player.order ==  player.order}">
+						<table border="1"><tr><td valign="middle" align="center" bgcolor="<c:if test="${lastUsedPairInfo.chosenWayNumber == lastUsedPairInfo.chosenPair.firstSum}">grey</c:if>">
+							
+						 	<img width="30" src="resources/images/dice${lastUsedPairInfo.chosenPair.firstPair.first.diceValue}.png"/>
+						 	<img width="30" src="resources/images/dice${lastUsedPairInfo.chosenPair.firstPair.second.diceValue}.png"/>
+						 	</td>
+						 	<td bgcolor="<c:if test="${lastUsedPairInfo.chosenWayNumber == lastUsedPairInfo.chosenPair.secondSum}">grey</c:if>">
+						 	
+						 	<img width="30" src="resources/images/dice${lastUsedPairInfo.chosenPair.secondPair.first.diceValue}.png"/>
+						 	<img width="30" src="resources/images/dice${lastUsedPairInfo.chosenPair.secondPair.second.diceValue}.png"/>
+						</td></tr></table>
+					</c:if>
+				</td>
 			</tr>
 		</c:forEach>
 	</table>
@@ -58,7 +81,7 @@ Game messages: ${gameInfo.errorMessage}
 	<table border=0>
 		<tr>
 			<td>
-				<s:message code="LAST.THROWN"/>
+				<s:message code="ACTUAL.THROW"/>
 			</td>
 			<c:forEach items="${gameInfo.dices}" var="dice">
 			 	<td> 
@@ -69,7 +92,7 @@ Game messages: ${gameInfo.errorMessage}
 	</table>
 
 	<!--  displaying pairs to choose -->
-	<table border="0">
+	<table border=0>
 		<tr>
 			<td>
 				<s:message code="CHOOSE_A_PAIR"/>

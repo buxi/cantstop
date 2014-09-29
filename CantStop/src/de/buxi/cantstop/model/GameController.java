@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import de.buxi.cantstop.service.TooManyPlayerException;
 
 /**
@@ -20,9 +23,8 @@ import de.buxi.cantstop.service.TooManyPlayerException;
  */
 public class GameController implements Serializable{
 			
-	/**
-	 * 
-	 */
+	Log log = LogFactory.getLog(GameController.class);
+	
 	private static final long serialVersionUID = -6919670618517317954L;
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
 	public static final int MINIMUM_PLAYER_NUMBER = 2;
@@ -37,7 +39,16 @@ public class GameController implements Serializable{
 	private GameState gameState;
 	private Collection<TwoDicesPair> wrongPairs;
 	private String errorMessage;
+
+	private UsedPairInfoTO lastUsedPairInfo;
 	
+	/**
+	 * @return the lastThrow
+	 */
+	public List<Dice> getLastThrow() {
+		return diceManager.getLastThrow();
+	}
+
 	/**
 	 * @return the errorMessage
 	 */
@@ -179,6 +190,7 @@ public class GameController implements Serializable{
 		checkGameStatus(Arrays.asList(GameState.IN_GAME));
 		distributeFreeClimbers();
 		this.gameState = GameState.IN_ROUND;
+		this.lastUsedPairInfo = null;
 		return this.doGetTransferObject();
 	}
 	
@@ -215,6 +227,8 @@ public class GameController implements Serializable{
 		
 		this.nextPlayer();
 		distributeFreeClimbers();
+		// notify diceManager the throw was used, needs to be reset
+		this.diceManager.reset();
 		this.gameState = GameState.IN_ROUND;
 		return this.doGetTransferObject();
 	}
@@ -286,7 +300,7 @@ public class GameController implements Serializable{
 	
 	public Collection<Dice> getDices() {
 		DiceManager diceManager = getDiceManager();
-		return diceManager.getDices();
+		return diceManager.getDicesClone();
 	}
 
 	public List<TwoDicesPair> getPossiblePairs() throws DiceNotThrownException, InvalidWayNumberException {
@@ -418,7 +432,7 @@ public class GameController implements Serializable{
 	}
 
 	/**
-	 * @return true is tehere is minimum one CHOOSABLE or WITHWAYINFO pair
+	 * @return true is there is minimum one CHOOSABLE or WITHWAYINFO pair
 	 * @throws DiceNotThrownException
 	 * @throws InvalidWayNumberException
 	 */
@@ -474,7 +488,7 @@ public class GameController implements Serializable{
 			try {
 				choseWay(player, way);
 			} catch (NotAvailableClimberException e) {
-				System.out.println(e.toString());
+				log.warn(e.getMessage());
 			}
 		}
 		else {
@@ -485,18 +499,21 @@ public class GameController implements Serializable{
 			try {
 				choseWay(player, way1);
 			} catch (NotAvailableClimberException e) {
-				System.out.println(e.toString());
+				log.warn(e.getMessage());
+
 			}
 			try {
 				choseWay(player, way2);
 			} catch (NotAvailableClimberException e) {
-				//TODO Log error
-				System.out.println(e.toString());
+				log.warn(e.getMessage());
 			}
 		}
 		
 		// minimum one Pair successful
 		this.gameState=GameState.IN_ROUND;
+		this.lastUsedPairInfo = new UsedPairInfoTO(chosenPair, chosenWayNumber, player);
+		// notify diceManager the throw was used, needs to be reset
+		this.diceManager.reset();
 		errorMessage = "STATE_PAIR_USED";
 	}
 
@@ -514,7 +531,7 @@ public class GameController implements Serializable{
 			NotAvailableClimberException, InvalidClimberMovementException, NullClimberException {
 		if (way1.isFree()) {
 			if (!way1.isClimberOnRope()) {
-				// no climber the the way
+				// no climber on the way
 				if (way1.isMarkerOnRope(player.getColor())) {
 					way1.placeClimberAfterMarker(player.getOneClimber(), player.getColor());
 				} else {
@@ -528,38 +545,7 @@ public class GameController implements Serializable{
 		}
 	}
 	
-	/**
-	 * generates a Transfer Object for client apps
-	 * @return new transfer object
-	 * @throws DiceNotThrownException
-	 * @throws InvalidWayNumberException 
-	 */
-	public GameTransferObject doGetTransferObject() throws DiceNotThrownException, InvalidWayNumberException {
-		GameTransferObject to = new GameTransferObject();
-		to.gameState = this.gameState;
-		to.actualPlayer = null;
-		to.actualPlayerNumber = -1;
-		if (!GameState.INIT.equals(gameState) ) {
-			to.actualPlayer = this.getActualPlayer();
-			to.actualPlayerNumber = this.getActualPlayerNumber();
-		}
-		to.boardDisplay = this.getBoard().display();
-		to.boardDisplayHTML = this.getBoard().displayHTML();
-		to.playerList = this.getPlayersInOrder();
-		to.errorMessage = this.errorMessage;
-		to.possiblePairs = null;
-		to.choosablePairs = null;
-		to.choosablePairsWithId = null;
-		to.dices = null;
-		if (GameState.DICES_THROWN.equals(gameState) ) {
-			to.possiblePairs = this.getPossiblePairs();
-			to.choosablePairs = this.getPairsToChoose();
-			to.choosablePairsWithId = this.getPairsToChooseWithId();
-			to.dices = this.getDices();
-		}
-		to.board = this.getBoard();
-		return to;
-	}
+	
 
 	
 	/**
@@ -594,5 +580,39 @@ public class GameController implements Serializable{
 		Color[] remainingColors = remainingColorSet.toArray(new Color[0]);
 		Color playerColor = remainingColors[0];
 		return playerColor;
+	}
+	
+	/**
+	 * generates a Transfer Object for client apps
+	 * @return new transfer object
+	 * @throws DiceNotThrownException
+	 * @throws InvalidWayNumberException 
+	 */
+	public GameTransferObject doGetTransferObject() throws DiceNotThrownException, InvalidWayNumberException {
+		GameTransferObject to = new GameTransferObject();
+		to.gameState = this.gameState;
+		to.actualPlayer = null;
+		to.actualPlayerNumber = -1;
+		if (!GameState.INIT.equals(gameState) ) {
+			to.actualPlayer = this.getActualPlayer();
+			to.actualPlayerNumber = this.getActualPlayerNumber();
+		}
+		to.boardDisplay = this.getBoard().display();
+		to.playerList = this.getPlayersInOrder();
+		to.errorMessage = this.errorMessage;
+		to.possiblePairs = null;
+		to.choosablePairs = null;
+		to.choosablePairsWithId = null;
+		to.dices = null;
+		to.lastThrow = this.getLastThrow();
+		to.lastUsedPairInfo = this.lastUsedPairInfo;
+		if (GameState.DICES_THROWN.equals(gameState) ) {
+			to.possiblePairs = this.getPossiblePairs();
+			to.choosablePairs = this.getPairsToChoose();
+			to.choosablePairsWithId = this.getPairsToChooseWithId();
+			to.dices = this.getDices();
+		}
+		to.board = this.getBoard();
+		return to;
 	}
 }

@@ -25,9 +25,24 @@ public class GameTransferObject {
 	public Collection<Dice> dices;
 	public String errorMessage;
 	public List<TwoDicesPair> choosablePairs;
-	public String boardDisplayHTML;
 	public Map<String, TwoDicesPair> choosablePairsWithId;
 	public Board board;
+	public List<Dice> lastThrow;
+	public UsedPairInfoTO lastUsedPairInfo;
+
+	/**
+	 * @return the lastUsedPairInfo
+	 */
+	public UsedPairInfoTO getLastUsedPairInfo() {
+		return lastUsedPairInfo;
+	}
+
+	/**
+	 * @return the lastThrow
+	 */
+	public List<Dice> getLastThrow() {
+		return lastThrow;
+	}
 
 	/**
 	 * @return the board
@@ -78,12 +93,6 @@ public class GameTransferObject {
 	 */
 	public void setPossiblePairs(List<TwoDicesPair> possiblePairs) {
 		this.possiblePairs = possiblePairs;
-	}
-	/**
-	 * @return the boardDisplay
-	 */
-	public String getBoardDisplayHTML() {
-		return boardDisplayHTML;
 	}
 	/**
 	 * @return the boardDisplay

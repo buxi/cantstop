@@ -73,4 +73,14 @@ public class DiceManagerTest extends SpringLoaderSuperClass{
 			assertTrue(dice.isThrown());
 		}
 	}
+	
+	@Test
+	public void testLastThrow() {
+		DiceManager manager = (DiceManager)ac.getBean("diceManager");
+		manager.throwAllDices();
+		List<Dice> dicesFirstThrow = manager.getDicesClone();
+		manager.reset();
+		List<Dice> previousThrow = manager.getLastThrow();
+		assertEquals("must be same: ", dicesFirstThrow,  previousThrow);
+	}
 }

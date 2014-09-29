@@ -165,7 +165,38 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		assertEquals("IN_ROUND State expected", GameState.IN_ROUND, gameController.getGameStatus());
 		assertNotNull("errorMessage should be", gameController.getErrorMessage());
 	}
-
+	@Test
+	public void testDoThrowLastThrow() throws Exception {
+		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
+		gameController.doStartGameTurn();
+		GameTransferObject to = gameController.doThrowDices();
+		Collection<Dice> dices = to.getDices();
+		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		gameController.doThrowDices();
+		List<Dice> previousThrow = gameController.getLastThrow();
+		assertEquals("must be same: ", dices,  previousThrow);
+	}
+	
+	@Test
+	public void testDoExecutePairs() throws Exception {
+		GameController gameController = (GameController)ac.getBean("testGameController");
+		gameController.doGameStart();
+		gameController.doStartGameTurn();
+		GameTransferObject to = gameController.doThrowDices();
+		to = gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);
+		Collection<Dice> dices = to.getLastThrow();
+		for (Dice dice : dices) {
+			assertNotNull("dice value must be visible", dice.getDiceValue());
+		}
+		UsedPairInfoTO lastUsedPairInfo = to.getLastUsedPairInfo();
+		assertNotNull("first pair first dice value", lastUsedPairInfo.getChosenPair().getFirstPair().getFirst().getDiceValue());
+		assertNotNull("first pair second dice value", lastUsedPairInfo.getChosenPair().getFirstPair().getSecond().getDiceValue());
+		assertNotNull("first pair first dice value", lastUsedPairInfo.getChosenPair().getSecondPair().getFirst().getDiceValue());
+		assertNotNull("secondpair second dice value", lastUsedPairInfo.getChosenPair().getSecondPair().getSecond().getDiceValue());
+		
+	}	
+	
 	@Test
 	public void testDoGameRoundFinishedWaysNoOtherWahl() throws Exception {
 		GameController gameController = (GameController)ac.getBean("testGameController");
@@ -357,8 +388,8 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	@Test
 	public void doAddPlayer() throws TooManyPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
-		String playerId = gameController.doAddPlayer("Joska");
 		//assertEquals("new PlayerId must be generated and should be 3", "3", playerId);
+		gameController.doAddPlayer("aaa");
 		List<Player> players = gameController.getPlayersInOrder();
 		assertEquals("3 players should be there (2 was preloaded)", 3, players.size());
 		assertEquals("markers should stay intact", 4, gameController.getAllMarkers().keySet().size());
@@ -368,8 +399,8 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	@Test(expected=TooManyPlayerException.class)
 	public void doAddPlayerTooManyPlayer() throws TooManyPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
-		String playerId = gameController.doAddPlayer("Joska");
-		String playerId2 = gameController.doAddPlayer("Joska2");
+		gameController.doAddPlayer("Joska");
+		gameController.doAddPlayer("Joska2");
 		//assertEquals("new PlayerId must be generated and should be 3", "3", playerId);
 		//assertEquals("new PlayerId must be generated and should be 4", "4", playerId2);
 		List<Player> players = gameController.getPlayersInOrder();

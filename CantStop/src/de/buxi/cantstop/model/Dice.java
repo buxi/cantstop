@@ -1,6 +1,6 @@
 package de.buxi.cantstop.model;
 
-public interface Dice {
+public interface Dice extends Cloneable {
 
 	/**
 	 * @return the wasThrown
@@ -31,4 +31,7 @@ public interface Dice {
 	
 	public boolean equals(Object obj);
 	public int hashCode();
+
+	public Object clone() throws CloneNotSupportedException;
+
 }

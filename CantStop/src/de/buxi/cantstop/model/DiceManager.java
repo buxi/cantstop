@@ -4,19 +4,25 @@
 package de.buxi.cantstop.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author buxi
  *
  */
 public class DiceManager implements Serializable{
-	/**
-	 * 
-	 */
+
+	Log log = LogFactory.getLog(DiceManager.class);
+	
 	private static final long serialVersionUID = -2229098432462786519L;
 	private List<Dice> dices;
-	private Player owner; 
+	private Player owner;
+
+	private List<Dice> lastThrow; 
 
 	/**
 	 * @param dices
@@ -65,6 +71,7 @@ public class DiceManager implements Serializable{
 		return true;
 	}
 	
+	
 	/**
 	 * Throw all dices
 	 */
@@ -74,6 +81,23 @@ public class DiceManager implements Serializable{
 			dice.reset();
 			dice.throwDice();
 		}
+		log.info("dices were thrown:"+dices);
+	}
+
+	/**
+	 * 
+	 */
+	protected List<Dice> getDicesClone() {
+		List<Dice> lastThrow = new ArrayList<Dice>(4);
+		for (Dice dice : dices) {
+			try {
+				lastThrow.add((Dice) dice.clone());
+			} catch (CloneNotSupportedException e) {
+				//this can not happen
+				log.error(e.getMessage());
+			}
+		}
+		return lastThrow;
 	}
 	
 	/**
@@ -99,5 +123,24 @@ public class DiceManager implements Serializable{
 		TwoDicesPair thirdKombination = new TwoDicesPair(dicePair03, dicePair12);
 		paarSet.add(thirdKombination);
 		return paarSet.getResultSet();
+	}
+
+	/**
+	 * @return previous throw 
+	 */
+	public List<Dice> getLastThrow() {
+		return this.lastThrow;
+	}
+
+	/**
+	 * reset diceManager, sets dices to notThrown and stores last throw
+	 */
+	public void reset() {
+		// storing last throw
+		this.lastThrow = getDicesClone();
+		log.debug("storing last throw:" + this.lastThrow);
+		for (Dice dice : dices) {
+			dice.reset();
+		}
 	}
 }

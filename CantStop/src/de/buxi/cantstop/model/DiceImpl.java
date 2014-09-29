@@ -106,6 +106,19 @@ public class DiceImpl implements Dice, Serializable {
 		return Integer.toString(diceValue);
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		DiceImpl newDice = new DiceImpl(this.getSideNumber());
+		newDice.setThrown(this.thrown);
+		newDice.setDiceValue(this.diceValue);
+		return newDice;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
