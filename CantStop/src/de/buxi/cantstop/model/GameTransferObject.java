@@ -24,7 +24,6 @@ public class GameTransferObject {
 	public List<Player> playerList;
 	public Collection<Dice> dices;
 	public String errorMessage;
-	public List<TwoDicesPair> choosablePairs;
 	public Map<String, TwoDicesPair> choosablePairsWithId;
 	public Board board;
 	public List<Dice> lastThrow;
@@ -153,18 +152,6 @@ public class GameTransferObject {
 	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-	}
-	/**
-	 * @return the choosablePairs
-	 */
-	public List<TwoDicesPair> getChoosablePairs() {
-		return choosablePairs;
-	}
-	/**
-	 * @param choosablePairs the choosablePairs to set
-	 */
-	public void setChoosablePairs(List<TwoDicesPair> choosablePairs) {
-		this.choosablePairs = choosablePairs;
 	}
 	public String getActualPlayerId() {
 		return Integer.toString(actualPlayerNumber);

@@ -4,8 +4,11 @@
 package de.buxi.cantstop.ui.console;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,15 +53,9 @@ public class CantStopMainConsolApp {
 		return context.getMessage(key, parameters, locale);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws GameException {
 		CantStopMainConsolApp mainApp = new CantStopMainConsolApp();
-		try {
-			mainApp.doGame();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.toString());
-			log.error(e);
-		}
+		mainApp.doGame();
 	}
 	
 	private void doGame() throws GameException{
@@ -66,6 +63,7 @@ public class CantStopMainConsolApp {
 		GameTransferObject gameControllerTO = gameServices.startGame();
 		gameControllerTO = gameServices.startTurn();
 		log.info("Game turn started");
+		Map<String, String> pairIdTranslate = null;
 	    do {
 	    	gameControllerTO = gameServices.getAllGameInformation();
 	    	StringBuffer messages = new StringBuffer(); 
@@ -111,14 +109,14 @@ public class CantStopMainConsolApp {
 					chosenPairNum = 2;
 				}
 				if (GameState.DICES_THROWN.equals(gameControllerTO.gameState) && 
-						gameControllerTO.choosablePairs.size() > 0 && 
-						chosenPairNum < gameControllerTO.choosablePairs.size()
+						gameControllerTO.choosablePairsWithId.size() > 0 && 
+						chosenPairNum < gameControllerTO.choosablePairsWithId.size()
 						) {
 					log.debug("chosenPairNum:"+chosenPairNum);
-					TwoDicesPair chosenPair = gameControllerTO.choosablePairs.get(chosenPairNum);
+					TwoDicesPair chosenPair = gameControllerTO.choosablePairsWithId.get(pairIdTranslate.get(Integer.toString(chosenPairNum)));
 					log.debug("chosenPair:"+chosenPair);
 					int wayNumber = getWayNumberFromUser(chosenPair);
-					gameControllerTO = gameServices.executePairs(chosenPair, wayNumber);
+					gameControllerTO = gameServices.executePairs(pairIdTranslate.get(Integer.toString(chosenPairNum)), wayNumber);
 				}
 				break;
 			default:
@@ -163,13 +161,15 @@ public class CantStopMainConsolApp {
 		    	//displaying dices
 		    	System.out.println(getMessage("PLAYER_THROWN", new Object[]{gameControllerTO.actualPlayer.getName(), dices}));
 				
-		    	for (int i = 0; i < gameControllerTO.choosablePairs.size(); i++) {
+		    	for (int i = 0; i < gameControllerTO.choosablePairsWithId.size(); i++) {
 		    		System.out.print(StringUtils.center(pairChoose[i], 15));
 				}
 		    	System.out.println();
-		    	for (TwoDicesPair pair : gameControllerTO.choosablePairs) {
-					
-					System.out.print(StringUtils.center(pair.display(), 15));
+		    	// temporarily translating webIds to consoleIds 
+		    	pairIdTranslate = new HashMap<String, String>();
+		    	for (Entry<String, TwoDicesPair> pairEntry : gameControllerTO.getChoosablePairsWithId().entrySet()) {
+					System.out.print(StringUtils.center(pairEntry.getValue().display(), 15));
+					pairIdTranslate.put(Integer.toString(choosablePairNumber), pairEntry.getKey());
 					choosablePairNumber++;
 				}
 		    	System.out.println();

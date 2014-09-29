@@ -602,14 +602,12 @@ public class GameController implements Serializable{
 		to.playerList = this.getPlayersInOrder();
 		to.errorMessage = this.errorMessage;
 		to.possiblePairs = null;
-		to.choosablePairs = null;
 		to.choosablePairsWithId = null;
 		to.dices = null;
 		to.lastThrow = this.getLastThrow();
 		to.lastUsedPairInfo = this.lastUsedPairInfo;
 		if (GameState.DICES_THROWN.equals(gameState) ) {
 			to.possiblePairs = this.getPossiblePairs();
-			to.choosablePairs = this.getPairsToChoose();
 			to.choosablePairsWithId = this.getPairsToChooseWithId();
 			to.dices = this.getDices();
 		}

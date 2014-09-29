@@ -10,6 +10,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,21 +108,6 @@ public class GameServicesConsole implements GameService {
 	}
 
 	@Override
-	public GameTransferObject executePairs(TwoDicesPair chosenPair,
-			int wayNumber) throws GameException {
-		try {
-			return gameController.doExecutePairs(chosenPair, wayNumber);
-		} catch (DiceNotThrownException | RopePointInvalidUsageException
-				| NotAvailableClimberException | InvalidWayNumberException
-				| InvalidClimberMovementException
-				| NoMarkerIsAvailableException | NullClimberException
-				| NoClimberOnWayException e) {
-			log.error(e.toString());
-			throw new GameException(e);
-		}
-	}
-	
-	@Override
 	public String addPlayer(String playerName) {
 		// TODO Auto-generated method stub
 		return null;
@@ -161,6 +150,23 @@ public class GameServicesConsole implements GameService {
 				o.close();
 			} catch (Exception e) {
 			}
+		}
+	}
+
+	@Override
+	public GameTransferObject executePairs(String chosenPairId, int wayNumber)
+			throws GameException {
+		try {
+			if (gameController.getPairsToChooseWithId().containsKey(chosenPairId)) {
+				return gameController.doExecutePairs(gameController.getPairsToChooseWithId().get(chosenPairId), wayNumber);	
+			} 
+			else {
+				throw new GameException("Invalid pairId:" +chosenPairId);
+			}
+			
+		} catch (InvalidWayNumberException | DiceNotThrownException | RopePointInvalidUsageException | NotAvailableClimberException | InvalidClimberMovementException | NoMarkerIsAvailableException | NullClimberException | NoClimberOnWayException e) {
+			log.error(e.toString());
+			throw new GameException(e);
 		}
 	}
 }
