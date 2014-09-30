@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
@@ -37,6 +38,20 @@ public class WelcomeController {
 		else {
 			 playerId = gameService.addPlayer(playerName);
 			 log.info("New player generated with id:" + playerId);
+			 try {
+					gameService.startGame();
+					log.info("do.gamestart:Incoming playerId:" + playerId);
+					model.addAttribute("gameInfo", gameService.startTurn());
+					model.addAttribute("gameInfo", gameService.getAllGameInformation());
+					model.addAttribute("playerId", playerId);
+					return "play";
+				} catch (NotEnoughPlayerException e) {
+					log.error("Not enough player in game");
+					model.addAttribute("errorMsg", "ERROR.NOTENOUGHPLAYER");
+					model.addAttribute("gameInfo", gameService.getAllGameInformation());
+					model.addAttribute("playerId", playerId);
+					return "waitingforplayer";
+				}
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);

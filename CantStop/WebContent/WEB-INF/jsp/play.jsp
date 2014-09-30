@@ -3,37 +3,44 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
+<c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
+
+<c:if test="${actualPlayer != playerId }">
+<meta http-equiv="refresh" content="1; URL=play?playerId=${playerId}">
+<s:message code="WAITING.FINISHTURN"/><br/>
+</c:if>
 <title><s:message code="PLAYROOM" text="Playroom" /></title>
 </head>
 <body>
 
 <!-- BUILDING SCREEN -->
-PlayerId:${playerId}<br>
-Error message: ${errorMsg}<br>
-Game messages: ${gameInfo.errorMessage}
+<c:if test="${not empty errorMsg}"><div style="color: red"><s:message code="${errorMsg}"/></div><br/></c:if>
+<c:if test="${not empty gameInfo.errorMessage}"><div style="color: red"><s:message code="${gameInfo.errorMessage}"/></div><br/></c:if>
 <s:message code="GAME_STATUS"/>  <s:message code="STATE_${gameInfo.gameState}"/> <br>
-<a href="http://localhost:8080/CantStop/play?playerId=0">P1</a>
-<a href="http://localhost:8080/CantStop/play?playerId=1">P2</a>
-<a href="http://localhost:8080/CantStop/play?playerId=2">P3</a>
-<a href="http://localhost:8080/CantStop/play?playerId=3">P4</a>
+<a href="play?playerId=${playerId}&language=de"><img height="15" alt="de" src="resources/images/DEIcon.png"></a>
+<a href="play?playerId=${playerId}&language=en"><img height="15" alt="uk" src="resources/images/UKIcon.png"></a>
+<a href="play?playerId=0">P1</a>
+<a href="play?playerId=1">P2</a>
+<a href="play?playerId=2">P3</a>
+<a href="play?playerId=3">P4</a>
 
 <!--  display board -->
 <jsp:include page="board.jsp"/>
 
 
 <!-- display players  -->
+	
+		<s:message code="LAST.THROW"/>
+		<c:forEach items="${gameInfo.lastThrow}" var="dice">
+		 	<td> 
+			 	<img width="25" src="resources/images/dice${dice.diceValue}.png"/>
+		 	</td>
+		</c:forEach>
+	
 
-	<s:message code="LAST.THROW"/>
-	<c:forEach items="${gameInfo.lastThrow}" var="dice">
-	 	<td> 
-		 	<img width="25" src="resources/images/dice${dice.diceValue}.png"/>
-	 	</td>
-	</c:forEach>
 	
-	
-	<c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
 	<c:set var="lastUsedPairInfo" value="${gameInfo.lastUsedPairInfo }"/>
-	<table border="">
+	<table border="0">
 		<c:forEach items="${gameInfo.playerList}" var="player">
 			<tr>
 				<td>
@@ -44,7 +51,7 @@ Game messages: ${gameInfo.errorMessage}
 				<td bgcolor="${player.color}">${player.name} (${player.order})</td>
 				<!-- display markers -->
 				<td> 
-					<table border=""><tr>
+					<table border="0"><tr>
 						<c:forEach items="${player.markers}" var="marker">
 							<td bgcolor="${marker.color }">&nbsp;&nbsp;&nbsp;</td>
 						</c:forEach>					
@@ -52,7 +59,7 @@ Game messages: ${gameInfo.errorMessage}
 				</td>
 				<!-- display climbers -->
 				<td> 
-					<table border=""><tr>
+					<table border="0"><tr>
 						<c:forEach items="${player.climbers}" var="climber">
 							<td><img height=15 src="resources/images/climber.png"></td>
 						</c:forEach>					
@@ -78,7 +85,7 @@ Game messages: ${gameInfo.errorMessage}
 
 <c:if test="${gameInfo.gameState=='DICES_THROWN'}">
 	<!-- displaying dices -->
-	<table border="">
+	<table border=0>
 		<tr>
 			<td>
 				<s:message code="ACTUAL.THROW"/>
@@ -92,7 +99,7 @@ Game messages: ${gameInfo.errorMessage}
 	</table>
 
 	<!--  displaying pairs to choose -->
-	<table border="">
+	<table border=0>
 		<tr>
 			<td>
 				<s:message code="CHOOSE_A_PAIR"/>
@@ -139,39 +146,33 @@ Game messages: ${gameInfo.errorMessage}
 </c:if>
 
 
-<table border="">
+<table border="0">
 <tr>
 <td><s:message code="ACTIONTITLE"/></td>
 <td>
 	<form action="do.finishgame" method="post">
 	<input type="hidden" name="playerId" value="${playerId}" />
-	<input type="submit" value="Finish game" />
+	<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
 	</form>
 </td>
 <!-- TODO real enum should be used -->
 <c:choose>
-
-<c:when test="${gameInfo.gameState=='INIT'}">
-<td>
-	<form action="do.gamestart" method="post">
-	<input type="hidden" name="playerId" value="${playerId}" />
-	<input type="submit" value="Start Game" />
-	</form>
-</td>
-</c:when>
 <c:when test="${gameInfo.gameState=='IN_ROUND'}">
-<td>
-	<form action="do.finishturn" method="post">
-	<input type="hidden" name="playerId" value="${playerId}" />
-	<input type="submit" value="Finish turn" />
-	</form>
-</td>
-<td>
-	<form action="do.throw" method="post">
-	<input type="hidden" name="playerId" value="${playerId}" />
-	<input type="submit" value="Throw" />
-	</form>
-</td>
+	<c:if test="${actualPlayer == playerId }">
+		<td>
+			<form action="do.finishturn" method="post">
+			<input type="hidden" name="playerId" value="${playerId}" />
+			<input type="submit" value="<s:message code="ACTION.FINISHTURN"/>" />
+			</form>
+		</td>
+		<td>
+			<form action="do.throw" method="post">
+			<input type="hidden" name="playerId" value="${playerId}" />
+			<input type="submit" value="<s:message code="ACTION.THROW"/>" />
+			</form>
+		</td>
+	</c:if>
+
 </c:when>
 </c:choose>
 </tr>

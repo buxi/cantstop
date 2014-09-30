@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
-New Board Design
 <c:set var="board" value="${gameInfo.board }"/>
 <table><tr>
 <c:forEach items="${board.ways}" var="way">

@@ -206,6 +206,21 @@ public class GameController implements Serializable{
 	public GameTransferObject doEndGameTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND, GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED));
 		// marks the climbers
+		this.errorMessage = null;
+		endGameturn();
+		return this.doGetTransferObject();
+	}
+
+	/**
+	 * @throws NoMarkerIsAvailableException
+	 * @throws RopePointInvalidUsageException
+	 * @throws InvalidClimberMovementException
+	 * @throws NoClimberOnWayException
+	 * @throws InvalidWayNumberException
+	 */
+	protected void endGameturn() throws NoMarkerIsAvailableException,
+			RopePointInvalidUsageException, InvalidClimberMovementException,
+			NoClimberOnWayException, InvalidWayNumberException {
 		Player actualPlayer = getActualPlayer();
 		if (GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED.equals(gameState)) {
 			this.climbers = board.removeClimbers();
@@ -221,7 +236,7 @@ public class GameController implements Serializable{
 			if (usedHuts.size() == 3) {
 				this.gameState = GameState.GAME_WIN;
 				this.errorMessage="STATE_GAME_WIN";
-				return this.doGetTransferObject();
+				return;
 			}
 		}
 		
@@ -230,7 +245,6 @@ public class GameController implements Serializable{
 		// notify diceManager the throw was used, needs to be reset
 		this.diceManager.reset();
 		this.gameState = GameState.IN_ROUND;
-		return this.doGetTransferObject();
 	}
 	
 	/**
@@ -400,7 +414,7 @@ public class GameController implements Serializable{
 	 */
 	public GameTransferObject doThrowDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND));
-		this.errorMessage = "";
+		this.errorMessage = null;
 		diceManager.throwAllDices();
 		this.gameState=GameState.DICES_THROWN;
 		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
@@ -409,7 +423,8 @@ public class GameController implements Serializable{
 			// GameRound must be finished
 			this.gameState=GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;
 			this.errorMessage = "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED";
-			doEndGameTurn();
+			log.info("turn finished, no available pair");
+			endGameturn();
 		}
 		return this.doGetTransferObject();
 	}
@@ -455,7 +470,7 @@ public class GameController implements Serializable{
 	 */
 	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
 		checkGameStatus(Arrays.asList(GameState.DICES_THROWN));
-		this.errorMessage = "";
+		this.errorMessage = null;
 		if (!this.getPossiblePairs().contains(chosenPair)) {
 			throw new InvalidPairsException("Pair:" + chosenPair + ", wayNumber:" + wayNumber);
 		}

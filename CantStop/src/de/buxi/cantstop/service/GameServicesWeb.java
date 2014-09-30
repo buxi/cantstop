@@ -41,11 +41,10 @@ public class GameServicesWeb implements GameService {
 	}
 	
 	@Override
-	public GameTransferObject startGame() throws GameException {
+	public GameTransferObject startGame() throws GameException, NotEnoughPlayerException {
 		try {
 			return gameController.doGameStart();
-		} catch (InvalidWayNumberException | NotEnoughPlayerException
-				| DiceNotThrownException e) {
+		} catch (InvalidWayNumberException | DiceNotThrownException e) {
 			log.error(e.toString());
 			throw new GameException(e);
 		}

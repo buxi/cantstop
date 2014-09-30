@@ -1,11 +1,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-<title>Bye</title>
+<title><s:message code="BYE.TITLE"/></title>
 </head>
 <body>
-<h2>Bye, bye!</h2>
+<h2><s:message code="BYE.HEAD"/></h2>
 
-thank you for playing
+<s:message code="BYE.MSG"/>
 </body>
 </html>

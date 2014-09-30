@@ -68,6 +68,7 @@ public class DiceManager implements Serializable{
 	 */
 	public boolean giveDices(Player newOwner) {
 		setOwner(newOwner);
+		lastThrow = null;
 		return true;
 	}
 	
@@ -91,7 +92,9 @@ public class DiceManager implements Serializable{
 		List<Dice> lastThrow = new ArrayList<Dice>(4);
 		for (Dice dice : dices) {
 			try {
-				lastThrow.add((Dice) dice.clone());
+				if (dice.isThrown()) {
+					lastThrow.add((Dice) dice.clone());
+				}
 			} catch (CloneNotSupportedException e) {
 				//this can not happen
 				log.error(e.getMessage());

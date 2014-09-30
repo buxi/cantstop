@@ -1,5 +1,8 @@
 package de.buxi.cantstop.web;
 
+import de.buxi.cantstop.model.GameState;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
@@ -13,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
 @Controller
-public class CantstopController {
+public class PlayController {
 	private GameService gameService;
-	private Log log = LogFactory.getLog(CantstopController.class);
+	private Log log = LogFactory.getLog(PlayController.class);
 
 	@Autowired
-	public CantstopController(GameService gameService) {
+	public PlayController(GameService gameService) {
 		this.gameService = gameService;
 	}
 
@@ -30,16 +33,23 @@ public class CantstopController {
 		return "play";
 	}
 
-	@RequestMapping({ "do.gamestart" })
-	public String doGameStart(@RequestParam("playerId") String playerId,
+	@RequestMapping({ "do.waitingforplayer" })
+	public String doWaitingForPlayer(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
-		gameService.startGame();
-		log.info("do.gamestart:Incoming playerId:" + playerId);
-		model.addAttribute("gameInfo", gameService.startTurn());
-		model.addAttribute("playerId", playerId);
-		return "play";
+		GameTransferObject to = gameService.getAllGameInformation();
+		log.info("do.waitingforplayer:Incoming playerId:" + playerId);
+		if (GameState.IN_ROUND.equals(to.getGameState())) {
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			model.addAttribute("playerId", playerId);
+			return "play";
+		}
+		else {
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			model.addAttribute("playerId", playerId);
+			return "waitingforplayer";
+		}
+		
 	}
-
 	@RequestMapping({ "do.finishgame" })
 	public String doFinishGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
@@ -57,7 +67,8 @@ public class CantstopController {
 			model.addAttribute("gameInfo", gameService.finishTurn());
 		}
 		else {
-			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			log.error("Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			model.addAttribute("errorMsg", "ERROR.OTHERPLAYERINTURN");
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
@@ -72,7 +83,8 @@ public class CantstopController {
 			model.addAttribute("gameInfo", gameService.throwDices());
 		}
 		else {
-			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			log.error("Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			model.addAttribute("errorMsg", "ERROR.OTHERPLAYERINTURN");
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
@@ -89,7 +101,8 @@ public class CantstopController {
 			model.addAttribute("gameInfo", gameService.executePairs(chosenPairId, Integer.valueOf(wayNumber)));
 		}
 		else {
-			model.addAttribute("errorMsg", "Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			log.error("Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
+			model.addAttribute("errorMsg", "ERROR.OTHERPLAYERINTURN");
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);

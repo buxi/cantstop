@@ -20,6 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.PairChoiceInfo;
 import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.TwoDicesPair;
@@ -53,12 +54,12 @@ public class CantStopMainConsolApp {
 		return context.getMessage(key, parameters, locale);
 	}
 
-	public static void main(String[] args) throws GameException {
+	public static void main(String[] args) throws Exception {
 		CantStopMainConsolApp mainApp = new CantStopMainConsolApp();
 		mainApp.doGame();
 	}
 	
-	private void doGame() throws GameException{
+	private void doGame() throws GameException, NotEnoughPlayerException{
 		String action = "";
 		GameTransferObject gameControllerTO = gameServices.startGame();
 		gameControllerTO = gameServices.startTurn();

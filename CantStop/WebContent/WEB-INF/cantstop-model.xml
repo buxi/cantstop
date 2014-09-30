@@ -88,9 +88,9 @@
  	<bean id="gameController" class="de.buxi.cantstop.model.GameController">
  		<constructor-arg name="players">
  			<util:map key-type="de.buxi.cantstop.model.Color">
- 				<entry key="BLUE"  value-ref="BluePlayer"/>
+ 				<!-- 				<entry key="BLUE"  value-ref="BluePlayer"/>
  				<entry key="RED"  value-ref="RedPlayer"/>
- 				<!-- <entry key="GREEN"  value-ref="GreenPlayer"/>
+ 				<entry key="GREEN"  value-ref="GreenPlayer"/>
  				<entry key="YELLOW"  value-ref="YellowPlayer"/> -->
  				
  			</util:map>
