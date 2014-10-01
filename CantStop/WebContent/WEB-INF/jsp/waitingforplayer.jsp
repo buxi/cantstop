@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <html>
 <head>
 <meta http-equiv="refresh" content="1; URL=do.waitingforplayer?playerId=${playerId}">
@@ -34,6 +35,11 @@
 			</tr>
 		</c:forEach>
 	</table>
-
+<c:if test="${fn:length(gameInfo.playerList) > 1 }">
+	<form action="do.startgame" method="post">
+		<input type="submit" value="<s:message code="ACTION.STARTGAME"/>" />
+		<input type="hidden" name="playerId" value="${playerId}" />
+	</form>
+</c:if>
 </body>
 </html>

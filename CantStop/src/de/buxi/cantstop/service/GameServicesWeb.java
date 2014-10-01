@@ -44,7 +44,7 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 	
 	@Override
 	public GameTransferObject reinitializeGame() throws GameException {
-		log.info("Reinitializing GameController and loading a new instance");
+		log.debug("Reinitializing GameController and loading a new instance");
 		this.gameController = (GameController) context.getBean("gameController");
 		try {
 			return gameController.doGetTransferObject();

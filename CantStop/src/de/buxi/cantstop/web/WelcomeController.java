@@ -41,34 +41,23 @@ public class WelcomeController {
 			gameInfo =gameService.reinitializeGame();
 		}
 		
-		if (gameInfo.getPlayerList().size()>4) {
+		if (gameInfo.getPlayerList().size() == 4) {
 			log.warn("Too many player");
+			model.addAttribute("errorMsg", "ERROR.TOOMANYPLAYER");
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			return "gameerrorinfo";
 		} 
 		else if (!GameState.INIT.equals(gameInfo.getGameState())) {
 			log.error("Game have already started");
 			model.addAttribute("errorMsg", "ERROR.GAMEALREADYSTARTED");
 			model.addAttribute("gameInfo", gameService.getAllGameInformation());
-			return "gamealreadystarted";
+			return "gameerrorinfo";
 		} else {
-			 playerId = gameService.addPlayer(playerName);
-			 log.info("New player generated with id:" + playerId);
-			 model.addAttribute("playerId", playerId);
-			 try {
-					gameService.startGame();
-					log.info("do.gamestart:Incoming playerId:" + playerId);
-					model.addAttribute("gameInfo", gameService.startTurn());
-					model.addAttribute("gameInfo", gameService.getAllGameInformation());
-					model.addAttribute("playerId", playerId);
-					return "play";
-				} catch (NotEnoughPlayerException e) {
-					log.error("Not enough player in game");
-					model.addAttribute("errorMsg", "ERROR.NOTENOUGHPLAYER");
-					model.addAttribute("gameInfo", gameService.getAllGameInformation());
-					model.addAttribute("playerId", playerId);
-					return "waitingforplayer";
-				}
+			playerId = gameService.addPlayer(playerName);
+			log.info("New player generated with id:" + playerId);
+			model.addAttribute("playerId", playerId);
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			return "waitingforplayer";
 		}
-		model.addAttribute("gameInfo", gameService.getAllGameInformation());
-		return "play";
 	}
 }

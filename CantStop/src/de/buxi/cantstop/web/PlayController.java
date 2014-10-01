@@ -2,6 +2,7 @@ package de.buxi.cantstop.web;
 
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
@@ -39,11 +40,35 @@ public class PlayController {
 		return "play";
 	}
 
+	@RequestMapping({ "do.startgame" })
+	public String doStartGame(@RequestParam("playerId") String playerId,
+			Model model) throws GameException {
+		GameTransferObject to = gameService.getAllGameInformation();
+		log.debug("do.startgame:Incoming playerId:" + playerId);
+		
+		if (GameState.INIT.equals(to.getGameState())) {
+			try {
+				gameService.startGame();
+				log.info("do.gamestart:Incoming playerId:" + playerId);
+				model.addAttribute("gameInfo", gameService.startTurn());
+				model.addAttribute("gameInfo", gameService.getAllGameInformation());
+				model.addAttribute("playerId", playerId);
+				return "play";
+			} catch (NotEnoughPlayerException e) {
+				model.addAttribute("gameInfo", gameService.getAllGameInformation());
+				model.addAttribute("playerId", playerId);
+				return "waitingforplayer";
+			}
+		}
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		return "play";
+	}
+	
 	@RequestMapping({ "do.waitingforplayer" })
 	public String doWaitingForPlayer(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		GameTransferObject to = gameService.getAllGameInformation();
-		log.info("do.waitingforplayer:Incoming playerId:" + playerId);
+		log.debug("do.waitingforplayer:Incoming playerId:" + playerId);
 		if (GameState.IN_ROUND.equals(to.getGameState())) {
 			model.addAttribute("gameInfo", gameService.getAllGameInformation());
 			model.addAttribute("playerId", playerId);
