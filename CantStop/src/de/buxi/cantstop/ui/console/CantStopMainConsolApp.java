@@ -65,146 +65,148 @@ public class CantStopMainConsolApp {
 		gameControllerTO = gameServices.startTurn();
 		log.info("Game turn started");
 		Map<String, String> pairIdTranslate = null;
-		Scanner in = new Scanner(System.in);
-	    do {
-	    	gameControllerTO = gameServices.getAllGameInformation();
-	    	StringBuffer messages = new StringBuffer(); 
-	    	switch (action) {
-			case "1": 
-				if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
-					gameControllerTO = gameServices.finishTurn();
-				}
-				else {
-					messages.append(getMessage("FINISH_ROUND_NOT_ALLOWED"));
-				}
-				break;
-			
-			case "2":
-				gameControllerTO = gameServices.throwDices();
-				break;
-			
-			case "3":
-				changeLocale();
-				messages.append(getMessage("LOCALE_CHANGED", new Object[]{locale}));
-				break;
-			case "4":
-				gameServices.saveState();
-				messages.append("State saved");
-				break;
-			case "5": 
-				gameServices.loadState();
-				messages.append("Saved state loaded");
-				action = "";
-				continue;
-			case "A" :
-			case "a" :
-			case "B" :
-			case "b" :
-			case "C" :
-			case "c" :
-				int chosenPairNum = 0;
-				if ("a".equals(action) || "A".equals(action)) {
-					chosenPairNum = 0;
-				} else if ("b".equals(action) || "B".equals(action)){
-					chosenPairNum = 1;
-				} else if ("c".equals(action) || "C".equals(action)){
-					chosenPairNum = 2;
-				}
-				if (GameState.DICES_THROWN.equals(gameControllerTO.gameState) && 
-						gameControllerTO.choosablePairsWithId.size() > 0 && 
-						chosenPairNum < gameControllerTO.choosablePairsWithId.size()
-						) {
-					log.debug("chosenPairNum:"+chosenPairNum);
-					TwoDicesPair chosenPair = gameControllerTO.choosablePairsWithId.get(pairIdTranslate.get(Integer.toString(chosenPairNum)));
-					log.debug("chosenPair:"+chosenPair);
-					int wayNumber = getWayNumberFromUser(chosenPair);
-					gameControllerTO = gameServices.executePairs(pairIdTranslate.get(Integer.toString(chosenPairNum)), wayNumber);
-				}
-				break;
-			default:
-				break;
-			} 
-	    	/* BUILDING SCREEN START */
-	    	System.out.println(messages.toString());
-			if (StringUtils.isNoneEmpty(gameControllerTO.errorMessage)) {
-				System.out.println(getMessage("GAME_MESSAGE", new Object[]{getMessage(gameControllerTO.errorMessage)}));
-			}
-			
-	    	System.out.print(getMessage("GAME_STATUS"));
-	    	System.out.println(getMessage("STATE_"+gameControllerTO.gameState.toString()));
-
-	    	//display board
-	    	System.out.println(gameControllerTO.boardDisplay);
-	    	
-	    	//display players
-	    	int actuellePlayer = gameControllerTO.actualPlayerNumber;
-	    	List<Player> playerList = gameControllerTO.playerList;
-	    	for (int i = 0; i < playerList.size(); i++) {
-	    		String inTurnMessage = getMessage("IN_TURN") + "----> ";
-				if (i == actuellePlayer) {
-					System.out.print(inTurnMessage);
-				}
-				else {
-					System.out.print(StringUtils.leftPad("", inTurnMessage.length()));
-				}
-				System.out.println(playerList.get(i).display());
-			}
-	    	
-	    	
-	    	//display menu
-	    	System.out.println(getMessage("ACTIONTITLE"));
-	    	System.out.println(getMessage("ACTION_MENU"));
-	    	
-	    	// displaying pairs to choose
-	    	int choosablePairNumber = 0;
-	    	if (GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
-		    	Collection<Dice> dices = gameControllerTO.dices;
-		    	
-		    	//displaying dices
-		    	System.out.println(getMessage("PLAYER_THROWN", new Object[]{gameControllerTO.actualPlayer.getName(), dices}));
+		// Java 7 feature: ARM
+		try (Scanner in = new Scanner(System.in);) {
+		    do {
+		    	gameControllerTO = gameServices.getAllGameInformation();
+		    	StringBuffer messages = new StringBuffer(); 
+		    	// Java 7 feature: Strings in switch case
+		    	switch (action) {
+				case "1": 
+					if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
+						gameControllerTO = gameServices.finishTurn();
+					}
+					else {
+						messages.append(getMessage("FINISH_ROUND_NOT_ALLOWED"));
+					}
+					break;
 				
-		    	for (int i = 0; i < gameControllerTO.choosablePairsWithId.size(); i++) {
-		    		System.out.print(StringUtils.center(pairChoose[i], 15));
+				case "2":
+					gameControllerTO = gameServices.throwDices();
+					break;
+				
+				case "3":
+					changeLocale();
+					messages.append(getMessage("LOCALE_CHANGED", new Object[]{locale}));
+					break;
+				case "4":
+					gameServices.saveState();
+					messages.append("State saved");
+					break;
+				case "5": 
+					gameServices.loadState();
+					messages.append("Saved state loaded");
+					action = "";
+					continue;
+				case "A" :
+				case "a" :
+				case "B" :
+				case "b" :
+				case "C" :
+				case "c" :
+					int chosenPairNum = 0;
+					if ("a".equals(action) || "A".equals(action)) {
+						chosenPairNum = 0;
+					} else if ("b".equals(action) || "B".equals(action)){
+						chosenPairNum = 1;
+					} else if ("c".equals(action) || "C".equals(action)){
+						chosenPairNum = 2;
+					}
+					if (GameState.DICES_THROWN.equals(gameControllerTO.gameState) && 
+							gameControllerTO.choosablePairsWithId.size() > 0 && 
+							chosenPairNum < gameControllerTO.choosablePairsWithId.size()
+							) {
+						log.debug("chosenPairNum:"+chosenPairNum);
+						TwoDicesPair chosenPair = gameControllerTO.choosablePairsWithId.get(pairIdTranslate.get(Integer.toString(chosenPairNum)));
+						log.debug("chosenPair:"+chosenPair);
+						int wayNumber = getWayNumberFromUser(chosenPair);
+						gameControllerTO = gameServices.executePairs(pairIdTranslate.get(Integer.toString(chosenPairNum)), wayNumber);
+					}
+					break;
+				default:
+					break;
+				} 
+		    	/* BUILDING SCREEN START */
+		    	System.out.println(messages.toString());
+				if (StringUtils.isNoneEmpty(gameControllerTO.errorMessage)) {
+					System.out.println(getMessage("GAME_MESSAGE", new Object[]{getMessage(gameControllerTO.errorMessage)}));
 				}
-		    	System.out.println();
-		    	// temporarily translating webIds to consoleIds 
-		    	pairIdTranslate = new HashMap<String, String>();
-		    	for (Entry<String, TwoDicesPair> pairEntry : gameControllerTO.getChoosablePairsWithId().entrySet()) {
-					System.out.print(StringUtils.center(pairEntry.getValue().display(), 15));
-					pairIdTranslate.put(Integer.toString(choosablePairNumber), pairEntry.getKey());
-					choosablePairNumber++;
+				
+		    	System.out.print(getMessage("GAME_STATUS"));
+		    	System.out.println(getMessage("STATE_"+gameControllerTO.gameState.toString()));
+	
+		    	//display board
+		    	System.out.println(gameControllerTO.boardDisplay);
+		    	
+		    	//display players
+		    	int actuellePlayer = gameControllerTO.actualPlayerNumber;
+		    	List<Player> playerList = gameControllerTO.playerList;
+		    	for (int i = 0; i < playerList.size(); i++) {
+		    		String inTurnMessage = getMessage("IN_TURN") + "----> ";
+					if (i == actuellePlayer) {
+						System.out.print(inTurnMessage);
+					}
+					else {
+						System.out.print(StringUtils.leftPad("", inTurnMessage.length()));
+					}
+					System.out.println(playerList.get(i).display());
 				}
-		    	System.out.println();
-	    	}
-	    	
-	    	if (choosablePairNumber>0) {
-	    		System.out.print(getMessage("CHOOSE_A_PAIR"));
-	    		System.out.print(SPACE + pairChoose[0]);
-	    		if (choosablePairNumber > 1) {
-	    			System.out.print(SPACE + pairChoose[1]);
-	    		}
-	    		if (choosablePairNumber > 2) {
-	    			System.out.print(SPACE + pairChoose[2]);
-	    		}
-	    		System.out.println();
-	    	}
-	    	if (GameState.GAME_WIN.equals(gameControllerTO.gameState)) {
-	    		System.out.println(getMessage("STATE_GAME_WIN", new Object[]{gameControllerTO.actualPlayer.getName()} ));
-	    		break;
-	    	}
-	    	/* BUILDING SCREEN END */
-
-	    	// Getting input from User
-	    	
-	    	if (!GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
-	    		System.out.println(getMessage("ENTER_ACTION_NUMBER"));
-	    	}
-		    action = in.next();      
-		    System.out.println(getMessage("ENTERED_ACTION", new Object[]{action}));
-		    gameControllerTO = null;
-		    
-	    } while (!"0".equals(action));
-	    in.close();
+		    	
+		    	
+		    	//display menu
+		    	System.out.println(getMessage("ACTIONTITLE"));
+		    	System.out.println(getMessage("ACTION_MENU"));
+		    	
+		    	// displaying pairs to choose
+		    	int choosablePairNumber = 0;
+		    	if (GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
+			    	Collection<Dice> dices = gameControllerTO.dices;
+			    	
+			    	//displaying dices
+			    	System.out.println(getMessage("PLAYER_THROWN", new Object[]{gameControllerTO.actualPlayer.getName(), dices}));
+					
+			    	for (int i = 0; i < gameControllerTO.choosablePairsWithId.size(); i++) {
+			    		System.out.print(StringUtils.center(pairChoose[i], 15));
+					}
+			    	System.out.println();
+			    	// temporarily translating webIds to consoleIds 
+			    	pairIdTranslate = new HashMap<String, String>();
+			    	for (Entry<String, TwoDicesPair> pairEntry : gameControllerTO.getChoosablePairsWithId().entrySet()) {
+						System.out.print(StringUtils.center(pairEntry.getValue().display(), 15));
+						pairIdTranslate.put(Integer.toString(choosablePairNumber), pairEntry.getKey());
+						choosablePairNumber++;
+					}
+			    	System.out.println();
+		    	}
+		    	
+		    	if (choosablePairNumber>0) {
+		    		System.out.print(getMessage("CHOOSE_A_PAIR"));
+		    		System.out.print(SPACE + pairChoose[0]);
+		    		if (choosablePairNumber > 1) {
+		    			System.out.print(SPACE + pairChoose[1]);
+		    		}
+		    		if (choosablePairNumber > 2) {
+		    			System.out.print(SPACE + pairChoose[2]);
+		    		}
+		    		System.out.println();
+		    	}
+		    	if (GameState.GAME_WIN.equals(gameControllerTO.gameState)) {
+		    		System.out.println(getMessage("STATE_GAME_WIN", new Object[]{gameControllerTO.actualPlayer.getName()} ));
+		    		break;
+		    	}
+		    	/* BUILDING SCREEN END */
+	
+		    	// Getting input from User
+		    	
+		    	if (!GameState.DICES_THROWN.equals(gameControllerTO.gameState)) {
+		    		System.out.println(getMessage("ENTER_ACTION_NUMBER"));
+		    	}
+			    action = in.next();      
+			    System.out.println(getMessage("ENTERED_ACTION", new Object[]{action}));
+			    gameControllerTO = null;
+			    
+		    } while (!"0".equals(action));
+		}
 	    System.out.println(getMessage("GAME_EXIT"));
 	}
 
@@ -215,13 +217,18 @@ public class CantStopMainConsolApp {
 	protected int getWayNumberFromUser(TwoDicesPair chosenPair) {
 		int wayNumber = -1;
 		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo())) {
-			Scanner in = new Scanner(System.in);
-			do {
-				System.out.print(getMessage("ENTER_WAYNUMBER", new Object[]{chosenPair.getFirstPair().getSum(), chosenPair.getSecondPair().getSum()}));
-			    wayNumber = in.nextInt();      
-			    System.out.println(getMessage("WAYNUMBER_ENTERED", new Object[]{wayNumber}));
-			} while (wayNumber != chosenPair.getFirstPair().getSum() && wayNumber != chosenPair.getSecondPair().getSum());
-		    in.close();
+			// Java 7 feature: ARM
+			try (Scanner in = new Scanner(System.in);) {
+				do {
+					System.out.print(getMessage("ENTER_WAYNUMBER",
+							new Object[] { chosenPair.getFirstPair().getSum(),
+									chosenPair.getSecondPair().getSum() }));
+					wayNumber = in.nextInt();
+					System.out.println(getMessage("WAYNUMBER_ENTERED",
+							new Object[] { wayNumber }));
+				} while (wayNumber != chosenPair.getFirstPair().getSum()
+						&& wayNumber != chosenPair.getSecondPair().getSum());
+			}
 		}
 		return wayNumber;
 	}

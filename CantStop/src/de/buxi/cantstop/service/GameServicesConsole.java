@@ -108,42 +108,26 @@ public class GameServicesConsole implements GameService {
 	}
 	
 	public void loadState() {
-		InputStream fis = null;
-		ObjectInputStream o = null;
-		try {
-			fis = new FileInputStream("saved.dat");
-			o = new ObjectInputStream(fis);
+		// Java 7 feature: ARM
+		try (
+			InputStream fis = new FileInputStream("saved.dat");
+			ObjectInputStream o = new ObjectInputStream(fis);){
+			
 			GameController savedGameController = (GameController) o.readObject();
 			this.gameController = savedGameController;
-		} catch (IOException e) {
+		} catch (ClassNotFoundException | IOException e) {
 			System.err.println(e);
-		} catch (ClassNotFoundException e) {
-			System.err.println(e);
-		} finally {
-			try {
-				fis.close();
-				o.close();
-			} catch (Exception e) {
-			}
 		}
 	}
 
 	public void saveState() {
-		OutputStream fos = null;
-		ObjectOutputStream o = null;
-
-		try {
-			fos = new FileOutputStream("saved.dat");
-			o = new ObjectOutputStream(fos);
+		// Java 7 feature: ARM
+		try (
+			OutputStream fos = new FileOutputStream("saved.dat");
+			ObjectOutputStream o = new ObjectOutputStream(fos);){
 			o.writeObject( this.gameController);
 		} catch (IOException e) {
 			System.err.println(e);
-		} finally {
-			try {
-				fos.close();
-				o.close();
-			} catch (Exception e) {
-			}
 		}
 	}
 
