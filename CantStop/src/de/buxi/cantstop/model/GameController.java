@@ -629,4 +629,18 @@ public class GameController implements Serializable{
 		to.board = this.getBoard();
 		return to;
 	}
+
+	/**
+	 * removes a player from game
+	 * @param playerId which player has the game finished 
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 */
+	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
+		this.gameState = GameState.GAME_FINISHED;
+		log.info("game was finished by player:" + playerId);
+		this.errorMessage = "GAMEWASFINISHED";
+		return this.doGetTransferObject();		
+	}
 }

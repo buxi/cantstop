@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="refresh" content="1; URL=do.waitingforplayer?playerId=${playerId}">
 <title><s:message code="PLAYROOM" text="Playroom" /></title>
-<s:message code="WAITING.OTHERPLAYER"/><br/>
+<s:message code="WAITING.OTHERPLAYER"/>
 </head>
 <body>
 

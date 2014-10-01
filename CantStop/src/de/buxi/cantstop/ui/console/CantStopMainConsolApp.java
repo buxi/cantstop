@@ -20,11 +20,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.PairChoiceInfo;
 import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.TwoDicesPair;
-import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 /**
  * @author buxi
@@ -59,7 +57,7 @@ public class CantStopMainConsolApp {
 		mainApp.doGame();
 	}
 	
-	private void doGame() throws GameException, NotEnoughPlayerException{
+	private void doGame() throws Exception{
 		String action = "";
 		GameTransferObject gameControllerTO = gameServices.startGame();
 		gameControllerTO = gameServices.startTurn();

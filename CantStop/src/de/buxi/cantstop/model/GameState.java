@@ -18,5 +18,6 @@ public enum GameState implements Serializable {
 	WRONG_PAIR_CHOSEN, 
 	PAIR_USED, 
 	NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED, 
-	GAME_WIN; 
+	GAME_WIN,
+	GAME_FINISHED;
 }

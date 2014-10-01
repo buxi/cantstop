@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -61,11 +62,6 @@ public class GameServicesConsole implements GameService {
 		}
 	}
 
-	@Override
-	public GameTransferObject finishGame() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public GameTransferObject finishTurn() throws GameException {
@@ -146,5 +142,11 @@ public class GameServicesConsole implements GameService {
 			log.error(e.toString());
 			throw new GameException(e);
 		}
+	}
+
+	@Override
+	public GameTransferObject finishGame(String playerId) throws GameException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

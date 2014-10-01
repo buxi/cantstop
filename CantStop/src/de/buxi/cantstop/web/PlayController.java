@@ -2,7 +2,6 @@ package de.buxi.cantstop.web;
 
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
@@ -33,6 +32,13 @@ public class PlayController {
 		return "play";
 	}
 
+	@RequestMapping({ "do.viewgame" })
+	public String doWaitingForPlayer(Model model) throws GameException {
+		log.info("do.viewgame");
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		return "play";
+	}
+
 	@RequestMapping({ "do.waitingforplayer" })
 	public String doWaitingForPlayer(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
@@ -50,10 +56,12 @@ public class PlayController {
 		}
 		
 	}
+	
 	@RequestMapping({ "do.finishgame" })
 	public String doFinishGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		log.info("do.finishgame:Incoming playerId:" + playerId);
+		gameService.finishGame(playerId);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		model.addAttribute("playerId", playerId);
 		return "gameover";

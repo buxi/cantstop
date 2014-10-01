@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
+import de.buxi.cantstop.model.GameState;
+import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
@@ -32,12 +34,25 @@ public class WelcomeController {
 	public String sumbitForm(@RequestParam("playerName") String playerName,
 			Model model) throws GameException {
 		String playerId = "";
-		if (gameService.getAllGameInformation().getPlayerList().size()>4) {
-			log.warn("Too many player");
+		GameTransferObject gameInfo = gameService.getAllGameInformation();
+		
+		if (GameState.GAME_FINISHED.equals(gameInfo.getGameState())) {
+			// reinitialize the game after it was finished
+			//gameService.reinitializeGame();
 		}
-		else {
+		
+		if (gameInfo.getPlayerList().size()>4) {
+			log.warn("Too many player");
+		} 
+		else if (!GameState.INIT.equals(gameInfo.getGameState())) {
+			log.error("Game have already started");
+			model.addAttribute("errorMsg", "ERROR.GAMEALREADYSTARTED");
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			return "gamealreadystarted";
+		} else {
 			 playerId = gameService.addPlayer(playerName);
 			 log.info("New player generated with id:" + playerId);
+			 model.addAttribute("playerId", playerId);
 			 try {
 					gameService.startGame();
 					log.info("do.gamestart:Incoming playerId:" + playerId);
@@ -54,7 +69,6 @@ public class WelcomeController {
 				}
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
-		model.addAttribute("playerId", playerId);
 		return "play";
 	}
 }

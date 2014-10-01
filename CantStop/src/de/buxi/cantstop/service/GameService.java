@@ -6,7 +6,7 @@ import de.buxi.cantstop.model.NotEnoughPlayerException;
 public interface GameService {
 	public GameTransferObject startGame() throws GameException, NotEnoughPlayerException;
 	public GameTransferObject startTurn() throws GameException;
-	public GameTransferObject finishGame();
+	public GameTransferObject finishGame(String playerId) throws GameException;
 	public GameTransferObject finishTurn() throws GameException;
 	
 	public GameTransferObject getAllGameInformation() throws GameException;

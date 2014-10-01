@@ -5,7 +5,7 @@
 <head>
 <c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
 
-<c:if test="${actualPlayer != playerId }">
+<c:if test="${not empty playerId && actualPlayer != playerId }">
 <meta http-equiv="refresh" content="1; URL=play?playerId=${playerId}">
 <s:message code="WAITING.FINISHTURN"/><br/>
 </c:if>
@@ -97,7 +97,7 @@
 	</table>
 
 	<!--  displaying pairs to choose -->
-	<c:if test="${actualPlayer == playerId }">
+	<c:if test="${not empty playerId && actualPlayer == playerId }">
 	<table border=0>
 		<tr>
 			<td>
@@ -149,15 +149,17 @@
 <tr>
 <td><s:message code="ACTIONTITLE"/></td>
 <td>
-	<form action="do.finishgame" method="post">
-	<input type="hidden" name="playerId" value="${playerId}" />
-	<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
-	</form>
+	<c:if test="${not empty playerId}">
+		<form action="do.finishgame" method="post">
+		<input type="hidden" name="playerId" value="${playerId}" />
+		<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
+		</form>
+	</c:if>
 </td>
 <!-- TODO real enum should be used -->
 <c:choose>
 <c:when test="${gameInfo.gameState=='IN_ROUND'}">
-	<c:if test="${actualPlayer == playerId }">
+	<c:if test="${not empty playerId && actualPlayer == playerId }">
 		<td>
 			<form action="do.finishturn" method="post">
 			<input type="hidden" name="playerId" value="${playerId}" />

@@ -3,14 +3,6 @@
  */
 package de.buxi.cantstop.service;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +50,6 @@ public class GameServicesWeb implements GameService {
 			log.error(e.toString());
 			throw new GameException(e);
 		}
-	}
-
-	@Override
-	public GameTransferObject finishGame() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -122,43 +108,26 @@ public class GameServicesWeb implements GameService {
 		}
 	}
 	
-	public void loadState() {
-		InputStream fis = null;
-		ObjectInputStream o = null;
-		try {
-			fis = new FileInputStream("saved.dat");
-			o = new ObjectInputStream(fis);
-			GameController savedGameController = (GameController) o.readObject();
-			this.gameController = savedGameController;
-		} catch (IOException e) {
-			System.err.println(e);
-		} catch (ClassNotFoundException e) {
-			System.err.println(e);
-		} finally {
-			try {
-				fis.close();
-				o.close();
-			} catch (Exception e) {
-			}
+	@Override
+	public GameTransferObject finishGame(String playerId) throws GameException {
+		try {	
+			return gameController.doEndGame(playerId);
+		} catch ( DiceNotThrownException | InvalidWayNumberException e) {
+			log.error(e.toString());
+			throw new GameException(e);
 		}
+		
 	}
 
+	@Override
 	public void saveState() {
-		OutputStream fos = null;
-		ObjectOutputStream o = null;
+		// TODO Auto-generated method stub
+		
+	}
 
-		try {
-			fos = new FileOutputStream("saved.dat");
-			o = new ObjectOutputStream(fos);
-			o.writeObject( this.gameController);
-		} catch (IOException e) {
-			System.err.println(e);
-		} finally {
-			try {
-				fos.close();
-				o.close();
-			} catch (Exception e) {
-			}
-		}
+	@Override
+	public void loadState() {
+		// TODO Auto-generated method stub
+		
 	}
 }
