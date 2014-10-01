@@ -38,7 +38,7 @@ public class WelcomeController {
 		
 		if (GameState.GAME_FINISHED.equals(gameInfo.getGameState())) {
 			// TODO reinitialize the game after it was finished
-			//gameService.reinitializeGame();
+			gameInfo =gameService.reinitializeGame();
 		}
 		
 		if (gameInfo.getPlayerList().size()>4) {

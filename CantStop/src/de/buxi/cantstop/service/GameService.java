@@ -18,4 +18,5 @@ public interface GameService {
 	public void loadState();
 	
 	public String addPlayer(String playerName) throws GameException;
+	public GameTransferObject reinitializeGame() throws GameException;
 }

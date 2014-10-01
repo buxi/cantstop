@@ -42,6 +42,13 @@ public class GameServicesConsole implements GameService {
 	}
 
 	@Override
+	public GameTransferObject reinitializeGame() throws GameException {
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public GameTransferObject startGame() throws GameException {
 		try {
 			return gameController.doGameStart();
