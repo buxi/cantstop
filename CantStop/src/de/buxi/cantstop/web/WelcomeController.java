@@ -37,7 +37,7 @@ public class WelcomeController {
 		GameTransferObject gameInfo = gameService.getAllGameInformation();
 		
 		if (GameState.GAME_FINISHED.equals(gameInfo.getGameState())) {
-			// reinitialize the game after it was finished
+			// TODO reinitialize the game after it was finished
 			//gameService.reinitializeGame();
 		}
 		

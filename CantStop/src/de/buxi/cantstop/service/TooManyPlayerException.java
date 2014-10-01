@@ -12,7 +12,6 @@ public class TooManyPlayerException extends Exception {
 	 */
 	public TooManyPlayerException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -24,7 +23,6 @@ public class TooManyPlayerException extends Exception {
 	public TooManyPlayerException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -33,7 +31,6 @@ public class TooManyPlayerException extends Exception {
 	 */
 	public TooManyPlayerException(String message, Throwable cause) {
 		super(message, cause);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -41,7 +38,6 @@ public class TooManyPlayerException extends Exception {
 	 */
 	public TooManyPlayerException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -49,7 +45,6 @@ public class TooManyPlayerException extends Exception {
 	 */
 	public TooManyPlayerException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

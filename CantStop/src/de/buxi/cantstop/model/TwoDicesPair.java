@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 /**
  * @author buxi
- * TODO TO is a must http://www.oracle.com/technetwork/articles/javaee/transferobject-139757.html
  */
 public class TwoDicesPair implements Serializable {
 	/**
