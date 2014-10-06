@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
