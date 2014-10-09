@@ -6,7 +6,7 @@
 <c:set var="actualPlayer" value="${gameInfo.actualPlayerNumber}"/>
 
 <c:if test="${not empty playerId && actualPlayer != playerId }">
-<meta http-equiv="refresh" content="1; URL=play?playerId=${playerId}">
+<!-- < m e t a http-equiv="refresh" content="1; URL=play?playerId=${playerId}">-->
 <s:message code="WAITING.FINISHTURN"/><br/>
 </c:if>
 <title><s:message code="PLAYROOM" text="Playroom" /></title>

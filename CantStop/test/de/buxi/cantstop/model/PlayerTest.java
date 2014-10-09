@@ -31,17 +31,17 @@ public class PlayerTest {
 	}
 
 	/**
-	 * Test method for {@link de.buxi.cantstop.model.Player#getOneClimber()}.
+	 * Test method for {@link de.buxi.cantstop.model.Player#aquireOneClimber()}.
 	 * @throws NotAvailableClimberException 
 	 */
 	@Test(expected=NotAvailableClimberException.class)
 	public void testGetOneClimberHasNo() throws NotAvailableClimberException {
 		Player player = new Player(1, "testPlayer", Color.BLUE);
-		player.getOneClimber();
+		player.aquireOneClimber();
 	}
 
 	/**
-	 * Test method for {@link de.buxi.cantstop.model.Player#getOneClimber()}.
+	 * Test method for {@link de.buxi.cantstop.model.Player#aquireOneClimber()}.
 	 */
 	@Test(expected=NotAvailableClimberException.class)
 	public void testGetOneClimberWith2Climber() throws NotAvailableClimberException {
@@ -51,23 +51,23 @@ public class PlayerTest {
 		climbers.add(new Climber());
 		player.addClimbers(climbers);
 		
-		assertNotNull("he has Climber",player.getOneClimber());
-		assertNotNull("he has Climber",player.getOneClimber());
-		assertNull("he has no Climber",player.getOneClimber());
+		assertNotNull("he has Climber",player.aquireOneClimber());
+		assertNotNull("he has Climber",player.aquireOneClimber());
+		assertNull("he has no Climber",player.aquireOneClimber());
 	}
 	
 	/**
-	 * Test method for {@link de.buxi.cantstop.model.Player#getOneMarker()}.
+	 * Test method for {@link de.buxi.cantstop.model.Player#aquireOneMarker()}.
 	 * @throws NoMarkerIsAvailableException 
 	 */
 	@Test(expected=NoMarkerIsAvailableException.class)
 	public void testGetOneMarkerHasNo() throws NoMarkerIsAvailableException {
 		Player player = new Player(1, "testPlayer", Color.BLUE);
-		player.getOneMarker();
+		player.aquireOneMarker();
 	}
 	
 	/**
-	 * Test method for {@link de.buxi.cantstop.model.Player#getOneMarker()}.
+	 * Test method for {@link de.buxi.cantstop.model.Player#aquireOneMarker()}.
 	 * @throws NoMarkerIsAvailableException 
 	 */
 	@Test(expected=NoMarkerIsAvailableException.class)
@@ -78,8 +78,8 @@ public class PlayerTest {
 		steine.add(new Marker(Color.BLUE));
 		player.addMarkers(steine);
 		
-		assertNotNull("he has Marker",player.getOneMarker());
-		assertNotNull("he has Marker",player.getOneMarker());
-		assertNull("he has keinen Marker",player.getOneMarker());
+		assertNotNull("he has Marker",player.aquireOneMarker());
+		assertNotNull("he has Marker",player.aquireOneMarker());
+		assertNull("he has keinen Marker",player.aquireOneMarker());
 	}
 }

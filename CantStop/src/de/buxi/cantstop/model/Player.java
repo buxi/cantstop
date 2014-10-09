@@ -162,7 +162,7 @@ public class Player implements Serializable{
 	 * @return Climber
 	 * @throws NotAvailableClimberException 
 	 */
-	public Climber getOneClimber() throws NotAvailableClimberException {
+	public Climber aquireOneClimber() throws NotAvailableClimberException {
 		if (climbers == null || climbers.isEmpty()) {
 			throw new NotAvailableClimberException("Player have no more climber");
 		}
@@ -175,7 +175,7 @@ public class Player implements Serializable{
 	 * gives a marker, if there is more
 	 * @throws NoMarkerIsAvailableException
 	 */
-	public Marker getOneMarker() throws NoMarkerIsAvailableException {
+	public Marker aquireOneMarker() throws NoMarkerIsAvailableException {
 		if (markers == null || markers.isEmpty()) {
 			throw new NoMarkerIsAvailableException("Player have no more marker:" + this.getName());
 		}

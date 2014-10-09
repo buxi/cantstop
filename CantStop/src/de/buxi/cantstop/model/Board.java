@@ -252,7 +252,7 @@ public class Board implements Serializable {
 				}
 				else {
 					// place new marker
-					climber = way.markClimberNewMarker(player.getOneMarker());
+					climber = way.markClimberNewMarker(player.aquireOneMarker());
 				}
 				freeClimber.add(climber);
 			}

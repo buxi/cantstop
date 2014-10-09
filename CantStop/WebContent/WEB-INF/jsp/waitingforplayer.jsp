@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
 <html>
 <head>
-<meta http-equiv="refresh" content="1; URL=do.waitingforplayer?playerId=${playerId}">
+<!-- < m e t a http-equiv="refresh" content="1; URL=do.waitingforplayer?playerId=${playerId}"> -->
 <title><s:message code="PLAYROOM" text="Playroom" /></title>
 <s:message code="WAITING.OTHERPLAYER"/>
 </head>

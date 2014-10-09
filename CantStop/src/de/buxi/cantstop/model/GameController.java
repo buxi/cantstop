@@ -549,9 +549,9 @@ public class GameController implements Serializable{
 			if (!way.isClimberOnRope() ) {
 				// no climber on the way
 				if (way.isMarkerOnRope(player.getColor())) {
-					way.placeClimberAfterMarker(player.getOneClimber(), player.getColor());
+					way.placeClimberAfterMarker(player.aquireOneClimber(), player.getColor());
 				} else {
-					way.placeClimberOntoFirstRopePoint(player.getOneClimber());	
+					way.placeClimberOntoFirstRopePoint(player.aquireOneClimber());	
 				}
 				
 			} else {
