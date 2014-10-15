@@ -2,7 +2,6 @@ package de.buxi.cantstop.web;
 
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
@@ -46,19 +45,13 @@ public class PlayController {
 		GameTransferObject to = gameService.getAllGameInformation();
 		log.debug("do.startgame:Incoming playerId:" + playerId);
 		
-		if (GameState.INIT.equals(to.getGameState())) {
-			try {
-				gameService.startGame();
-				log.info("do.gamestart:Incoming playerId:" + playerId);
-				model.addAttribute("gameInfo", gameService.startTurn());
-				model.addAttribute("gameInfo", gameService.getAllGameInformation());
-				model.addAttribute("playerId", playerId);
-				return "play";
-			} catch (NotEnoughPlayerException e) {
-				model.addAttribute("gameInfo", gameService.getAllGameInformation());
-				model.addAttribute("playerId", playerId);
-				return "waitingforplayer";
-			}
+		if (GameState.ENOUGH_PLAYER.equals(to.getGameState())) {
+			gameService.startGame();
+			log.info("do.gamestart:Incoming playerId:" + playerId);
+			model.addAttribute("gameInfo", gameService.startTurn());
+			model.addAttribute("gameInfo", gameService.getAllGameInformation());
+			model.addAttribute("playerId", playerId);
+			return "play";
 		}
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "play";

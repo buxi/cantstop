@@ -22,7 +22,7 @@ import de.buxi.cantstop.model.Marker;
 import de.buxi.cantstop.model.Player;
 import de.buxi.cantstop.model.Way;
 
-public class GameControllerSetupTest extends SpringLoaderSuperClass{
+public class GameControllerSetupTest extends SpringLoaderSuperClassModelTests{
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -90,6 +90,6 @@ public class GameControllerSetupTest extends SpringLoaderSuperClass{
 		List<Climber> climbers = gameController.getClimbers();
 		assertNotNull("Climber is null", climbers);
 		assertEquals("3 Climbers missing", 3, climbers.size());
-		assertEquals("INIT Status", GameState.INIT, gameController.getGameStatus());
+		assertEquals("ENOUGH_PLAYER Status", GameState.ENOUGH_PLAYER, gameController.getGameStatus());
 	}
 }

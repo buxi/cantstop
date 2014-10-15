@@ -23,7 +23,7 @@ import de.buxi.cantstop.model.Way;
  * @author buxi
  *
  */
-public class WayTest extends SpringLoaderSuperClass {
+public class WayTest extends SpringLoaderSuperClassModelTests {
 
 	private GameFactory gameFactory;
 	/**

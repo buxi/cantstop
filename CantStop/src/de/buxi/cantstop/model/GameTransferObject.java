@@ -157,5 +157,19 @@ public class GameTransferObject {
 		return Integer.toString(actualPlayerNumber);
 	}
 	
-	
+	public String getJoinedPlayersListAJAX() {
+		StringBuffer result = new StringBuffer();
+		for (Player player : getPlayerList()) {
+			result.append(player.getName());
+			result.append(", ");
+		}
+		
+		// deleting the last, unnecessary comma and space
+		if (getPlayerList() != null && getPlayerList().size() > 0) {
+			result.deleteCharAt(result.length()-1);
+			result.deleteCharAt(result.length()-1);
+		}
+
+		return result.toString();
+	}
 }

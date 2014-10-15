@@ -11,11 +11,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author buxi
- * loads Spring Context and makes it visible for the tests
+ * loads Spring Context and makes it visible for the tests which are related to
+ * the application model
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/cantstopGameBeans.xml")
-public class SpringLoaderSuperClass {
+public class SpringLoaderSuperClassModelTests {
 	@Autowired
 	protected ApplicationContext ac;
 	

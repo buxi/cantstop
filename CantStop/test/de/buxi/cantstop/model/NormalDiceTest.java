@@ -8,7 +8,7 @@ import org.junit.Test;
 import de.buxi.cantstop.model.Dice;
 import de.buxi.cantstop.model.DiceNotThrownException;
 
-public class NormalDiceTest extends SpringLoaderSuperClass {
+public class NormalDiceTest extends SpringLoaderSuperClassModelTests {
 	
 	@Before
 	public void setUp() throws Exception {

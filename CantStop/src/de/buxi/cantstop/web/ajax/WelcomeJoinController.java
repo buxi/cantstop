@@ -1,0 +1,89 @@
+package de.buxi.cantstop.web.ajax;
+
+import java.util.Locale;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+
+import de.buxi.cantstop.model.GameState;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.service.GameException;
+import de.buxi.cantstop.service.GameService;
+
+@Controller
+public class WelcomeJoinController implements ApplicationContextAware{
+	private Log log = LogFactory.getLog(WelcomeJoinController.class);
+	private GameService gameService;
+	private ApplicationContext ac;
+
+	@Autowired
+	public WelcomeJoinController(GameService gameService) {
+		this.gameService = gameService;
+	}
+	
+	/**
+	 * Shows welcome page with join possibility
+	 * @param model
+	 * @return 
+	 * @throws GameException
+	 */
+	@RequestMapping(value="welcome", method = RequestMethod.GET)
+	public String welcome(Model model) throws GameException {
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		return "welcomejoin";
+	}
+	
+	@RequestMapping(value="do.addplayer", method = RequestMethod.POST)
+	public @ResponseBody JsonResponse addPlayer(@RequestParam("playerName") String playerName, Locale locale) throws GameException {
+		JsonResponse response = new JsonResponse();
+		
+		String playerId = "";
+		GameTransferObject gameInfo = gameService.getAllGameInformation();
+		log.info("Incoming playerName:" + playerName);
+		
+		if (StringUtils.isEmpty(playerName)) {
+			response.setStatus(JsonResponse.ERROR);
+			response.setErrorMessage(ac.getMessage("ERROR.NAMEISREQUIRED", null, locale)); 
+			response.setGto(gameService.getAllGameInformation());
+			return response;
+		} 
+		if (GameState.GAME_FINISHED.equals(gameInfo.getGameState())) {
+			// reinitialize the game after it was finished
+			gameInfo =gameService.reinitializeGame();
+		}
+		
+		if (gameInfo.getPlayerList().size() == 4) {
+			log.warn("Too many player");
+			response.setStatus(JsonResponse.ERROR);
+			response.setErrorMessage(ac.getMessage("ERROR.TOOMANYPLAYER", null, locale)); 
+		} 
+		else if (!GameState.INIT.equals(gameInfo.getGameState())) {
+			log.error("Game have already started");
+			response.setStatus(JsonResponse.ERROR);
+			response.setErrorMessage(ac.getMessage("ERROR.GAMEALREADYSTARTED", null, locale)); 
+		} else {
+			playerId = gameService.addPlayer(playerName);
+			log.info("New player generated with id:" + playerId);
+			response.setMethodResult(playerId);
+		}
+		response.setGto(gameService.getAllGameInformation());
+		return response;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		ac = applicationContext;
+	}	
+}

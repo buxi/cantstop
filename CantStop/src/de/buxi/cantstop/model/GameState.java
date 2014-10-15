@@ -10,7 +10,15 @@ import java.io.Serializable;
  *
  */
 public enum GameState implements Serializable {
+	/**
+	 * game is initialized, waiting for players to join
+	 */
 	INIT, 
+	/**
+	 * minimum number of player have joined to the game, it can be started
+	 */
+	ENOUGH_PLAYER, 
+	
 	IN_GAME, 
 	IN_ROUND, 
 	ROUND_FINISHED, 

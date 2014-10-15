@@ -1,4 +1,4 @@
-package de.buxi.cantstop.web;
+package de.buxi.cantstop.web.ajax;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,28 +17,25 @@ import de.buxi.cantstop.service.GameService;
 public class PollingController {
 	private Log log = LogFactory.getLog(PollingController.class);
 	private GameService gameService;
-
+	
 	@Autowired
 	public PollingController(GameService gameService) {
 		this.gameService = gameService;
 	}
 	
-	// response is returned as JSON, because jackson jars are on classpath
+	// 
+	/**
+	 * method to return all game related information to an ajax polling function
+	 * response is returned as JSON, because jackson jars are on classpath
+	 * @param model
+	 * @return GameTransferObject in JSON format
+	 * @throws GameException
+	 */
 	@RequestMapping(value= "polling", method = RequestMethod.POST)
 	public @ResponseBody GameTransferObject poll(Model model) throws GameException {
 		//log.debug("polling called");
 		GameTransferObject gameInfo = gameService.getAllGameInformation();
-		//gameInfo.errorMessage = "aaaaaaaaaaaaaaa";
-		
 		model.addAttribute("gameInfo", gameInfo);
 		return gameInfo;
 	}
-	
-	
-	@RequestMapping(value= "polling", method = RequestMethod.GET)
-	public String welcome(Model model) throws GameException {
-		model.addAttribute("gameInfo", gameService.getAllGameInformation());
-		return "polling";
-	}
-	
 }

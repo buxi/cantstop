@@ -69,6 +69,9 @@ public class GameController implements Serializable{
 		this.climbers = climbers;
 		this.gameState = GameState.INIT;
 		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
+		if (players != null && players.size() >= GameController.MINIMUM_PLAYER_NUMBER) {
+			this.gameState = GameState.ENOUGH_PLAYER;
+		}
 	}
 
 	/**
@@ -269,6 +272,7 @@ public class GameController implements Serializable{
 	
 	/**
 	 * @param expectedStatuses with or
+	 * @throws InvalidGameStateException 
 	 */
 	private void checkGameStatus(List<GameState> expectedStatuses) {
 		if (!expectedStatuses.contains(this.getGameStatus())) {
@@ -282,11 +286,8 @@ public class GameController implements Serializable{
 	 * @throws DiceNotThrownException 
 	 * @throws NotEnoughPlayerException 
 	 */
-	public GameTransferObject doGameStart() throws  InvalidWayNumberException, NotEnoughPlayerException, DiceNotThrownException {
-		checkGameStatus(Arrays.asList(GameState.INIT));
-		if (this.playerMap.keySet().size() < GameController.MINIMUM_PLAYER_NUMBER) {
-			throw new NotEnoughPlayerException("Not enough player");
-		}
+	public GameTransferObject doGameStart() throws  InvalidWayNumberException, DiceNotThrownException {
+		checkGameStatus(Arrays.asList(GameState.ENOUGH_PLAYER));
 		determineFirstPlayer();
 		determinePlayerOrderStandard(); 
 		// distributes Markers
@@ -561,9 +562,6 @@ public class GameController implements Serializable{
 		}
 	}
 	
-	
-
-	
 	/**
 	 * Adds a player to the player list
 	 * @param playerName
@@ -571,6 +569,7 @@ public class GameController implements Serializable{
 	 * @throws TooManyPlayerException
 	 */
 	public String doAddPlayer(String playerName) throws TooManyPlayerException {
+		checkGameStatus(Arrays.asList(GameState.INIT, GameState.ENOUGH_PLAYER));
 		// TODO id should be generated in a better way (for example with Spring)
 		Color playerColor = getAFreeColor();
 		int playerId = playerMap.keySet().size();
@@ -578,6 +577,9 @@ public class GameController implements Serializable{
 		playerMap.put(playerColor, newPlayer);
 		determinePlayerOrderStandard();
 		actualPlayerNumber = playerId;
+		if (this.playerMap.keySet().size() >= GameController.MINIMUM_PLAYER_NUMBER) {
+			this.gameState = GameState.ENOUGH_PLAYER;
+		}
 		return Integer.toString(playerId);
 	}
 

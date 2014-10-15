@@ -36,7 +36,7 @@ import de.buxi.cantstop.model.TwoDicesPair;
 import de.buxi.cantstop.model.Way;
 import de.buxi.cantstop.service.TooManyPlayerException;
 
-public class GameControllerTest extends SpringLoaderSuperClass{
+public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 
 	@Before
 	public void setUp() throws Exception {
@@ -238,7 +238,6 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		gameController.doEndGameTurn();
 		
 		assertEquals("IN_ROUND State expected", GameState.IN_ROUND, gameController.getGameStatus());
-		assertNotNull("errorMessage should be", gameController.getErrorMessage());
 		Player actualPlayer = gameController.getActualPlayer();
 		assertNotEquals("actual Player should be the next", oldPlayer, actualPlayer );
 		Way way2 = gameController.getBoard().getWayByNumber(2);
@@ -295,7 +294,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test
-	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
+	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		assertEquals("First Player should be determined", GameController.DEFAULT_FIRST_PLAYER_NUM, gameController.getActualPlayerNumber());
@@ -316,14 +315,14 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 
 	@Test(expected=InvalidGameStateException.class)
-	public void testDoGameStartInvalidState() throws DiceNotThrownException, InvalidWayNumberException, NotEnoughPlayerException {
+	public void testDoGameStartInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doGameStart();
 	}
 	
 	@Test
-	public void testDoPairInputCheckWithValidWaehlbarPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
+	public void testDoPairInputCheckWithValidWaehlbarPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -334,7 +333,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test(expected=InvalidWayNumberException.class)
-	public void testDoPairInputCheckWithInValidWayNumber() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
+	public void testDoPairInputCheckWithInValidWayNumber() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -350,7 +349,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 
 	@Test(expected=InvalidPairsException.class)
-	public void testDoPairInputCheckWithInValidPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
+	public void testDoPairInputCheckWithInValidPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -365,7 +364,7 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 	}
 	
 	@Test()
-	public void testDoPairInputCheckWithValidAberNeuPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException, NotEnoughPlayerException {
+	public void testDoPairInputCheckWithValidAberNeuPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doGameStart();
 		gameController.doStartGameTurn();
@@ -379,11 +378,6 @@ public class GameControllerTest extends SpringLoaderSuperClass{
 		gameController.doExecutePairs(basePairPair, -1);
 	}
 	
-	@Test
-	public void testDoGetTransferObject() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void doAddPlayer() throws TooManyPlayerException {
 		GameController gameController = (GameController)ac.getBean("testGameController");

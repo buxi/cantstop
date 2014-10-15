@@ -35,7 +35,7 @@ import de.buxi.cantstop.model.Way;
  * @author buxi
  *
  */
-public class BoardTest extends SpringLoaderSuperClass{
+public class BoardTest extends SpringLoaderSuperClassModelTests{
 	/**
 	 * @throws java.lang.Exception
 	 */

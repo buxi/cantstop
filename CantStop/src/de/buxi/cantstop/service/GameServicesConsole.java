@@ -22,7 +22,6 @@ import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 /**
@@ -52,8 +51,7 @@ public class GameServicesConsole implements GameService {
 	public GameTransferObject startGame() throws GameException {
 		try {
 			return gameController.doGameStart();
-		} catch (InvalidWayNumberException | NotEnoughPlayerException
-				| DiceNotThrownException e) {
+		} catch (InvalidWayNumberException | DiceNotThrownException e) {
 			log.error(e.toString());
 			throw new GameException(e);
 		}

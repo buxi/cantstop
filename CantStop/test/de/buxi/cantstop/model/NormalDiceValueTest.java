@@ -15,7 +15,7 @@ import de.buxi.cantstop.model.DiceNotThrownException;
  * @author buxi
  *
  */
-public class NormalDiceValueTest  extends SpringLoaderSuperClass{
+public class NormalDiceValueTest  extends SpringLoaderSuperClassModelTests{
 	// TODO not nice, rarely can fail
 	private int maxthrows = 100; // endless loop to avoid
 

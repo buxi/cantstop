@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
  * @author buxi
  *
  */
-public class DiceManagerTest extends SpringLoaderSuperClass{
+public class DiceManagerTest extends SpringLoaderSuperClassModelTests{
 	private static List<Dice> emptyDicesList = new ArrayList<Dice>();
 	
 	/**

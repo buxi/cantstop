@@ -35,7 +35,7 @@ import de.buxi.cantstop.model.TwoDicesPair;
  *  WxM  : Way x marked
  *  WxBS : Climber on the Way x
  */
-public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClass{
+public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassModelTests{
 
 	
 	private class DiceValuesPairChoosableContainter {

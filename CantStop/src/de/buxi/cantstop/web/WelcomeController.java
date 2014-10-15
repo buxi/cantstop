@@ -30,7 +30,7 @@ public class WelcomeController {
 		return "welcome";
 	}
 	@RequestMapping(method = RequestMethod.POST)
-	public String sumbitForm(@RequestParam("playerName") String playerName,
+	public String submitForm(@RequestParam("playerName") String playerName,
 			Model model) throws GameException {
 		String playerId = "";
 		GameTransferObject gameInfo = gameService.getAllGameInformation();

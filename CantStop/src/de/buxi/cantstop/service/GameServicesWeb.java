@@ -18,7 +18,6 @@ import de.buxi.cantstop.model.InvalidWayNumberException;
 import de.buxi.cantstop.model.NoClimberOnWayException;
 import de.buxi.cantstop.model.NoMarkerIsAvailableException;
 import de.buxi.cantstop.model.NotAvailableClimberException;
-import de.buxi.cantstop.model.NotEnoughPlayerException;
 import de.buxi.cantstop.model.NullClimberException;
 import de.buxi.cantstop.model.RopePointInvalidUsageException;
 /**
@@ -55,7 +54,7 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 	}
 	
 	@Override
-	public GameTransferObject startGame() throws GameException, NotEnoughPlayerException {
+	public GameTransferObject startGame() throws GameException {
 		try {
 			return gameController.doGameStart();
 		} catch (InvalidWayNumberException | DiceNotThrownException e) {
