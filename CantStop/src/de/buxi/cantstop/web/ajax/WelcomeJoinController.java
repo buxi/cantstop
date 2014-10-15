@@ -21,6 +21,7 @@ import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
 
+
 @Controller
 public class WelcomeJoinController implements ApplicationContextAware{
 	private Log log = LogFactory.getLog(WelcomeJoinController.class);
@@ -38,7 +39,7 @@ public class WelcomeJoinController implements ApplicationContextAware{
 	 * @return 
 	 * @throws GameException
 	 */
-	@RequestMapping(value="welcome", method = RequestMethod.GET)
+	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
 	public String welcome(Model model) throws GameException {
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "welcomejoin";
