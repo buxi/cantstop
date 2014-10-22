@@ -41,6 +41,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 	 */
 	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
 	public String welcome(Model model) throws GameException {
+		log.info("welcome");
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "welcomejoin";
 	}

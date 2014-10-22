@@ -85,7 +85,7 @@ function doAjaxPost() {
 
 
 <div id="welcomeBlock">
-<h2><s:message code="WELCOME.HEADER" text="Welcome to Can't Stop" /></h2>
+<h2><s:message code="WELCOME.HEADER" /></h2>
 <img alt="" width="200" src="resources/images/cantstop.jpg">
 </div>
 
