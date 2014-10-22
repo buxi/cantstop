@@ -16,7 +16,7 @@ function refreshBoard(board) {
 		
 		var hutClimber = way.hut.climber;
 		if (hutClimber != null) {
-			hutHTML += wayNumber + "<img height=15 src='resources/images/climber.png'>";
+			hutHTML +=  "<img height=15 src='resources/images/climber.png'>";
 		}
 		hutHTML += "</td></tr>";
 		wayTableHTML += hutHTML;
@@ -49,15 +49,13 @@ function refreshBoard(board) {
 	}
 }
 
-function refreshDices(dices) {
+function refreshDices(dices, widthInfo) {
 	var htmlCode = "";
 	if (dices == null) { return htmlCode; }
 	
 	for (var i = 0; i < dices.length; i++) {
 		var dice = dices[i];
-		htmlCode += "<td>"; 
-		htmlCode += "<img width=25 src='resources/images/dice"+dice.diceValue+".png'/>";
-		htmlCode += "</td>";
+		htmlCode += "<img width="+widthInfo+" src='resources/images/dice"+dice.diceValue+".png'/>";
 	}
 	return  htmlCode;
 }
@@ -67,23 +65,22 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 	tr.empty();
 	var htmlVal = "";
 	$.each( choosablePairsWithId, function(pairId,pair){
-		htmlVal += "<div>";
-		htmlVal += "<img width=30 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
-		htmlVal += "<img width=30 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
-		htmlVal += "<img width=30 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
-		htmlVal += "<img width=30 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
-		htmlVal += "<form  method='post'>";
+		htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+		htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
+		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
+		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+		htmlVal += "<form  method='post'  style='float:right'>";
 		// TODO localized BUTTON LABEL
-		htmlVal += pairId + "<input type='button' value='BUTTON.PAIRWAHL' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
+		htmlVal += "<input type='button' value='BUTTON.PAIRWAHL' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
 		//<!-- TODO real enum should be used -->
 		if (pair.pairChoiceInfo == 'WITHWAYINFO') {
-			htmlVal += "<select id='chosenPairWayNumber"+pairId+"' name='wayNumber'><option value='"+pair.firstSum+"'>"+pair.firstSum +"</option><option value='"+pair.secondSum+"'>"+pair.secondSum +"</option></select>";
+			htmlVal += "<select style='float:right' id='chosenPairWayNumber"+pairId+"' name='wayNumber'><option value='"+pair.firstSum+"'>"+pair.firstSum +"</option><option value='"+pair.secondSum+"'>"+pair.secondSum +"</option></select>";
 		}
 		else {
 			htmlVal += "<input id='chosenPairWayNumber"+pairId+"'  type='hidden' name='wayNumber' value='-1' />";
 		}
 		htmlVal += "<input type='hidden' name='playerId' value='"+playerId+"'/>";
-		htmlVal += "</form></div>";
+		htmlVal += "</form><br>";
 	})
 	tr.append(htmlVal);
 	return;
@@ -110,7 +107,7 @@ function refreshPlayersMarkers(markers) {
 	return  htmlCode;
 }
 
-function refreshLastUsedPair(lastUsedPairInfo, actualPlayerId) {
+function refreshLastUsedPair(lastUsedPairInfo) {
 	var htmlCode = "";
 	if (lastUsedPairInfo == null) { return htmlCode; }
 	var bgColor1 = "";
@@ -123,15 +120,15 @@ function refreshLastUsedPair(lastUsedPairInfo, actualPlayerId) {
 		bgColor2 = "grey";
 	}
 	
-	htmlCode += "<td valign=middle align=center bgcolor='"+bgColor1+"'>";
-	htmlCode += "<img width=30 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.first.diceValue+".png'/>";
-	htmlCode += "<img width=30 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.second.diceValue+".png'/>";
-	htmlCode += "</td>";
+	htmlCode += "<div style='float:left; valign:middle; align:center; bgcolor:"+bgColor1+"'>";
+	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.first.diceValue+".png'/>";
+	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.second.diceValue+".png'/>";
+	htmlCode += "</div>";
 
-	htmlCode += "<td valign=middle align=center bgcolor='"+bgColor2+"'>";
-	htmlCode += "<img width=30 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.first.diceValue+".png'/>";
-	htmlCode += "<img width=30 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.second.diceValue+".png'/>";
-	htmlCode += "</td>";
+	htmlCode += "<div style='valign:middle; align:center; bgcolor:"+bgColor2+"'>";
+	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.first.diceValue+".png'/>";
+	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.second.diceValue+".png'/>";
+	htmlCode += "</div>";
 	
 	return htmlCode;
 }
@@ -150,8 +147,12 @@ function refreshPlayersList(players, actualPlayerId, lastUsedPairInfo) {
 		
 		$('#playersMarkers_'+player.order).html(refreshPlayersMarkers(player.markers));
 		$('#playersClimbers_'+player.order).html(refreshPlayersClimbers(player.climbers));
-		$('#lastUsedPair_'+player.order).show();
-		$('#lastUsedPairRow_'+player.order).html(refreshLastUsedPair(lastUsedPairInfo, actualPlayerId));
+		$('#lastUsedPair_'+player.order).hide();
+		$('#lastUsedPairRow_'+player.order).html("");
+		if (lastUsedPairInfo.player.order == player.order) {
+			$('#lastUsedPair_'+player.order).show();
+			$('#lastUsedPairRow_'+player.order).html(refreshLastUsedPair(lastUsedPairInfo));
+		}
 	}
 }
 

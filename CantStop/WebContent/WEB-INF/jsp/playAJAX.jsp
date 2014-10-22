@@ -41,8 +41,8 @@ function poll(){
 	  }, 3000);
 	   $('#ajaxLoading').hide(); 
 	}
-	
 (poll());
+
 function doAjaxPost(command, playerIdForm, pairId ) {  
 	  var wayNumberForm = "-1";
 	  if ($('#chosenPairWayNumber'+pairId) != null) {
@@ -60,10 +60,6 @@ function doAjaxPost(command, playerIdForm, pairId ) {
 	    		$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
 	      	  	$('#game_errorMessage').html(response.gto.errorMessage);
-	      	   // $('#playerId').val(response.methodResult);
-	      	    /*$('#addPlayer').hide();
-	      	  	$('#waitingForOthers').show();
-	      	  	*/
 		    }else{
 			  	$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
@@ -91,7 +87,7 @@ function refreshPage(playerId, gto) {
 	refreshBoard(gto.board);
 	//displaying actual throw
 	if (gto.gameState == 'DICES_THROWN') {
-		$('#actualThrowRow').html(refreshDices(gto.dices));
+		$('#actualThrowRow').html(refreshDices(gto.dices, 40));
 		$('#DICES_THROWN').show();
 		
 		//  displaying pairs to choose 
@@ -103,7 +99,7 @@ function refreshPage(playerId, gto) {
 	
 	//displaying last throw
 	if (gto.lastThrow != null) {
-		$('#lastThrowRow').html(refreshDices(gto.lastThrow));
+		$('#lastThrowRow').html(refreshDices(gto.lastThrow, 25));
 		$('#lastThrow').show();
 	}
 	
@@ -132,56 +128,38 @@ function refreshPage(playerId, gto) {
 <jsp:include page="boardAJAX.jsp"/>
 
 
+ 
+<!-- display playerList -->
+<div id="playerList" style="overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 300px;">
+	<c:forEach items="${gameInfo.playerList}" var="player">
+		<div id="inturn_${player.order}" style="display: none; float:left">
+			<s:message code="IN_TURN"/>
+		</div>
+		<div style="float:left; bgColor:${player.color}">${player.name} (${player.order})</div>
+		
+		<!-- display markers -->
+		<div id="playersMarkers_${player.order}" style="float:left"></div>
+		
+		<!-- display climbers -->
+		<div id="playersClimbers_${player.order}" style="float:left"></div>
+		<div id="lastUsedPair_${player.order}">
+			<div id="lastUsedPairRow_${player.order}" ></div>
+		</div>
+		<br>
+	</c:forEach>
+</div>
+
 <!-- display lastThrow  -->
-<div id="lastThrow" style="display: none;">
-	<s:message code="LAST.THROW"/><table><tr id="lastThrowRow"/></table>
-</div>	 
-	<c:set var="lastUsedPairInfo" value="${gameInfo.lastUsedPairInfo }"/>
-	<table border="0">
-		<c:forEach items="${gameInfo.playerList}" var="player">
-			<tr>
-				<td>
-					<div id="inturn_${player.order}" style="display: none;">
-						<s:message code="IN_TURN"/>
-					</div>
-				</td>
-				<td bgcolor="${player.color}">${player.name} (${player.order})</td>
-				<!-- display markers -->
-				<td> 
-					<table border="0"><tr id="playersMarkers_${player.order}">
-					</tr></table>
-				</td>
-				<!-- display climbers -->
-				<td> 
-					<table border="0"><tr><td id="playersClimbers_${player.order}">
-					</td></tr></table>
-				</td>
-				<td>
-					<table id="lastUsedPair_${playerId }" border="1"><tr id="lastUsedPairRow_${playerId }">
-					</tr></table>
-				</td>
-			</tr>
-		</c:forEach>
-	</table>
+<div id="lastThrow" style="display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 200px;">
+	<s:message code="LAST.THROW"/><div id="lastThrowRow" style="float:right" /></div>
+</div>	
 
 <!-- display dices  -->
-<div id="DICES_THROWN" style="display: none;">
-	<s:message code="ACTUAL.THROW"/><table><tr id="actualThrowRow"/></table>
-
+<div id="DICES_THROWN" style="display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 470px;">
+	<div style="float:left"><s:message code="ACTUAL.THROW"/><div id="actualThrowRow"></div></div>
+	
 	<!--  displaying pairs to choose -->
-	<div id="PAIRSTOCHOOSE">
-	<table border=0>
-		<tr>
-			<td>
-				<s:message code="CHOOSE_A_PAIR"/>
-			</td>
-			 	<td>
-				 	<div id="PAIRSTOCHOOSEINNERHTML">
-					</div>
-			 	</td>
-		</tr>
-	</table>
-	</div>
+	<div id="PAIRSTOCHOOSE" style="float:right"><s:message code="CHOOSE_A_PAIR"/><div id="PAIRSTOCHOOSEINNERHTML"></div></div>
 </div>
 
 <!-- TODO real enum should be used -->
@@ -190,24 +168,18 @@ function refreshPage(playerId, gto) {
 </c:if>
 <input type="hidden" id="globalPlayerId" value="${playerId}" />
 
-<table border="0">
-<tr>
-<td><s:message code="ACTIONTITLE"/></td>
-<td>
+<div id="actionButtonPart" style="overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 400px;">
+	<s:message code="ACTIONTITLE"/>
 	<c:if test="${not empty playerId}">
-		<form action="do.finishgame" method="post">
+		<form action="do.finishgame" method="post" style="display:inline;">
 		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
 		<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
 		</form>
 	</c:if>
-
-	<input type="hidden" name="playerId" value="${playerId}" />
-	<div id="commandsInTurn" style="display: none;">
+	<div id="commandsInTurn" style="float:right; display: none; ">
 		<input type="button" value="<s:message code='ACTION.FINISHTURN'/>" onclick="doAjaxPost('do.finishturnAJAX', '${playerId}', null)">
 		<input type="button" value="<s:message code='ACTION.THROW'/>" onclick="doAjaxPost('do.throwAJAX', '${playerId}', null)">
 	</div>
-</td>
-</tr>
-</table>
+</div>
 </body>
 </html>
