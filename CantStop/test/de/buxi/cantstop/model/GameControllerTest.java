@@ -394,13 +394,21 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doAddPlayer("Joska");
 		gameController.doAddPlayer("Joska2");
-		//assertEquals("new PlayerId must be generated and should be 3", "3", playerId);
-		//assertEquals("new PlayerId must be generated and should be 4", "4", playerId2);
 		List<Player> players = gameController.getPlayersInOrder();
 		assertEquals("3 players should be there (2 was preloaded)", 4, players.size());
 		gameController.doAddPlayer("too many");
 	}
 
+	@Test
+	public void testGameFull() throws TooManyPlayerException  {
+		GameController gameController = (GameController)ac.getBean("testGameController");
+		assertFalse("Game is not full", gameController.isGameFull());
+		gameController.doAddPlayer("Joska");
+		assertFalse("Game is not full", gameController.isGameFull());
+		gameController.doAddPlayer("Joska2");
+		assertTrue("Game is full", gameController.isGameFull());
+	}
+	
 	@Test
 	public void testDeterminePlayerOrderStandard() {
 		fail("too simple to test, no real logic in it");

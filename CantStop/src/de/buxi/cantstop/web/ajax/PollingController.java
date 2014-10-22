@@ -31,7 +31,7 @@ public class PollingController {
 	 * @return GameTransferObject in JSON format
 	 * @throws GameException
 	 */
-	@RequestMapping(value= "polling", method = RequestMethod.POST)
+	@RequestMapping(value= "pollingAJAX", method = RequestMethod.POST)
 	public @ResponseBody GameTransferObject poll(Model model) throws GameException {
 		//log.debug("polling called");
 		GameTransferObject gameInfo = gameService.getAllGameInformation();

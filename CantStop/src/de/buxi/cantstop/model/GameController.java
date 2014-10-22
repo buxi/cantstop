@@ -629,7 +629,18 @@ public class GameController implements Serializable{
 			to.dices = this.getDices();
 		}
 		to.board = this.getBoard();
+		to.gameFull = this.isGameFull();
 		return to;
+	}
+
+	/**
+	 * @return true if <code>MAXIMUM_PLAYER_NUMBER</code> have already joined to the game
+	 */
+	public boolean isGameFull() {
+		if (playerMap.values().size() == MAXIMUM_PLAYER_NUMBER) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -32,8 +32,6 @@ public class GameControllerSetupTest extends SpringLoaderSuperClassModelTests{
 	public void setUp() throws Exception {
 	}
 	
-	
-
 	/**
 	 * Test Game preparation Board, Climbers, Players, Markers, etc
 	 */

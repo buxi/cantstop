@@ -23,7 +23,7 @@ import de.buxi.cantstop.service.GameService;
 
 
 @Controller
-public class WelcomeJoinController implements ApplicationContextAware{
+public class WelcomeJoinController implements ApplicationContextAware {
 	private Log log = LogFactory.getLog(WelcomeJoinController.class);
 	private GameService gameService;
 	private ApplicationContext ac;
@@ -45,7 +45,14 @@ public class WelcomeJoinController implements ApplicationContextAware{
 		return "welcomejoin";
 	}
 	
-	@RequestMapping(value="do.addplayer", method = RequestMethod.POST)
+	/**
+	 * Called from welcomejoin.jsp
+	 * @param playerName incoming parameter 
+	 * @param locale need to give back localized error messages
+	 * @return <code>JsonResponse</code> 
+	 * @throws GameException
+	 */
+	@RequestMapping(value="do.addplayerAJAX", method = RequestMethod.POST)
 	public @ResponseBody JsonResponse addPlayer(@RequestParam("playerName") String playerName, Locale locale) throws GameException {
 		JsonResponse response = new JsonResponse();
 		
@@ -69,8 +76,9 @@ public class WelcomeJoinController implements ApplicationContextAware{
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.TOOMANYPLAYER", null, locale)); 
 		} 
-		else if (!GameState.INIT.equals(gameInfo.getGameState())) {
-			log.error("Game have already started");
+		else if (!GameState.INIT.equals(gameInfo.getGameState()) && 
+				 !GameState.ENOUGH_PLAYER.equals(gameInfo.getGameState())) {
+			log.error("Game have already started, gameState:" + gameInfo.getGameState());
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.GAMEALREADYSTARTED", null, locale)); 
 		} else {
@@ -82,6 +90,11 @@ public class WelcomeJoinController implements ApplicationContextAware{
 		return response;
 	}
 
+	/* 
+	 * Needed to access localized messages
+	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 */
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {

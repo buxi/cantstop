@@ -28,6 +28,14 @@ public class GameTransferObject {
 	public Board board;
 	public List<Dice> lastThrow;
 	public UsedPairInfoTO lastUsedPairInfo;
+	public Boolean gameFull;
+
+	/**
+	 * @return the gameFull
+	 */
+	public Boolean getGameFull() {
+		return gameFull;
+	}
 
 	/**
 	 * @return the lastUsedPairInfo

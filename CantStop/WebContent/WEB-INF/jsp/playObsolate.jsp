@@ -18,7 +18,7 @@
 <c:if test="${not empty gameInfo.errorMessage}"><div style="color: red"><s:message code="${gameInfo.errorMessage}"/></div><br/></c:if>
 <s:message code="GAME_STATUS"/>  <s:message code="STATE_${gameInfo.gameState}"/> <br>
 
-<jsp:include page="langSelection.jsp"/>
+<jsp:include page="langSelectionIncl.jsp"/>
 
 <jsp:include page="playerSelection.jsp"/>
 

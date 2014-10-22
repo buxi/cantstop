@@ -36,31 +36,31 @@
 	</bean>
 	
 	<!-- 10 piece BLUE Marker -->
-	<bean id="blueMarkers" factory-bean="gameFactory" factory-method="createMarkers">
+	<bean id="blueMarkers" scope="prototype" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
  		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
  	</bean>
 
 	<!-- 10 piece GREEN Marker -->
-	<bean id="blackMarkers" factory-bean="gameFactory" factory-method="createMarkers">
+	<bean id="blackMarkers" scope="prototype" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
  		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="GREEN"/>
  	</bean>
 
 	<!-- 10 piece YELLOW Marker -->
-	<bean id="yellowMarkers" factory-bean="gameFactory" factory-method="createMarkers">
+	<bean id="yellowMarkers" scope="prototype" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
  		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="YELLOW"/>
  	</bean>
 
 	<!-- 10 piece RED Marker -->
-	<bean id="redMarkers" factory-bean="gameFactory" factory-method="createMarkers">
+	<bean id="redMarkers" scope="prototype" factory-bean="gameFactory" factory-method="createMarkers">
  		<constructor-arg name="number" value="10"/>
  		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="RED"/>
  	</bean>
 
 	<!-- 3 piece Climber -->
-	<bean id="climbers" factory-bean="gameFactory" factory-method="createClimbers">
+	<bean id="climbers" scope="prototype" factory-bean="gameFactory" factory-method="createClimbers">
  		<constructor-arg name="number" value="3"/>
  	</bean>
 
@@ -109,10 +109,10 @@
  	</bean> 
 
 	<!-- Board settings -->
-	<bean id="gameBoard" factory-bean="gameFactory" factory-method="createBoard">
+	<bean id="gameBoard" scope="prototype" factory-bean="gameFactory" factory-method="createBoard">
 		<constructor-arg name="wayDefinitions">
 			<map>
-				<!-- <HutsNumber, RopePointAnnumber> -->
+				<!-- <HutsNumber, RopePointNumber> -->
 				<entry key="2" value="2" />
 				<entry key="3" value="4" />
 				<entry key="4" value="6" />

@@ -18,7 +18,7 @@ function doAjaxPost() {
 	  
 	  $.ajax({  
 	    type: "POST",  
-	    url: "do.addplayer",  
+	    url: "do.addplayerAJAX",  
 	    data: "playerName=" + name, 
 	    success: function(response){
 	    	// we have the response 
@@ -40,10 +40,11 @@ function doAjaxPost() {
 	    }  
 	  });  
 	}  
-	
+
 (function poll(){
+	$('#ajaxLoading').show();   
 	   setTimeout(function(){
-	      $.ajax({ type: "POST", url: "polling", error: function(e){  
+	      $.ajax({ type: "POST", url: "pollingAJAX", error: function(e){  
 	    	  $('#info').html('Error: ' + e.responseText);
 		    }  , success: function(response){
 		    $('#json_status').html("polling called");
@@ -51,18 +52,27 @@ function doAjaxPost() {
 	        $('#gameState').html(response.gameState);
 	        $('#game_errorMessage').html(response.errorMessage);
 	        $('#joinedPlayersList').html(response.joinedPlayersListAJAX);
-			if (response.gameState == 'ENOUGH_PLAYER') {
+			if ($('#playerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
 				$('#startGame').show();
+			}
+			if ($('#playerId').val()=='' && !response.gameFull) {
+				$('#addPlayer').show();
+				$('#waitingForOthers').show();
+			}
+			else {
+				$('#addPlayer').hide();
+				$('#waitingForOthers').hide();
 			}
 			
 			if (response.gameState == 'IN_SPIEL' || response.gameState == 'IN_ROUND' ) {
-				window.location = "play?playerId=" + $('#playerId').val();
+				window.location = "playAJAX?playerId=" + $('#playerId').val();
 			}
 			
 	        //Setup the next poll recursively
 	        poll();
 	      }, dataType: "json"});
 	  }, 3000);
+	   $('#ajaxLoading').hide();
 	})();
 </script>
 <!-- AJAX scripts END -->
@@ -71,34 +81,23 @@ function doAjaxPost() {
 <body>
 
 <!-- language selection -->
-<div id="langSelection">
-  <jsp:include page="langSelection.jsp"/>
-</div>
+<jsp:include page="langSelectionIncl.jsp"/>
+
 
 <div id="welcomeBlock">
 <h2><s:message code="WELCOME.HEADER" text="Welcome to Can't Stop" /></h2>
 <img alt="" width="200" src="resources/images/cantstop.jpg">
 </div>
 
+<!-- game state and error messages selection -->
+<jsp:include page="gameStateIncl.jsp"/>
 
-
-<div id="gameState">
-  <s:message code="GAME_STATUS"/> <s:message code="STATE_${gameInfo.gameState}"/> <br>
-</div>
-
-<div id="messages">
-<c:if test="${not empty errorMsg}"><div style="color: red"><s:message code="${errorMsg}"/></div><br/></c:if>
-<div id="game_errorMessage" style="color: red"></div><br/>
-<div id="json_status" style="color: green;"></div>
-<div id="json_errorMessage" style="color: green;"></div>
-
-</div>
 
 <div id="joinedPlayers">
   <s:message code="JOINED.PLAYERS"/><div id="joinedPlayersList"></div>
 </div>
 
-<div id="addPlayer">
+<div id="addPlayer" style="display: none;">
   <s:message code='JOIN.MESSAGE'/><br/>
   <input type="text" id="playerName">
   <input type="button" value="<s:message code='JOIN.BUTTON'/>" onclick="doAjaxPost()">

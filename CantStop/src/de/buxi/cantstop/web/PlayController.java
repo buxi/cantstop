@@ -32,14 +32,14 @@ public class PlayController {
 		return "play";
 	}
 
-	@RequestMapping({ "do.viewgame" })
+	@RequestMapping({ "do.viewgameOld" })
 	public String doWaitingForPlayer(Model model) throws GameException {
 		log.info("do.viewgame");
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "play";
 	}
 
-	@RequestMapping({ "do.startgame" })
+	@RequestMapping({ "do.startgameOld" })
 	public String doStartGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		GameTransferObject to = gameService.getAllGameInformation();
@@ -57,7 +57,7 @@ public class PlayController {
 		return "play";
 	}
 	
-	@RequestMapping({ "do.waitingforplayer" })
+	@RequestMapping({ "do.waitingforplayerOld" })
 	public String doWaitingForPlayer(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		GameTransferObject to = gameService.getAllGameInformation();
@@ -75,7 +75,7 @@ public class PlayController {
 		
 	}
 	
-	@RequestMapping({ "do.finishgame" })
+	@RequestMapping({ "do.finishgameOld" })
 	public String doFinishGame(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		log.info("do.finishgame:Incoming playerId:" + playerId);
@@ -85,7 +85,7 @@ public class PlayController {
 		return "gameover";
 	}
 
-	@RequestMapping({ "do.finishturn" })
+	@RequestMapping({ "do.finishturnOld" })
 	public String doFinishTurn(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		log.info("do.finishturn:Incoming playerId:" + playerId);
@@ -101,7 +101,7 @@ public class PlayController {
 		return "play";
 	}
 
-	@RequestMapping({ "do.throw" })
+	@RequestMapping({ "do.throwOld" })
 	public String doThrowDices(@RequestParam("playerId") String playerId,
 			Model model) throws GameException {
 		log.info("do.throw: Incoming playerId:" + playerId);
@@ -117,7 +117,7 @@ public class PlayController {
 		return "play";
 	}
 	
-	@RequestMapping({ "do.executePair" })
+	@RequestMapping({ "do.executePairOld" })
 	public String doExecutePair(@RequestParam("playerId") String playerId,
 			@RequestParam("chosenPairId") String chosenPairId, 
 			@RequestParam("wayNumber") String wayNumber, 
