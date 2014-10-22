@@ -7,7 +7,7 @@ function refreshBoard(board) {
 		var wayTableHTML = "";
 		
 		// displaying Hut 
-		var hutHTML = "<tr><td id='h_"+way.number+"' width=10 ";		
+		var hutHTML = "<tr><td id='h_"+way.number+"' style='border:1px solid black; width:30px; height:30px'";		
 		var hutMarker = way.hut.marker;
 		if (hutMarker != null) {
 			 hutHTML += " bgcolor=" + marker.color;
@@ -26,21 +26,18 @@ function refreshBoard(board) {
 		for (var j = 0; j < way.ropePoints.length; j++) {
 			var ropePoint =  way.ropePoints[arrayLength - j - 1];
 			var climber = ropePoint.climber;
-			var rpHTML = "<tr><td width='10'>";
+			var rpHTML = "<tr><td  style='border:1px solid black; width:30px; height:30px'>";
 			if (climber != null) {
-				rpHTML="<img height=15 src='resources/images/climber.png'>";
+				rpHTML +="<img height=15 src='resources/images/climber.png'>";
 			}	
 			if (climber == null && (ropePoint.markers == null || ropePoint.markers.length == 0)) {
 				rpHTML += "<img height=15 src='resources/images/empty.png'>";
 			}
 			// displaying markers
-			rpHTML += "<table><tr>";
 			for (var k = 0; k < ropePoint.markers.length; k++) {
 				var marker = ropePoint.markers[k];
-				rpHTML += "<td bgcolor='"+marker.color+"'>&nbsp;&nbsp;&nbsp;</td>";	
+				rpHTML += "<img height=15 src='resources/images/marker_"+marker.color+".png'>";	
 			}
-			rpHTML += "</tr></table>";
-				
 			rpHTML += "</td></tr>";
 			wayTableHTML += rpHTML;
 			
@@ -102,7 +99,7 @@ function refreshPlayersMarkers(markers) {
 	
 	for (var i = 0; i < markers.length; i++) {
 		var marker = markers[i];
-		htmlCode += "<td bgcolor="+marker.color+">&nbsp;&nbsp;&nbsp;</td>";
+		htmlCode += "<img height=15 src='resources/images/marker_"+marker.color+".png'>";	
 	}
 	return  htmlCode;
 }
@@ -149,7 +146,7 @@ function refreshPlayersList(players, actualPlayerId, lastUsedPairInfo) {
 		$('#playersClimbers_'+player.order).html(refreshPlayersClimbers(player.climbers));
 		$('#lastUsedPair_'+player.order).hide();
 		$('#lastUsedPairRow_'+player.order).html("");
-		if (lastUsedPairInfo.player.order == player.order) {
+		if (lastUsedPairInfo != null && lastUsedPairInfo.player.order == player.order) {
 			$('#lastUsedPair_'+player.order).show();
 			$('#lastUsedPairRow_'+player.order).html(refreshLastUsedPair(lastUsedPairInfo));
 		}

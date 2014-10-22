@@ -98,7 +98,7 @@ function refreshPage(playerId, gto) {
 	}
 	
 	//displaying last throw
-	if (gto.lastThrow != null) {
+	if (gto.lastThrow != null && gto.lastThrow.size>0) {
 		$('#lastThrowRow').html(refreshDices(gto.lastThrow, 25));
 		$('#lastThrow').show();
 	}
@@ -112,45 +112,44 @@ function refreshPage(playerId, gto) {
 </head>
 
 <body>
-
+<div style="width:650px">
 <!-- BUILDING SCREEN -->
 <jsp:include page="langSelectionIncl.jsp"/>
 
-<!-- TODO should be removed in Production -->
-<jsp:include page="playerSelection.jsp"/>
-
 <!-- game state and error messages selection -->
-<jsp:include page="gameStateIncl.jsp"/>
-
-<div id="debugInfo" style="color: blue;"></div>
-
+<div style="width:500px;height:50px; overflow: hidden; white-space: nowrap; border: 1px solid black;  ">
+	<jsp:include page="gameStateIncl.jsp"/>
+</div>
 <!--  display board -->
-<jsp:include page="boardAJAX.jsp"/>
-
+<div id="board" style="float:left; height:500px;">
+	<jsp:include page="boardAJAX.jsp"/>
+</div>
 
  
 <!-- display playerList -->
-<div id="playerList" style="overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 300px;">
+<div id="playerList" style="float:right;  width: 150px; height:500px">
 	<c:forEach items="${gameInfo.playerList}" var="player">
-		<div id="inturn_${player.order}" style="display: none; float:left">
+	<div style="border:1px solid black; height:125px">
+		<div id="inturn_${player.order}" style="display: none; ">
 			<s:message code="IN_TURN"/>
 		</div>
-		<div style="float:left; bgColor:${player.color}">${player.name} (${player.order})</div>
+		<div style="align:center;  bgColor:${player.color}">${player.name}</div>
 		
 		<!-- display markers -->
-		<div id="playersMarkers_${player.order}" style="float:left"></div>
+		<div id="playersMarkers_${player.order}" ></div>
 		
 		<!-- display climbers -->
-		<div id="playersClimbers_${player.order}" style="float:left"></div>
+		<div id="playersClimbers_${player.order}" ></div>
 		<div id="lastUsedPair_${player.order}">
 			<div id="lastUsedPairRow_${player.order}" ></div>
 		</div>
 		<br>
+	</div>
 	</c:forEach>
 </div>
 
 <!-- display lastThrow  -->
-<div id="lastThrow" style="display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 200px;">
+<div id="lastThrow" style=" display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 200px;">
 	<s:message code="LAST.THROW"/><div id="lastThrowRow" style="float:right" /></div>
 </div>	
 
@@ -180,6 +179,8 @@ function refreshPage(playerId, gto) {
 		<input type="button" value="<s:message code='ACTION.FINISHTURN'/>" onclick="doAjaxPost('do.finishturnAJAX', '${playerId}', null)">
 		<input type="button" value="<s:message code='ACTION.THROW'/>" onclick="doAjaxPost('do.throwAJAX', '${playerId}', null)">
 	</div>
+</div>
+
 </div>
 </body>
 </html>

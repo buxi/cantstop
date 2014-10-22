@@ -8,6 +8,6 @@
 <c:set var="board" value="${gameInfo.board }"/>
 <table><tr>
 <c:forEach items="${board.ways}" var="way">
-	<td><table border=1 id="wayTable_${way.number}"></table></td>
+	<td><table id="wayTable_${way.number}"></table></td>
 </c:forEach>
 </tr></table>
