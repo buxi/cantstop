@@ -618,6 +618,7 @@ public class GameController implements Serializable{
 		to.boardDisplay = this.getBoard().display();
 		to.playerList = this.getPlayersInOrder();
 		to.errorMessage = this.errorMessage;
+		to.errorMessageString = "";
 		to.possiblePairs = null;
 		to.choosablePairsWithId = null;
 		to.dices = null;

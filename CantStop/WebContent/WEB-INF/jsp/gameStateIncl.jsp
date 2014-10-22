@@ -4,7 +4,7 @@
   <img height="15" alt="uk" src="resources/images/ajax-loader.gif">
 </div>
 
-<div id="gameState" style="float:left; ">
+<div id="gameState" style="float:left; display:none">
   <s:message code="GAME_STATUS"/> <s:message code="STATE_${gameInfo.gameState}"/> <br>
 </div>
 

@@ -24,11 +24,28 @@ public class GameTransferObject {
 	public List<Player> playerList;
 	public Collection<Dice> dices;
 	public String errorMessage;
+	public String errorMessageString;
 	public Map<String, TwoDicesPair> choosablePairsWithId;
 	public Board board;
 	public List<Dice> lastThrow;
 	public UsedPairInfoTO lastUsedPairInfo;
 	public Boolean gameFull;
+
+	
+	
+	/**
+	 * @return the errorMessageString
+	 */
+	public String getErrorMessageString() {
+		return errorMessageString;
+	}
+
+	/**
+	 * @param errorMessageString the errorMessageString to set
+	 */
+	public void setErrorMessageString(String errorMessageString) {
+		this.errorMessageString = errorMessageString;
+	}
 
 	/**
 	 * @return the gameFull

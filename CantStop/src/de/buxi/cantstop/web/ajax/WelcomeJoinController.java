@@ -40,8 +40,8 @@ public class WelcomeJoinController implements ApplicationContextAware {
 	 * @throws GameException
 	 */
 	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
-	public String welcome(Model model) throws GameException {
-		log.info("welcome");
+	public String welcome(Model model, Locale locale) throws GameException {
+		log.info("welcome, locale:"+locale);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
 		return "welcomejoin";
 	}

@@ -156,7 +156,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale));
 		}
-		response.setGto(gameService.getAllGameInformation());
+		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 	

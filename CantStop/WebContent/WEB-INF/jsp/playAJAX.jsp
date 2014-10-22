@@ -59,11 +59,11 @@ function doAjaxPost(command, playerIdForm, pairId ) {
 	    	if(response.status == "SUCCESS"){
 	    		$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessage);
+	      	  	$('#game_errorMessage').html(response.gto.errorMessageString);
 		    }else{
 			  	$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessage)
+	      	  	$('#game_errorMessage').html(response.gto.errorMessageString)
 		    }
 	    	refreshPage(playerIdForm, response.gto);
 	    },  
@@ -117,7 +117,7 @@ function refreshPage(playerId, gto) {
 <jsp:include page="langSelectionIncl.jsp"/>
 
 <!-- game state and error messages selection -->
-<div style="width:500px;height:50px; overflow: hidden; white-space: nowrap; border: 1px solid black;  ">
+<div style="width:500px;height:50px; overflow: hidden; white-space: nowrap; border: 0px solid black;  ">
 	<jsp:include page="gameStateIncl.jsp"/>
 </div>
 <!--  display board -->
@@ -127,9 +127,9 @@ function refreshPage(playerId, gto) {
 
  
 <!-- display playerList -->
-<div id="playerList" style="float:right;  width: 150px; height:500px">
+<div id="playerList" style="float:right;  width: 160px; height:500px">
 	<c:forEach items="${gameInfo.playerList}" var="player">
-	<div style="border:1px solid black; height:125px">
+	<div style="border:0px solid black; height:125px">
 		<div id="inturn_${player.order}" style="display: none; ">
 			<s:message code="IN_TURN"/>
 		</div>
@@ -149,12 +149,12 @@ function refreshPage(playerId, gto) {
 </div>
 
 <!-- display lastThrow  -->
-<div id="lastThrow" style=" display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 200px;">
+<div id="lastThrow" style=" display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 200px;">
 	<s:message code="LAST.THROW"/><div id="lastThrowRow" style="float:right" /></div>
 </div>	
 
 <!-- display dices  -->
-<div id="DICES_THROWN" style="display: none; overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 470px;">
+<div id="DICES_THROWN" style="display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 470px;">
 	<div style="float:left"><s:message code="ACTUAL.THROW"/><div id="actualThrowRow"></div></div>
 	
 	<!--  displaying pairs to choose -->
@@ -167,7 +167,7 @@ function refreshPage(playerId, gto) {
 </c:if>
 <input type="hidden" id="globalPlayerId" value="${playerId}" />
 
-<div id="actionButtonPart" style="overflow: hidden; white-space: nowrap; border: 1px solid black;  width: 400px;">
+<div id="actionButtonPart" style="overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 400px;">
 	<s:message code="ACTIONTITLE"/>
 	<c:if test="${not empty playerId}">
 		<form action="do.finishgame" method="post" style="display:inline;">
