@@ -134,7 +134,6 @@ public class Way implements Serializable{
 	}
 	
 	/**
-	 * TODO it must by SYNCHRONIZED
 	 * @param newClimber
 	 * @throws RopePointInvalidUsageException
 	 * @throws NullClimberException 

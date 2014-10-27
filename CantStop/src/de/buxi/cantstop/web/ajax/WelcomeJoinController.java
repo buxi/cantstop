@@ -3,8 +3,6 @@ package de.buxi.cantstop.web.ajax;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,7 +88,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 			log.info("New player generated with id:" + playerId);
 			response.setMethodResult(playerId);
 			request.getSession().invalidate();
-		    HttpSession newSession = request.getSession();
+		    request.getSession();
 		}
 		response.setGto(gameService.getAllGameInformation());
 		return response;

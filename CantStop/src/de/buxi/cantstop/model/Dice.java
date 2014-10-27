@@ -20,7 +20,7 @@ public interface Dice extends Cloneable {
 
 	/**
 	 * reset wasThrown = false
-	 * TODO how can we force reset?  In DiceManager.throwAllDice
+	 * how can we force reset?  In DiceManager.throwAllDice
 	 */
 	public void reset();
 	

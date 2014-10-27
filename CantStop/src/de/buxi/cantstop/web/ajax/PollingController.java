@@ -3,7 +3,6 @@ package de.buxi.cantstop.web.ajax;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSessionContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

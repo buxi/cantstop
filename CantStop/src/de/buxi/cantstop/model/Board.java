@@ -96,7 +96,7 @@ public class Board implements Serializable {
 	 * @throws InvalidWayNumberException 
 	 */
 	public Way getWayByNumber(int wayNumber) throws InvalidWayNumberException {
-		// TODO einfache Transformation des WayNumber zu WayID
+		// TODO simple Transformation of WayNumber to WayID
 		if (wayNumber < 2 || wayNumber > 12) {
 			throw new InvalidWayNumberException("Invalid waynumber" + wayNumber +", wayNumber between 2 and 12 is valid");
 		}
