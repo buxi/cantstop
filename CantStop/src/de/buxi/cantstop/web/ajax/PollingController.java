@@ -46,8 +46,6 @@ public class PollingController implements ApplicationContextAware {
 		GameTransferObject gameInfo = gameService.getAllGameInformation();
 		model.addAttribute("gameInfo", gameInfo);
 		Locale locale = LocaleContextHolder.getLocale();
-		log.debug(gameInfo.getActualPlayerId()+":" +locale);
-		log.debug("sessionId:"+request.getSession().getId());
 		MessageHelper.decorateWithErrorString(gameInfo, locale, ac);
 		return gameInfo;
 	}
