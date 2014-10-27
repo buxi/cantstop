@@ -101,7 +101,7 @@ function refreshPage(playerId, gto) {
 	}
 	
 	//displaying last throw
-	if (gto.lastThrow != null && gto.lastThrow.size>0) {
+	if (gto.lastThrow != null && gto.lastThrow.length>0) {
 		$('#lastThrowRow').html(refreshDices(gto.lastThrow, 25));
 		$('#lastThrow').show();
 	}
@@ -131,8 +131,9 @@ function refreshPage(playerId, gto) {
  
 <!-- display playerList -->
 <div id="playerList" style="float:right;  width: 160px; height:500px">
+	<div style="border:0px solid black; height:25px"><s:message code="ACTIVE.PLAYERS"/></div>
 	<c:forEach items="${gameInfo.playerList}" var="player">
-	<div style="border:0px solid black; height:125px">
+	<div id="inturnplayer_${player.order}" style=" height:125px">
 		<div id="inturn_${player.order}" style="display: none; ">
 			<s:message code="IN_TURN"/>
 		</div>
@@ -152,12 +153,12 @@ function refreshPage(playerId, gto) {
 </div>
 
 <!-- display lastThrow  -->
-<div id="lastThrow" style=" display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 200px;">
-	<s:message code="LAST.THROW"/><div id="lastThrowRow" style="float:right" /></div>
+<div id="lastThrow" style=" display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  ">
+	<div style="float:left"><s:message code="LAST.THROW"/></div><div id="lastThrowRow" style="float:right" /></div>
 </div>	
 
 <!-- display dices  -->
-<div id="DICES_THROWN" style="display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 470px;">
+<div id="DICES_THROWN" style="display: none; overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 450px;">
 	<div style="float:left"><s:message code="ACTUAL.THROW"/><div id="actualThrowRow"></div></div>
 	
 	<!--  displaying pairs to choose -->
@@ -170,10 +171,10 @@ function refreshPage(playerId, gto) {
 </c:if>
 <input type="hidden" id="globalPlayerId" value="${playerId}" />
 
-<div id="actionButtonPart" style="overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 400px;">
-	<s:message code="ACTIONTITLE"/>
+<div id="actionButtonPart" style="overflow: hidden; white-space: nowrap; border: 0px solid black;  width: 450px;">
+	<div style="float:left;"><s:message code="ACTIONTITLE"/></div>
 	<c:if test="${not empty playerId}">
-		<form action="do.finishgame" method="post" style="display:inline;">
+		<form action="do.finishgame" method="post" style="float:left; display:inline;">
 		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
 		<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
 		</form>
