@@ -496,7 +496,6 @@ public class GameController implements Serializable{
 	 * @throws NoMarkerIsAvailableException 
 	 * @throws NullClimberException 
 	 * @throws NoClimberOnWayException 
-	 * @throws IllegalWayWahlenException
 	 */
 	protected void pairExecute(TwoDicesPair chosenPair, int chosenWayNumber, Player player) throws DiceNotThrownException, RopePointInvalidUsageException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
 		if (chosenWayNumber>0) {

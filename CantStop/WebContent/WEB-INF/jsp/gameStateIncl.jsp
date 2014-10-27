@@ -10,7 +10,7 @@
 
 <div id="messages" style="float:right">
 	<c:if test="${not empty errorMsg}"><div style="color: red"><s:message code="${errorMsg}"/></div><br/></c:if>
-	<div id="game_errorMessage" style="color: red"></div><br/>
+	<div id="game_errorMessage" style="color: blue"></div><br/>
 	<div id="json_status" style="color: green; display:none"></div>
-	<div id="json_errorMessage" style="color: green;  display:none"></div>
+	<div id="json_errorMessage" style="color: yellow;  display:none"></div>
 </div>

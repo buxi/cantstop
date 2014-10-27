@@ -10,6 +10,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><s:message code="PLAYROOM" text="Playroom" /></title>
 <!-- AJAX scripts START -->
+<script type="text/javascript">
+	var buttonLabel = "<s:message code="BUTTON.CHOOSE"/>"
+</script>
 <script src="resources/js/jquery.js"></script>
 <script src="resources/js/gamescripts.js"></script>
 <script type="text/javascript">
@@ -24,7 +27,7 @@ function poll(){
 			    $('#json_status').html("polling called");
 			    $('#json_errorcode').html("");
 		        $('#gameState').html(response.gameState);
-		        $('#game_errorMessage').html(response.errorMessage);
+		        $('#game_errorMessage').html(response.errorMessageString);
 		        /*$('#joinedPlayersList').html(response.joinedPlayersListAJAX);
 				if (response.gameState == 'ENOUGH_PLAYER') {
 					$('#startGame').show();

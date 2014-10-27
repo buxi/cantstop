@@ -2,6 +2,8 @@ package de.buxi.cantstop.web.ajax;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.service.GameException;
@@ -116,13 +118,13 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale)); 
 		}
 				
-		response.setGto(gameService.getAllGameInformation());
+		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 
 	@RequestMapping(value= "do.throwAJAX", method = RequestMethod.POST)
-	public @ResponseBody JsonResponse doThrowDices(@RequestParam("playerId") String playerId, Locale locale) throws GameException {
-		log.info("do.throwAJAX: Incoming playerId:" + playerId);
+	public @ResponseBody JsonResponse doThrowDices(@RequestParam("playerId") String playerId, Locale locale, HttpServletRequest request) throws GameException {
+		log.info("do.throwAJAX: Incoming playerId:" + playerId+";sessionId:"+request.getSession().getId());
 		
 		JsonResponse response = new JsonResponse();
 		
@@ -134,8 +136,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale)); 
 		}
-				
-		response.setGto(gameService.getAllGameInformation());
+		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 	
@@ -155,6 +156,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale));
 		}
+		//TODO can be better 
 		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}

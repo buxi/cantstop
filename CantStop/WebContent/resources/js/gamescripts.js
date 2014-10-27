@@ -67,8 +67,7 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
 		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
 		htmlVal += "<form  method='post'  style='float:right'>";
-		// TODO localized BUTTON LABEL
-		htmlVal += "<input type='button' value='WAHLEN' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
+		htmlVal += "<input type='button' value='"+buttonLabel+"' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
 		//<!-- TODO real enum should be used -->
 		if (pair.pairChoiceInfo == 'WITHWAYINFO') {
 			htmlVal += "<select style='float:right' id='chosenPairWayNumber"+pairId+"' name='wayNumber'><option value='"+pair.firstSum+"'>"+pair.firstSum +"</option><option value='"+pair.secondSum+"'>"+pair.secondSum +"</option></select>";

@@ -2,6 +2,9 @@ package de.buxi.cantstop.web.ajax;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +57,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 	 * @throws GameException
 	 */
 	@RequestMapping(value="do.addplayerAJAX", method = RequestMethod.POST)
-	public @ResponseBody JsonResponse addPlayer(@RequestParam("playerName") String playerName, Locale locale) throws GameException {
+	public @ResponseBody JsonResponse addPlayer(@RequestParam("playerName") String playerName, Locale locale, HttpServletRequest request) throws GameException {
 		JsonResponse response = new JsonResponse();
 		
 		String playerId = "";
@@ -86,6 +89,8 @@ public class WelcomeJoinController implements ApplicationContextAware {
 			playerId = gameService.addPlayer(playerName);
 			log.info("New player generated with id:" + playerId);
 			response.setMethodResult(playerId);
+			request.getSession().invalidate();
+		    HttpSession newSession = request.getSession();
 		}
 		response.setGto(gameService.getAllGameInformation());
 		return response;
