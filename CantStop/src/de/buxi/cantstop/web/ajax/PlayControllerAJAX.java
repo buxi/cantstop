@@ -52,17 +52,16 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			Model model) throws GameException {
 		GameTransferObject to = gameService.getAllGameInformation();
 		log.debug("do.startgame:Incoming playerId:" + playerId);
-		
+		model.addAttribute("playerId", playerId);
 		if (GameState.ENOUGH_PLAYER.equals(to.getGameState())) {
 			gameService.startGame();
-			log.info("do.gamestart:Incoming playerId:" + playerId);
 			model.addAttribute("gameInfo", gameService.startTurn());
 			model.addAttribute("gameInfo", gameService.getAllGameInformation());
-			model.addAttribute("playerId", playerId);
-			return "playAJAX";
+			return "redirect:playAJAX";
 		}
+		
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());
-		return "playAJAX";
+		return "redirect:playAJAX";
 	}
 	
 	/**
