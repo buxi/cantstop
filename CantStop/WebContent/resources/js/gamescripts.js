@@ -62,12 +62,13 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 	tr.empty();
 	var htmlVal = "";
 	$.each( choosablePairsWithId, function(pairId,pair){
-		htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+		htmlVal += "<div style='overflow: hidden; white-space: nowrap; border: 1px solid black;'>";
+		htmlVal += "<div style='float:left'><img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
 		htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
 		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
-		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/></div>";
 		htmlVal += "<form  method='post'  style='float:right'>";
-		htmlVal += "<input type='button' value='"+buttonLabel+"' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
+		htmlVal += "<input style='float:right' type='button' value='"+buttonLabel+"' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
 		//<!-- TODO real enum should be used -->
 		if (pair.pairChoiceInfo == 'WITHWAYINFO') {
 			htmlVal += "<select style='float:right' id='chosenPairWayNumber"+pairId+"' name='wayNumber'><option value='"+pair.firstSum+"'>"+pair.firstSum +"</option><option value='"+pair.secondSum+"'>"+pair.secondSum +"</option></select>";
@@ -76,7 +77,7 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 			htmlVal += "<input id='chosenPairWayNumber"+pairId+"'  type='hidden' name='wayNumber' value='-1' />";
 		}
 		htmlVal += "<input type='hidden' name='playerId' value='"+playerId+"'/>";
-		htmlVal += "</form><br>";
+		htmlVal += "</form><br></div>";
 	})
 	tr.append(htmlVal);
 	return;
@@ -136,9 +137,16 @@ function refreshPlayersList(players, actualPlayerId, lastUsedPairInfo) {
 		var player = players[i];
 		if (player.order == actualPlayerId ) {
 			$('#inturn_'+player.order).show();
+			$('#inturnplayer_'+player.order).css({"border-color": "#C1E0FF", 
+	             "border-weight":"1px", 
+	             "border-style":"solid"});
+			
 		}
 		else {
 			$('#inturn_'+player.order).hide();
+			$('#inturnplayer_'+player.order).css({"border-color": "#FFFFFF", 
+	             "border-weight":"0px", 
+	             "border-style":"solid"});
 		}
 		
 		$('#playersMarkers_'+player.order).html(refreshPlayersMarkers(player.markers));
