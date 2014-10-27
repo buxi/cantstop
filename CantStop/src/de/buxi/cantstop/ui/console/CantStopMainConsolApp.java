@@ -117,7 +117,7 @@ public class CantStopMainConsolApp {
 						log.debug("chosenPairNum:"+chosenPairNum);
 						TwoDicesPair chosenPair = gameControllerTO.choosablePairsWithId.get(pairIdTranslate.get(Integer.toString(chosenPairNum)));
 						log.debug("chosenPair:"+chosenPair);
-						int wayNumber = getWayNumberFromUser(chosenPair);
+						int wayNumber = getWayNumberFromUser(chosenPair, in);
 						gameControllerTO = gameServices.executePairs(pairIdTranslate.get(Integer.toString(chosenPairNum)), wayNumber);
 					}
 					break;
@@ -212,21 +212,19 @@ public class CantStopMainConsolApp {
 	 * @param chosenPair
 	 * @return way number chosen from user
 	 */
-	protected int getWayNumberFromUser(TwoDicesPair chosenPair) {
+	protected int getWayNumberFromUser(TwoDicesPair chosenPair, Scanner in) {
 		int wayNumber = -1;
 		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo())) {
 			// Java 7 feature: ARM
-			try (Scanner in = new Scanner(System.in);) {
-				do {
-					System.out.print(getMessage("ENTER_WAYNUMBER",
-							new Object[] { chosenPair.getFirstPair().getSum(),
-									chosenPair.getSecondPair().getSum() }));
-					wayNumber = in.nextInt();
-					System.out.println(getMessage("WAYNUMBER_ENTERED",
-							new Object[] { wayNumber }));
-				} while (wayNumber != chosenPair.getFirstPair().getSum()
-						&& wayNumber != chosenPair.getSecondPair().getSum());
-			}
+			do {
+				System.out.print(getMessage("ENTER_WAYNUMBER",
+						new Object[] { chosenPair.getFirstPair().getSum(),
+								chosenPair.getSecondPair().getSum() }));
+				wayNumber = in.nextInt();
+				System.out.println(getMessage("WAYNUMBER_ENTERED",
+						new Object[] { wayNumber }));
+			} while (wayNumber != chosenPair.getFirstPair().getSum()
+					&& wayNumber != chosenPair.getSecondPair().getSum());
 		}
 		return wayNumber;
 	}
