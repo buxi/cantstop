@@ -62,22 +62,28 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 	tr.empty();
 	var htmlVal = "";
 	$.each( choosablePairsWithId, function(pairId,pair){
-		htmlVal += "<div style='overflow: hidden; white-space: nowrap; border: 1px solid black;'>";
-		htmlVal += "<div style='float:left'><img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
-		htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
-		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
-		htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/></div>";
-		htmlVal += "<form  method='post'  style='float:right'>";
-		htmlVal += "<input style='float:right' type='button' value='"+buttonLabel+"' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \"  />";
-		//<!-- TODO real enum should be used -->
+		htmlVal += "<div style='overflow: hidden; white-space: nowrap; border: 0px solid black;'>";
+		
 		if (pair.pairChoiceInfo == 'WITHWAYINFO') {
-			htmlVal += "<select style='float:right' id='chosenPairWayNumber"+pairId+"' name='wayNumber'><option value='"+pair.firstSum+"'>"+pair.firstSum +"</option><option value='"+pair.secondSum+"'>"+pair.secondSum +"</option></select>";
+			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPostWithWayNumber('do.executePairAJAX', '"+playerId+"', '"+pairId+"', '"+pair.firstSum+"') \" >";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
+			htmlVal += "</a>";
+		
+			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPostWithWayNumber('do.executePairAJAX', '"+playerId+"', '"+pairId+"', '"+pair.secondSum+"') \" >";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+			htmlVal += "</a>";
 		}
 		else {
-			htmlVal += "<input id='chosenPairWayNumber"+pairId+"'  type='hidden' name='wayNumber' value='-1' />";
+			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \" >";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
+			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+			htmlVal += "</a>";
 		}
-		htmlVal += "<input type='hidden' name='playerId' value='"+playerId+"'/>";
-		htmlVal += "</form><br></div>";
+		htmlVal += "<br></div>";
 	})
 	tr.append(htmlVal);
 	return;
@@ -107,26 +113,28 @@ function refreshPlayersMarkers(markers) {
 function refreshLastUsedPair(lastUsedPairInfo) {
 	var htmlCode = "";
 	if (lastUsedPairInfo == null) { return htmlCode; }
-	var bgColor1 = "";
+	var border1 = "";
 	if (lastUsedPairInfo.chosenWayNumber == lastUsedPairInfo.chosenPair.firstSum){
-		bgColor1 = "grey";
+		border1 = "border:2px solid red;";
 	}
 	
-	var bgColor2 = "";
+	var border2 = "";
 	if (lastUsedPairInfo.chosenWayNumber == lastUsedPairInfo.chosenPair.secondSum){
-		bgColor2 = "grey";
+		border2 = "border:2px solid red;";
 	}
+	htmlCode += "<div>"; 
 	
-	htmlCode += "<div style='float:left; valign:middle; align:center; bgcolor:"+bgColor1+"'>";
+	htmlCode += "<div style='width:50; float:left; "+border1+"'>";
 	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.first.diceValue+".png'/>";
 	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.second.diceValue+".png'/>";
 	htmlCode += "</div>";
 
-	htmlCode += "<div style='valign:middle; align:center; bgcolor:"+bgColor2+"'>";
+	htmlCode += "<div style='width:50; float:left; "+border2+"'>";
 	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.first.diceValue+".png'/>";
 	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.second.diceValue+".png'/>";
 	htmlCode += "</div>";
 	
+	htmlCode += "</div>";
 	return htmlCode;
 }
 

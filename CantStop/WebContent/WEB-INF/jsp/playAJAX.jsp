@@ -8,6 +8,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="resources/css/game.css" rel="stylesheet" type="text/css"/>
+
 <title><s:message code="PLAYROOM" text="Playroom" /></title>
 <!-- AJAX scripts START -->
 <script type="text/javascript">
@@ -17,7 +19,8 @@
 <script src="resources/js/gamescripts.js"></script>
 <script type="text/javascript">
 function poll(){
-	$('#ajaxLoading').show();   
+		$('#ajaxLoading').show();
+	
 	   setTimeout(function(){
 	      $.ajax({ type: "POST", url: "pollingAJAX", 
 	    	error: function(e){  
@@ -42,15 +45,15 @@ function poll(){
 		        poll();
 	      }, dataType: "json"});
 	  }, 3000);
-	   $('#ajaxLoading').hide(); 
+	   	$('#ajaxLoading').hide(); 
 	}
 (poll());
 
 function doAjaxPost(command, playerIdForm, pairId ) {  
-	  var wayNumberForm = "-1";
-	  if ($('#chosenPairWayNumber'+pairId) != null) {
-		  wayNumberForm =  $('#chosenPairWayNumber'+pairId).val();	  
-	  }
+	doAjaxPostWithWayNumber(command, playerIdForm, pairId, "-1");
+}
+
+function doAjaxPostWithWayNumber(command, playerIdForm, pairId, wayNumberForm ) {  
 	  var formData = {playerId:playerIdForm, chosenPairId:pairId, wayNumber:wayNumberForm};
 	  $.ajax({  
 	    type: "POST",  
