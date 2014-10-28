@@ -610,7 +610,7 @@ public class GameController implements Serializable{
 		to.gameState = this.gameState;
 		to.actualPlayer = null;
 		to.actualPlayerNumber = -1;
-		if (!GameState.INIT.equals(gameState) ) {
+		if (!GameState.INIT.equals(gameState) && !GameState.GAME_FINISHED.equals(gameState) ) {
 			to.actualPlayer = this.getActualPlayer();
 			to.actualPlayerNumber = this.getActualPlayerNumber();
 		}

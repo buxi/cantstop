@@ -132,7 +132,9 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 	@Override
 	public GameTransferObject finishGame(String playerId) throws GameException {
 		try {	
-			return gameController.doEndGame(playerId);
+			gameController.doEndGame(playerId);
+			// reinitialize the game after it was finished
+			return this.reinitializeGame();
 		} catch ( DiceNotThrownException | InvalidWayNumberException e) {
 			log.error(e.toString());
 			throw new GameException(e);

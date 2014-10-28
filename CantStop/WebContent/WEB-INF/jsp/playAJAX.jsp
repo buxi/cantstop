@@ -31,12 +31,7 @@ function poll(){
 			    $('#json_errorcode').html("");
 		        $('#gameState').html(response.gameState);
 		        $('#game_errorMessage').html(response.errorMessageString);
-		        /*$('#joinedPlayersList').html(response.joinedPlayersListAJAX);
-				if (response.gameState == 'ENOUGH_PLAYER') {
-					$('#startGame').show();
-				}
-				*/
-				if (response.gameState == 'GAME_FINISHED' ) {
+				if (response.gameState == 'INIT' ) {
 					window.location = "do.showGameOver?playerId=" + $('#playerId').val();
 				}
 				refreshPage($('#globalPlayerId').val(), response);

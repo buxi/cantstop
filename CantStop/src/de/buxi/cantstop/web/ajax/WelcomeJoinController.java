@@ -68,10 +68,6 @@ public class WelcomeJoinController implements ApplicationContextAware {
 			response.setGto(gameService.getAllGameInformation());
 			return response;
 		} 
-		if (GameState.GAME_FINISHED.equals(gameInfo.getGameState())) {
-			// reinitialize the game after it was finished
-			gameInfo =gameService.reinitializeGame();
-		}
 		
 		if (gameInfo.getPlayerList().size() == 4) {
 			log.warn("Too many player");
