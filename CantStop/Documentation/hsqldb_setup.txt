@@ -1,0 +1,29 @@
+
+
+Place: hsqldb.jar in WEB-INF/lib
+
+== Setup in web.xml==
+<servlet-name>hsqldb</servlet-name>
+    <servlet-class>org.hsqldb.server.Servlet</servlet-class>
+    <init-param>
+    	<!-- Location of HSQLDB database files -->
+		<param-name>hsqldb.server.database</param-name> 
+		<param-value>./WEB-INF/database/</param-value> 
+	</init-param>
+	<init-param>
+    	<!-- database files are placed in WEB-INF -->
+    	<param-name>hsqldb.server.use_web-inf_path</param-name>
+    	<param-value>true</param-value>
+	</init-param>
+	
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>hsqldb</servlet-name>
+    <url-pattern>/hsqldb</url-pattern>
+  </servlet-mapping>
+  
+
+URL of HSQLDB in the application: http://localhost:9080/CantStop/hsqldb
+
+JDBC connection URL: jdbc:hsqldb:http://localhost:9080/CantStop/hsqldb
