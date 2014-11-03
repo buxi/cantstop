@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameFactory.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">GameFactory.java</span></div><h1>GameFactory.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+/**
+ * @author buxi
+ * contains all Factory-methods for the Game
+ */
+<span class="fc" id="L17">public class GameFactory {</span>
+	
+	
+	/**
+	 * generates the board
+	 * @return full board with all ways
+	 */
+	public Board createBoard(Map&lt;Integer,Integer&gt; wayDefinitions) {
+<span class="fc" id="L25">		Set&lt;Entry&lt;Integer, Integer&gt;&gt; wayDefinitionsEntries = wayDefinitions.entrySet();</span>
+<span class="fc" id="L26">		List&lt;Way&gt; ways = new ArrayList&lt;Way&gt;(11);</span>
+		
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		for (Entry&lt;Integer, Integer&gt; entry : wayDefinitionsEntries) {</span>
+<span class="fc" id="L29">			int number = entry.getKey();</span>
+<span class="fc" id="L30">			int lange = entry.getValue();</span>
+<span class="fc" id="L31">			Way way = createWay(number, lange);</span>
+<span class="fc" id="L32">			ways.add(way);</span>
+		}
+<span class="fc" id="L34">		Board board = new Board(ways);</span>
+<span class="fc" id="L35">		return board;</span>
+	}
+
+	/**
+	 * @param number
+	 * @param length
+	 * @return
+	 */
+	protected Way createWay(int number, int length) {
+<span class="fc" id="L44">		Hut hut = new Hut(number);</span>
+		
+<span class="fc" id="L46">		List&lt;RopePoint&gt; ropePoints = new ArrayList&lt;RopePoint&gt;();</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">		for (int i = 0; i &lt; length ; i++) {</span>
+<span class="fc" id="L48">			ropePoints.add(new RopePoint());</span>
+		}
+<span class="fc" id="L50">		Way way = new Way(number, hut , ropePoints);</span>
+<span class="fc" id="L51">		return way;</span>
+	}
+	
+	/**
+	 * @param how much marker to generate
+	 * @param color of marker
+	 * @return new markers with color 
+	 */
+	public Collection&lt;Marker&gt; createMarkers(int number, Color color){
+<span class="fc" id="L60">		List&lt;Marker&gt; markers = new ArrayList&lt;Marker&gt;(number);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">		for (int i = 0; i &lt; number; i++) {</span>
+<span class="fc" id="L62">			markers.add(new Marker(color));</span>
+		}		
+<span class="fc" id="L64">		return markers;</span>
+	}
+	
+	public static Collection&lt;Marker&gt; createMarkersStatic (int number, Color color){
+<span class="fc" id="L68">		return new GameFactory().createMarkers(number, color);</span>
+	}
+	/**
+	 * @param number of climbers to generate
+	 * @return new climbers 
+	 */
+	public Collection&lt;Climber&gt; createClimbers(int number){
+<span class="fc" id="L75">		List&lt;Climber&gt; climberList = new ArrayList&lt;Climber&gt;(number);</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">		for (int i = 0; i &lt; number; i++) {</span>
+<span class="fc" id="L77">			climberList.add(new Climber());</span>
+		}		
+<span class="fc" id="L79">		return climberList;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>

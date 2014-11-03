@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>PollingController.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.web.ajax</a> &gt; <span class="el_source">PollingController.java</span></div><h1>PollingController.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.web.ajax;
+
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.service.GameException;
+import de.buxi.cantstop.service.GameService;
+
+@Controller
+public class PollingController implements ApplicationContextAware {
+<span class="nc" id="L26">	private Log log = LogFactory.getLog(PollingController.class);</span>
+	private GameService gameService;
+	private ApplicationContext ac;
+	
+	@Autowired
+<span class="nc" id="L31">	public PollingController(GameService gameService) {</span>
+<span class="nc" id="L32">		this.gameService = gameService;</span>
+<span class="nc" id="L33">	}</span>
+	
+	// 
+	/**
+	 * method to return all game related information to an ajax polling function
+	 * response is returned as JSON, because jackson jars are on classpath
+	 * @param model
+	 * @return GameTransferObject in JSON format
+	 * @throws GameException
+	 */
+	@RequestMapping(value= &quot;pollingAJAX&quot;, method = RequestMethod.POST)
+	public @ResponseBody GameTransferObject poll(Model model, HttpServletRequest request) throws GameException {
+		//log.debug(&quot;polling called&quot;);
+<span class="nc" id="L46">		GameTransferObject gameInfo = gameService.getAllGameInformation();</span>
+<span class="nc" id="L47">		model.addAttribute(&quot;gameInfo&quot;, gameInfo);</span>
+<span class="nc" id="L48">		Locale locale = LocaleContextHolder.getLocale();</span>
+<span class="nc" id="L49">		MessageHelper.decorateWithErrorString(gameInfo, locale, ac);</span>
+<span class="nc" id="L50">		return gameInfo;</span>
+	}
+	
+	/* 
+	 * Needed to access localized messages
+	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 */
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+<span class="nc" id="L61">		ac = applicationContext;</span>
+<span class="nc" id="L62">	}	</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>

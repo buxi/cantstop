@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>WelcomeJoinController.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.web.ajax</a> &gt; <span class="el_source">WelcomeJoinController.java</span></div><h1>WelcomeJoinController.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.web.ajax;
+
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+
+import de.buxi.cantstop.model.GameState;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.service.GameException;
+import de.buxi.cantstop.service.GameService;
+
+
+@Controller
+public class WelcomeJoinController implements ApplicationContextAware {
+<span class="nc" id="L28">	private Log log = LogFactory.getLog(WelcomeJoinController.class);</span>
+	private GameService gameService;
+	private ApplicationContext ac;
+
+	@Autowired
+<span class="nc" id="L33">	public WelcomeJoinController(GameService gameService) {</span>
+<span class="nc" id="L34">		this.gameService = gameService;</span>
+<span class="nc" id="L35">	}</span>
+	
+	/**
+	 * Shows welcome page with join possibility
+	 * @param model
+	 * @return 
+	 * @throws GameException
+	 */
+	@RequestMapping(value = {&quot;&quot;,&quot;/&quot;}, method = RequestMethod.GET)
+	public String welcome(Model model, Locale locale) throws GameException {
+<span class="nc" id="L45">		log.info(&quot;welcome, locale:&quot;+locale);</span>
+<span class="nc" id="L46">		model.addAttribute(&quot;gameInfo&quot;, gameService.getAllGameInformation());</span>
+<span class="nc" id="L47">		return &quot;welcomejoin&quot;;</span>
+	}
+	
+	/**
+	 * Called from welcomejoin.jsp
+	 * @param playerName incoming parameter 
+	 * @param locale need to give back localized error messages
+	 * @return &lt;code&gt;JsonResponse&lt;/code&gt; 
+	 * @throws GameException
+	 */
+	@RequestMapping(value=&quot;do.addplayerAJAX&quot;, method = RequestMethod.POST)
+	public @ResponseBody JsonResponse addPlayer(@RequestParam(&quot;playerName&quot;) String playerName, Locale locale, HttpServletRequest request) throws GameException {
+<span class="nc" id="L59">		JsonResponse response = new JsonResponse();</span>
+		
+<span class="nc" id="L61">		String playerId = &quot;&quot;;</span>
+<span class="nc" id="L62">		GameTransferObject gameInfo = gameService.getAllGameInformation();</span>
+<span class="nc" id="L63">		log.info(&quot;Incoming playerName:&quot; + playerName);</span>
+		
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		if (StringUtils.isEmpty(playerName)) {</span>
+<span class="nc" id="L66">			response.setStatus(JsonResponse.ERROR);</span>
+<span class="nc" id="L67">			response.setErrorMessage(ac.getMessage(&quot;ERROR.NAMEISREQUIRED&quot;, null, locale)); </span>
+<span class="nc" id="L68">			response.setGto(gameService.getAllGameInformation());</span>
+<span class="nc" id="L69">			return response;</span>
+		} 
+		
+<span class="nc bnc" id="L72" title="All 2 branches missed.">		if (gameInfo.getPlayerList().size() == 4) {</span>
+<span class="nc" id="L73">			log.warn(&quot;Too many player&quot;);</span>
+<span class="nc" id="L74">			response.setStatus(JsonResponse.ERROR);</span>
+<span class="nc" id="L75">			response.setErrorMessage(ac.getMessage(&quot;ERROR.TOOMANYPLAYER&quot;, null, locale)); </span>
+<span class="nc" id="L76">		} </span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">		else if (!GameState.INIT.equals(gameInfo.getGameState()) &amp;&amp; </span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">				 !GameState.ENOUGH_PLAYER.equals(gameInfo.getGameState())) {</span>
+<span class="nc" id="L79">			log.error(&quot;Game have already started, gameState:&quot; + gameInfo.getGameState());</span>
+<span class="nc" id="L80">			response.setStatus(JsonResponse.ERROR);</span>
+<span class="nc" id="L81">			response.setErrorMessage(ac.getMessage(&quot;ERROR.GAMEALREADYSTARTED&quot;, null, locale)); </span>
+<span class="nc" id="L82">		} else {</span>
+<span class="nc" id="L83">			playerId = gameService.addPlayer(playerName);</span>
+<span class="nc" id="L84">			log.info(&quot;New player generated with id:&quot; + playerId);</span>
+<span class="nc" id="L85">			response.setMethodResult(playerId);</span>
+<span class="nc" id="L86">			request.getSession().invalidate();</span>
+<span class="nc" id="L87">		    request.getSession();</span>
+		}
+<span class="nc" id="L89">		response.setGto(gameService.getAllGameInformation());</span>
+<span class="nc" id="L90">		return response;</span>
+	}
+
+	/* 
+	 * Needed to access localized messages
+	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 */
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+<span class="nc" id="L101">		ac = applicationContext;</span>
+<span class="nc" id="L102">	}	</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>

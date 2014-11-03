@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>BoardTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">BoardTest.java</span></div><h1>BoardTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Board;
+import de.buxi.cantstop.model.Climber;
+import de.buxi.cantstop.model.Color;
+import de.buxi.cantstop.model.GameFactory;
+import de.buxi.cantstop.model.Hut;
+import de.buxi.cantstop.model.InvalidClimberMovementException;
+import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.cantstop.model.Marker;
+import de.buxi.cantstop.model.NoClimberOnWayException;
+import de.buxi.cantstop.model.NoMarkerIsAvailableException;
+import de.buxi.cantstop.model.NullClimberException;
+import de.buxi.cantstop.model.Player;
+import de.buxi.cantstop.model.RopePointInvalidUsageException;
+import de.buxi.cantstop.model.Way;
+
+/**
+ * @author buxi
+ *
+ */
+<span class="fc" id="L38">public class BoardTest extends SpringLoaderSuperClassModelTests{</span>
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		
+<span class="fc" id="L45">	}</span>
+
+	@Test
+	public void testGetWayByNumber() throws InvalidWayNumberException {
+<span class="fc" id="L49">		Way way = mock(Way.class);</span>
+<span class="fc" id="L50">		List&lt;Way&gt; ways = new ArrayList&lt;Way&gt;();</span>
+<span class="fc" id="L51">		ways.add(way);</span>
+<span class="fc" id="L52">		Board board = new Board(ways);</span>
+<span class="fc" id="L53">		Way resultWay = board.getWayByNumber(2);</span>
+<span class="fc" id="L54">		assertEquals(&quot;Way 2 should be there&quot;, way, resultWay);</span>
+<span class="fc" id="L55">	}</span>
+
+	@Test(expected=InvalidWayNumberException.class)
+	public void testGetWayByNumberNegativ1() throws InvalidWayNumberException {
+<span class="nc" id="L59">		Board board = new Board(null);</span>
+<span class="nc" id="L60">		board.getWayByNumber(1);</span>
+<span class="nc" id="L61">	}</span>
+	
+	@Test(expected=InvalidWayNumberException.class)
+	public void testGetWayByNumberNegativ2() throws InvalidWayNumberException {
+<span class="nc" id="L65">		List&lt;Way&gt; ways = new ArrayList&lt;Way&gt;();</span>
+<span class="nc" id="L66">		Board board = new Board(ways);</span>
+<span class="nc" id="L67">		board.getWayByNumber(1);</span>
+<span class="nc" id="L68">	}</span>
+	
+	@Test
+	public void testMarkClimbersAllDown() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
+<span class="fc" id="L72">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L73">		Collection&lt;Integer&gt; wayNumberList = new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4));</span>
+<span class="fc" id="L74">		Collection&lt;Climber&gt; placedClimbers = BoardTestHelper.placeClimberOnTheWayAllDown(board, wayNumberList);</span>
+<span class="fc" id="L75">		Player player = new Player(1, &quot;1&quot;, Color.BLUE);</span>
+<span class="fc" id="L76">		player.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));</span>
+<span class="fc" id="L77">		Collection&lt;Climber&gt; freeClimbers = board.markClimbers(player);</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">		for (Climber freeClimber : freeClimbers) {</span>
+<span class="fc" id="L79">			assertTrue(&quot;Climber not found&quot;, placedClimbers.remove(freeClimber));</span>
+		}
+<span class="fc" id="L81">		assertTrue(&quot;All placed Climber not found&quot;, placedClimbers.isEmpty());</span>
+		
+<span class="fc bfc" id="L83" title="All 2 branches covered.">		for (int wayNumber : wayNumberList) {</span>
+<span class="fc" id="L84">			Way way = board.getWayByNumber(wayNumber);</span>
+<span class="fc" id="L85">			assertTrue(&quot;Way ist not marked&quot;, way.getFirstRopePoint().isMarkerForColor(Color.BLUE));</span>
+		}
+<span class="fc" id="L87">	}</span>
+
+	@Test
+	public void testMarkClimbersAllInHut() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
+<span class="fc" id="L91">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L92">		Collection&lt;Integer&gt; wayNumberList = new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4));</span>
+<span class="fc" id="L93">		Collection&lt;Climber&gt; placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);</span>
+<span class="fc" id="L94">		Player player = new Player(1, &quot;1&quot;, Color.BLUE);</span>
+<span class="fc" id="L95">		player.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));</span>
+<span class="fc" id="L96">		Collection&lt;Climber&gt; freeClimbers = board.markClimbers(player);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		for (Climber freeClimber : freeClimbers) {</span>
+<span class="fc" id="L98">			assertTrue(&quot;Climber not found&quot;, placedClimbers.remove(freeClimber));</span>
+		}
+<span class="fc" id="L100">		assertTrue(&quot;All placed climbers not found&quot;, placedClimbers.isEmpty());</span>
+		
+<span class="fc bfc" id="L102" title="All 2 branches covered.">		for (int wayNumber : wayNumberList) {</span>
+<span class="fc" id="L103">			Way way = board.getWayByNumber(wayNumber);</span>
+<span class="fc" id="L104">			assertTrue(&quot;Hut is not marked&quot;, way.getHut().isMarked(Color.BLUE));</span>
+		}
+<span class="fc" id="L106">	}</span>
+
+	@Test
+	public void testRemoveClimbersFromHuts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, InvalidClimberMovementException {
+		//tests with  small Board
+<span class="fc" id="L111">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L112">		Collection&lt;Integer&gt; wayNumberList = new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4));</span>
+<span class="fc" id="L113">		Collection&lt;Climber&gt; placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);</span>
+		
+<span class="fc" id="L115">		Collection&lt;Climber&gt; freeClimbers = board.removeClimbers();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">		for (Climber freeClimber : freeClimbers) {</span>
+<span class="fc" id="L117">			assertTrue(&quot;Climber not found&quot;, placedClimbers.remove(freeClimber));</span>
+		}
+<span class="fc" id="L119">		assertTrue(&quot;Not all climber found&quot;, placedClimbers.isEmpty());</span>
+		
+<span class="fc bfc" id="L121" title="All 2 branches covered.">		for (int wayNumber : wayNumberList) {</span>
+<span class="fc" id="L122">			Way way = board.getWayByNumber(wayNumber);</span>
+<span class="fc" id="L123">			assertFalse(&quot;No Climber should be in hut&quot;, way.isClimberInHut());</span>
+		}
+<span class="fc" id="L125">	}</span>
+
+	@Test
+	public void testRemoveClimbersFromRope() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, InvalidClimberMovementException {
+		//test with small board
+<span class="fc" id="L130">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L131">		Collection&lt;Integer&gt; wayNumberList = new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4));</span>
+<span class="fc" id="L132">		Collection&lt;Climber&gt; placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);</span>
+		
+<span class="fc" id="L134">		Collection&lt;Climber&gt; freeClimbers = board.removeClimbers();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">		for (Climber freeClimber : freeClimbers) {</span>
+<span class="fc" id="L136">			assertTrue(&quot;Climber not found&quot;, placedClimbers.remove(freeClimber));</span>
+		}
+<span class="fc" id="L138">		assertTrue(&quot;not all placed Climber were found&quot;, placedClimbers.isEmpty());</span>
+		
+<span class="fc bfc" id="L140" title="All 2 branches covered.">		for (int wayNumber : wayNumberList) {</span>
+<span class="fc" id="L141">			Way way = board.getWayByNumber(wayNumber);</span>
+<span class="fc" id="L142">			assertFalse(&quot;no Climber should be on the rope&quot;, way.isClimberOnRope());</span>
+		}
+<span class="fc" id="L144">	}</span>
+	
+	@Test
+	public void testGetBlockedHuts3Huts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException {
+		//test with small board
+<span class="fc" id="L149">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L150">		Collection&lt;Marker&gt; markers = BoardTestHelper.markHuts(board, new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4)), Color.BLUE);</span>
+<span class="fc" id="L151">		Collection&lt;Hut&gt; huts = board.getBlockedHuts(new Player(1, &quot;1&quot;, Color.BLUE));</span>
+<span class="fc" id="L152">		assertEquals(&quot;3 Huts should be blocked with BLAU&quot;, 3, huts.size());</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">		for (Hut hut : huts) {</span>
+<span class="fc" id="L154">			assertTrue(&quot;Marker not found&quot;, markers.remove(hut.getMarker()));</span>
+		}
+<span class="fc" id="L156">		assertTrue(&quot;not all Markers were found&quot;, markers.isEmpty());</span>
+<span class="fc" id="L157">	}</span>
+	
+	@Test
+	public void testGetBlockedeHutsNotBlocked() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException {
+		//test with small board
+<span class="fc" id="L162">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L163">		Collection&lt;Hut&gt; huts = board.getBlockedHuts(new Player(1, &quot;1&quot;, Color.BLUE));</span>
+<span class="fc" id="L164">		assertTrue(&quot;No hut should be blocked&quot;, huts.isEmpty());</span>
+<span class="fc" id="L165">	}</span>
+
+	@Test
+	public void testRemoveMarkersFromBlockedWays() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidWayNumberException, NullClimberException {
+<span class="fc" id="L169">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="fc" id="L170">		Collection&lt;Integer&gt; wayNumberList = new ArrayList&lt;Integer&gt;(Arrays.asList(2,3,4));</span>
+		
+		// marks the Ways next to the hut with BLUE
+<span class="fc" id="L173">		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);</span>
+<span class="fc" id="L174">		Player playerBLAU = new Player(1, &quot;1&quot;, Color.BLUE);</span>
+<span class="fc" id="L175">		playerBLAU.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));</span>
+<span class="fc" id="L176">		board.markClimbers(playerBLAU);</span>
+		
+		// marks the Ways down with RED
+<span class="fc" id="L179">		BoardTestHelper.placeClimberOnTheWayAllDown(board, wayNumberList);</span>
+<span class="fc" id="L180">		Player playerRED = new Player(2, &quot;2&quot;, Color.RED);</span>
+<span class="fc" id="L181">		playerRED.addMarkers(GameFactory.createMarkersStatic(3, Color.RED));</span>
+<span class="fc" id="L182">		board.markClimbers(playerRED);</span>
+		
+		// marks the huts with YELLOW
+<span class="fc" id="L185">		BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);</span>
+<span class="fc" id="L186">		Player playerYELLOW = new Player(3, &quot;3&quot;, Color.YELLOW);</span>
+<span class="fc" id="L187">		playerYELLOW.addMarkers(GameFactory.createMarkersStatic(3, Color.YELLOW));</span>
+<span class="fc" id="L188">		board.markClimbers(playerYELLOW);</span>
+
+		// all RED and BLAU Markers should be removed 
+<span class="fc" id="L191">		Collection&lt;Hut&gt; usedHuts = board.getBlockedHuts(playerYELLOW);</span>
+<span class="fc" id="L192">		assertEquals(&quot;3 hut should be blocked&quot;, 3, usedHuts.size());</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">		for (Hut hut : usedHuts) {</span>
+<span class="fc" id="L194">			assertEquals(&quot;hut should be marked with YELLOW&quot;, Color.YELLOW, hut.getMarker().getColor());</span>
+		}
+<span class="fc" id="L196">		Map&lt;Color, Collection&lt;Marker&gt;&gt; removedMarkers = board.removeMarkersFromBlockedWays(usedHuts);</span>
+<span class="fc" id="L197">		assertEquals(&quot;3 RED Markers should be removed&quot;, 3, removedMarkers.get(Color.RED).size());</span>
+<span class="fc" id="L198">		assertEquals(&quot;3 BLAU Markers should be removed&quot;, 3, removedMarkers.get(Color.BLUE).size());</span>
+		
+<span class="fc" id="L200">		assertFalse(&quot;Green not plays&quot;, removedMarkers.containsKey(Color.GREEN));</span>
+<span class="fc" id="L201">	}</span>
+	public void testFindLongestWay() {
+<span class="nc" id="L203">		Board board = (Board)ac.getBean(&quot;smallBoard&quot;);</span>
+<span class="nc" id="L204">		assertEquals(&quot;On smallboard there is only ways with 1 ropepoint&quot;, 1, board.findLongestWay());</span>
+		
+<span class="nc" id="L206">		Board gameBoard = (Board)ac.getBean(&quot;gameBoard&quot;);</span>
+<span class="nc" id="L207">		assertEquals(&quot;On gameBoard longest way has 12 rope point&quot;, 12, gameBoard.findLongestWay());</span>
+<span class="nc" id="L208">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>
