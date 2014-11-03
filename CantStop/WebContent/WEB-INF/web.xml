@@ -17,6 +17,7 @@
     <param-value>
     	/WEB-INF/cantstop-service.xml
     	/WEB-INF/cantstop-model.xml
+    	/WEB-INF/cantstop-database-jdbc.xml
     </param-value>
   </context-param>
   
