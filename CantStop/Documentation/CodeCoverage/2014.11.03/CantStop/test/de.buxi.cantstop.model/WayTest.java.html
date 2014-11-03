@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>WayTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">WayTest.java</span></div><h1>WayTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Climber;
+import de.buxi.cantstop.model.Color;
+import de.buxi.cantstop.model.GameFactory;
+import de.buxi.cantstop.model.InvalidClimberMovementException;
+import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.cantstop.model.Marker;
+import de.buxi.cantstop.model.NoClimberOnWayException;
+import de.buxi.cantstop.model.NullClimberException;
+import de.buxi.cantstop.model.RopePointInvalidUsageException;
+import de.buxi.cantstop.model.Way;
+
+/**
+ * @author buxi
+ *
+ */
+<span class="fc" id="L26">public class WayTest extends SpringLoaderSuperClassModelTests {</span>
+
+	private GameFactory gameFactory;
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L34">		gameFactory = (GameFactory)ac.getBean(&quot;gameFactory&quot;);</span>
+<span class="fc" id="L35">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isBlocked()}.
+	 * @throws InvalidWayNumberException 
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testIsBlockedFromPlayerPositive() throws InvalidWayNumberException, RopePointInvalidUsageException {
+<span class="fc" id="L44">		Way way3 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L45">		assertFalse(&quot;Way should be free&quot;, way3.isBlockedByPlayer(null));</span>
+<span class="fc" id="L46">		assertFalse(&quot;Way should be free&quot;, way3.isBlockedByPlayer(Color.BLUE));</span>
+		
+		
+<span class="fc" id="L49">		way3.getHut().mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L50">		assertTrue(&quot;Way is marked&quot;, way3.isBlockedByPlayer(Color.BLUE));</span>
+		
+<span class="fc" id="L52">		assertFalse(&quot;Way is marked with BLUE&quot;, way3.isBlockedByPlayer(Color.GREEN));</span>
+<span class="fc" id="L53">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isBlocked()}.
+	 * @throws InvalidWayNumberException 
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testIsBlocked() throws InvalidWayNumberException, RopePointInvalidUsageException {
+<span class="fc" id="L62">		Way way3 = gameFactory.createWay(2, 2);</span>
+		
+<span class="fc" id="L64">		assertFalse(&quot;Way should be free&quot;, way3.isBlocked());</span>
+		
+<span class="fc" id="L66">		way3.getHut().mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L67">		assertTrue(&quot;Way is marked&quot;, way3.isBlocked());</span>
+<span class="fc" id="L68">	}</span>
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isFree()}.
+	 * @throws InvalidWayNumberException 
+	 */
+	@Test
+	public void testIsFree() throws InvalidWayNumberException {
+<span class="fc" id="L75">		Way way3 = gameFactory.createWay(3, 4);</span>
+<span class="fc" id="L76">		assertTrue(&quot;Way should be free&quot;, way3.isFree());</span>
+		
+<span class="fc" id="L78">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isClimberOnRope()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testIsClimberOnRope() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L87">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L88">		assertFalse(&quot;no climber on the rope&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L89">		way2.getRopePoints().get(0).placeClimber(new Climber());</span>
+<span class="fc" id="L90">		assertTrue(&quot;Climber on the Rope Coord 0&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L91">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#whereIsTheClimberOnTheRope()}.
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testWhereIsClimberOnRopeNoClimber() throws RopePointInvalidUsageException {
+<span class="fc" id="L99">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">		assertTrue(&quot;no climber on the rope&quot;, way2.whereIsTheClimberOnTheRope() &lt; 0);</span>
+<span class="fc" id="L101">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#whereIsTheClimberOnTheRope()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testWhereIsClimberOnRopeKoord0() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L110">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L111">		way2.getRopePoints().get(0).placeClimber(new Climber());</span>
+<span class="fc" id="L112">		assertEquals(&quot;Climber on the Rope Coord 0&quot;, 0, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L113">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#whereIsTheClimberOnTheRope()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testWhereIsClimberOnRopeNextToHut() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L122">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L123">		way2.getUpperRopePoint().placeClimber(new Climber());</span>
+<span class="fc" id="L124">		assertEquals(&quot;Climber on the Rope Coord 1&quot;, 1, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L125">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isMarkerOnRope(de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testIsMarkerOnRope() throws RopePointInvalidUsageException {
+<span class="fc" id="L133">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L134">		assertFalse(&quot;no marker on the rope&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L135">		way2.getRopePoints().get(0).mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L136">		assertTrue(&quot;Marker on the Rope Coord 0&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L137">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isMarkerOnRope(de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testIsMarkerOnRopeNextToHut() throws RopePointInvalidUsageException {
+<span class="fc" id="L145">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L146">		assertFalse(&quot;no marker on the rope&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L147">		way2.getUpperRopePoint().mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L148">		assertTrue(&quot;Marker on the Rope Coord 1&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L149">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#whereIsMarkerForColor(de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 */
+	@Test
+	public void testWhereIsMarkerForColor() throws RopePointInvalidUsageException {
+<span class="fc" id="L157">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L158">		assertFalse(&quot;no marker on the rope&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L159">		way2.getRopePoints().get(1).mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L160">		assertEquals(&quot;Marker on the Rope Coord 1&quot;, 1, way2.whereIsMarkerForColor(Color.BLUE));</span>
+<span class="fc" id="L161">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#getFirstRopePoint()}.
+	 */
+	@Test
+	public void testGetFirstRopePoint() {
+<span class="fc" id="L168">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L169">		assertEquals(&quot;Untfirst RopePoint should be [0] sein&quot;, way2.getRopePoints().get(0), way2.getFirstRopePoint());</span>
+<span class="fc" id="L170">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#getUpperRopePoint()}.
+	 */
+	@Test
+	public void testGetUpperRopePoint() {
+<span class="fc" id="L177">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L178">		assertEquals(&quot;Upper RopePoint should be [1]&quot;, way2.getRopePoints().get(1), way2.getUpperRopePoint());</span>
+<span class="fc" id="L179">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#placeClimberOntoFirstRopePoint(de.buxi.cantstop.model.Climber)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testPlaceClimberDown() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L188">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L189">		way2.placeClimberOntoFirstRopePoint(new Climber());</span>
+<span class="fc" id="L190">		assertEquals(&quot;Climber on the Rope Coord 0&quot;, 0, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L191">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#placeClimberAfterMarker(de.buxi.cantstop.model.Climber, de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws InvalidClimberMovementException 
+	 */
+	@Test(expected=InvalidClimberMovementException.class)
+	public void testPlaceClimberAfterMarkerNullMarker() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException {
+<span class="nc" id="L201">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L202">		way2.placeClimberAfterMarker(new Climber(), null);</span>
+<span class="nc" id="L203">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#placeClimberAfterMarker(de.buxi.cantstop.model.Climber, de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws InvalidClimberMovementException 
+	 */
+	@Test(expected=NullClimberException.class)
+	public void testPlaceClimberAfterMarkerNullClimber() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException {
+<span class="nc" id="L213">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L214">		way2.getRopePoints().get(1).mark(new Marker(Color.BLUE));</span>
+<span class="nc" id="L215">		way2.placeClimberAfterMarker(null, Color.BLUE);</span>
+<span class="nc" id="L216">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#placeClimberAfterMarker(de.buxi.cantstop.model.Climber, de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws InvalidClimberMovementException 
+	 */
+	@Test
+	public void testPlaceClimberAfterMarkerInWithte() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException {
+<span class="fc" id="L226">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L227">		way2.getRopePoints().get(3).mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L228">		way2.placeClimberAfterMarker(new Climber(), Color.BLUE);</span>
+<span class="fc" id="L229">		assertEquals(&quot;Climber should be on 4. RopePoint&quot;, 4, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L230">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#placeClimberAfterMarker(de.buxi.cantstop.model.Climber, de.buxi.cantstop.model.Color)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws InvalidClimberMovementException 
+	 */
+	@Test
+	public void testPlaceClimberNachMarkerNextToHut() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException {
+<span class="fc" id="L240">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L241">		way2.getUpperRopePoint().mark(new Marker(Color.BLUE));</span>
+<span class="fc" id="L242">		way2.placeClimberAfterMarker(new Climber(), Color.BLUE);</span>
+<span class="fc" id="L243">		assertEquals(&quot;Climber should be in the hut&quot;, -1000, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L244">		assertTrue(&quot;Climber should be in the hut2&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L245">		assertFalse(&quot;Climber should not be on the rope&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L246">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#moveClimber()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testBewayClimber() throws RopePointInvalidUsageException, InvalidClimberMovementException, NullClimberException {
+<span class="fc" id="L256">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L257">		way2.getRopePoints().get(4).placeClimber(new Climber());</span>
+<span class="fc" id="L258">		way2.moveClimber();</span>
+<span class="fc" id="L259">		assertEquals(&quot;Climber should be in the hut&quot;, 5, way2.whereIsTheClimberOnTheRope());</span>
+<span class="fc" id="L260">		way2.moveClimber();</span>
+<span class="fc" id="L261">		assertTrue(&quot;Climber should be in the hut2&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L262">		assertFalse(&quot;Climber should be not auf dem Seil&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L263">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#moveClimber()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws NullClimberException 
+	 */
+	@Test(expected=InvalidClimberMovementException.class)
+	public void testBewayClimberNoClimber() throws RopePointInvalidUsageException, InvalidClimberMovementException, NullClimberException {
+<span class="nc" id="L273">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L274">		way2.moveClimber();</span>
+<span class="nc" id="L275">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#markClimberOnTheWay(de.buxi.cantstop.model.Marker)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NoClimberOnWayException 
+	 */
+	@Test(expected=NoClimberOnWayException.class)
+	public void testMarkClimberOnTheWayNoClimberOnTheWay() throws RopePointInvalidUsageException, NoClimberOnWayException {
+<span class="nc" id="L284">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L285">		assertEquals(&quot;no free Climber to get back&quot;, null, way2.markClimberNewMarker(new Marker(Color.BLUE)));</span>
+<span class="nc" id="L286">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#markClimberOnTheWay(de.buxi.cantstop.model.Marker)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws NoClimberOnWayException 
+	 */
+	@Test
+	public void testMarkClimberOnTheWayKoord2() throws RopePointInvalidUsageException, NullClimberException, NoClimberOnWayException {
+<span class="fc" id="L296">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L297">		Climber climber = new Climber();</span>
+<span class="fc" id="L298">		way2.getRopePoints().get(1).placeClimber(climber);</span>
+		
+<span class="fc" id="L300">		Climber resultClimber = way2.markClimberNewMarker(new Marker(Color.BLUE));</span>
+<span class="fc" id="L301">		assertEquals(&quot;Climbers should be same&quot;, climber, resultClimber);</span>
+<span class="fc" id="L302">		assertFalse(&quot;no Climber should be on the rope&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L303">		assertFalse(&quot;no Climber should be in the hut&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L304">		assertEquals(&quot;Marker should be on Koord2&quot;, 1, way2.whereIsMarkerForColor(Color.BLUE));</span>
+<span class="fc" id="L305">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#markClimberOnTheWay(de.buxi.cantstop.model.Marker)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws NoClimberOnWayException 
+	 */
+	@Test
+	public void testMarkClimberOnTheWayKoord2AlreadyMarked() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException, NoClimberOnWayException {
+<span class="fc" id="L316">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L317">		Climber climber = new Climber();</span>
+<span class="fc" id="L318">		way2.getRopePoints().get(1).placeClimber(climber);</span>
+		
+<span class="fc" id="L320">		Climber resultClimber = way2.markClimberNewMarker(new Marker(Color.BLUE));</span>
+<span class="fc" id="L321">		assertEquals(&quot;Climbers should be same&quot;, climber, resultClimber);</span>
+<span class="fc" id="L322">		assertFalse(&quot;no climber should be on the rope&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L323">		assertFalse(&quot;no climber should be in the hut&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L324">		assertEquals(&quot;Marker should be on Koord2&quot;, 1, way2.whereIsMarkerForColor(Color.BLUE));</span>
+		
+		//second Rund
+<span class="fc" id="L327">		way2.placeClimberAfterMarker(climber, Color.BLUE);</span>
+<span class="fc" id="L328">		resultClimber = way2.markClimberMoveMarker(Color.BLUE);</span>
+<span class="fc" id="L329">		assertEquals(&quot;Climber sollen same sein&quot;, climber, resultClimber);</span>
+<span class="fc" id="L330">		assertFalse(&quot;no climber should be on the rope be&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L331">		assertFalse(&quot;no Climber should be in the hut&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L332">		assertEquals(&quot;Marker should be on Koord2&quot;, 2, way2.whereIsMarkerForColor(Color.BLUE));</span>
+<span class="fc" id="L333">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#markClimberOnTheWay(de.buxi.cantstop.model.Marker)}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 * @throws NoClimberOnWayException 
+	 */
+	@Test
+	public void testMarkClimberOnTheWayInHut() throws RopePointInvalidUsageException, NullClimberException, NoClimberOnWayException {
+<span class="fc" id="L343">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L344">		Climber climber = new Climber();</span>
+<span class="fc" id="L345">		way2.getHut().placeClimber(climber);</span>
+		
+<span class="fc" id="L347">		Climber resultClimber = way2.markClimberNewMarker(new Marker(Color.BLUE));</span>
+<span class="fc" id="L348">		assertEquals(&quot;Climber should be the same be&quot;, climber, resultClimber);</span>
+<span class="fc" id="L349">		assertFalse(&quot;no climber should be on the rope be&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L350">		assertFalse(&quot;no Climber should be in the hut&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L351">		assertTrue(&quot;Marker should be in the hut&quot;, way2.isBlocked());</span>
+<span class="fc" id="L352">		assertFalse(&quot;Marker should be in the hut&quot;, way2.isMarkerOnRope(Color.BLUE));</span>
+<span class="fc" id="L353">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.Way#isClimberInHut()}.
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NullClimberException 
+	 */
+	@Test
+	public void testIsClimberInHut() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L362">		Way way2 = gameFactory.createWay(2, 2);</span>
+<span class="fc" id="L363">		assertFalse(&quot;Hut must be empty&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L364">		way2.getHut().placeClimber(new Climber());</span>
+<span class="fc" id="L365">		assertTrue(&quot;Hut must be blocked&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L366">	}</span>
+	
+	@Test
+	public void testRemoveClimberFromHut() throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc" id="L370">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L371">		Climber climber = new Climber();</span>
+<span class="fc" id="L372">		way2.getHut().placeClimber(climber);</span>
+		
+<span class="fc" id="L374">		Climber resultClimber = way2.removeClimberFromHut();</span>
+<span class="fc" id="L375">		assertEquals(&quot;Climber should be the same be&quot;, climber, resultClimber);</span>
+<span class="fc" id="L376">		assertFalse(&quot;no climber should be on the rope be&quot;, way2.isClimberOnRope());</span>
+<span class="fc" id="L377">		assertFalse(&quot;no Climber should be in the hut&quot;, way2.isClimberInHut());</span>
+<span class="fc" id="L378">		assertTrue(&quot;Marker should not be in the hut&quot;, way2.isFree());</span>
+<span class="fc" id="L379">	}</span>
+	
+	@Test(expected=RopePointInvalidUsageException.class)
+	public void testRemoveClimberFromHutEmptyHut() throws RopePointInvalidUsageException {
+<span class="nc" id="L383">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L384">		Climber resultClimber = way2.removeClimberFromHut();</span>
+<span class="nc" id="L385">		assertNull(&quot;no Climber is in the hut&quot;, resultClimber);</span>
+<span class="nc" id="L386">	}</span>
+
+	@Test
+	public void testRemoveClimberFromRope() throws RopePointInvalidUsageException, NullClimberException, InvalidClimberMovementException {
+<span class="fc" id="L390">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="fc" id="L391">		Climber climber = new Climber();</span>
+<span class="fc" id="L392">		way2.getFirstRopePoint().placeClimber(climber);</span>
+<span class="fc" id="L393">		Climber resultClimber = way2.removeClimberFromRope();</span>
+<span class="fc" id="L394">		assertEquals(&quot;Climber should be the same be&quot;, climber, resultClimber);</span>
+<span class="fc" id="L395">	}</span>
+	
+	@Test(expected=InvalidClimberMovementException.class)
+	public void testRemoveClimberFromEmptyRope() throws InvalidClimberMovementException, RopePointInvalidUsageException {
+<span class="nc" id="L399">		Way way2 = gameFactory.createWay(4, 6);</span>
+<span class="nc" id="L400">		Climber resultClimber = way2.removeClimberFromRope();</span>
+<span class="nc" id="L401">		assertNull(&quot;no Climber is in the hut&quot;, resultClimber);</span>
+<span class="nc" id="L402">	}</span>
+
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>

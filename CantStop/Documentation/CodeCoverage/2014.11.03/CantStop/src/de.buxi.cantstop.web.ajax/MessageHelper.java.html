@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>MessageHelper.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (03.11.2014 05:56:13)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.web.ajax</a> &gt; <span class="el_source">MessageHelper.java</span></div><h1>MessageHelper.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.web.ajax;
+
+import java.util.Locale;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
+
+import de.buxi.cantstop.model.GameTransferObject;
+
+<span class="nc" id="L10">public class MessageHelper {</span>
+
+	public static GameTransferObject decorateWithErrorString(
+			GameTransferObject allGameInformation, Locale locale, ApplicationContext ac) {
+<span class="nc" id="L14">		String errorMessage = allGameInformation.getErrorMessage();</span>
+<span class="nc bnc" id="L15" title="All 2 branches missed.">		if (StringUtils.isNotBlank(errorMessage)) {</span>
+<span class="nc" id="L16">			allGameInformation.setErrorMessageString(ac.getMessage(errorMessage, null, locale));	</span>
+		}
+<span class="nc" id="L18">		return allGameInformation;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (03.11.2014 05:56:13)</div></body></html>
