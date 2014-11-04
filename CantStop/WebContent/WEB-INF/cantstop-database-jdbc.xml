@@ -23,7 +23,7 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 	
-	<bean id="DAOAspect" class="de.buxi.cantstop.aop.TestLoggingAspect">
+	<bean id="DAOAspect" class="de.buxi.cantstop.aop.GameRecordAspect">
 		<property name="dao" ref="gameInfoDao" />
 	</bean>
 </beans>
