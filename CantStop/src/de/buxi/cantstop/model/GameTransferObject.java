@@ -3,6 +3,7 @@
  */
 package de.buxi.cantstop.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,10 @@ import java.util.Map;
  * Transfer Object for GameController
  * is a must http://www.oracle.com/technetwork/articles/javaee/transferobject-139757.html
  * 
- * TODO UNITTEST ?
  */
 
-public class GameTransferObject {
+public class GameTransferObject implements Serializable{
+	private static final long serialVersionUID = 2743607355384994736L;
 	public GameState gameState;
 	public Player actualPlayer;
 	public List<TwoDicesPair> possiblePairs;
@@ -30,9 +31,19 @@ public class GameTransferObject {
 	public List<Dice> lastThrow;
 	public UsedPairInfoTO lastUsedPairInfo;
 	public Boolean gameFull;
+	public String startTime;
+	public long startTimestamp;
+	public String joinedPlayersList;
+	public String description;
+	public int gameId;
+	
+	/**
+	 * @return the joinedPlayersList
+	 */
+	public String getJoinedPlayersList() {
+		return joinedPlayersList;
+	}
 
-	
-	
 	/**
 	 * @return the errorMessageString
 	 */
@@ -182,19 +193,19 @@ public class GameTransferObject {
 		return Integer.toString(actualPlayerNumber);
 	}
 	
-	public String getJoinedPlayersListAJAX() {
-		StringBuffer result = new StringBuffer();
-		for (Player player : getPlayerList()) {
-			result.append(player.getName());
-			result.append(", ");
-		}
-		
-		// deleting the last, unnecessary comma and space
-		if (getPlayerList() != null && getPlayerList().size() > 0) {
-			result.deleteCharAt(result.length()-1);
-			result.deleteCharAt(result.length()-1);
-		}
+	public int getGameId() {
+		return this.gameId;
+	}
 
-		return result.toString();
+	public long getStartTimestamp() {
+		return this.startTimestamp;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public String getStartTime() {
+		return this.startTime;
 	}
 }

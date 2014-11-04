@@ -296,7 +296,12 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 	@Test
 	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException {
 		GameController gameController = (GameController)ac.getBean("testGameController");
-		gameController.doGameStart();
+		GameTransferObject to = gameController.doGameStart();
+		
+		assertNotNull("start time must be filled", to.getStartTime());
+		assertNotNull("start timestamp must be filled", to.getStartTimestamp());
+		
+
 		assertEquals("First Player should be determined", GameController.DEFAULT_FIRST_PLAYER_NUM, gameController.getActualPlayerNumber());
 		assertEquals("IN_GAME State", GameState.IN_GAME, gameController.getGameStatus());
 		

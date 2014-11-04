@@ -1,6 +1,7 @@
 package de.buxi.cantstop.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,7 +42,25 @@ public class GameController implements Serializable{
 	private String errorMessage;
 
 	private UsedPairInfoTO lastUsedPairInfo;
+
+	private long startTimestamp;
+	private String startTime;
 	
+	
+	/**
+	 * @return the startTimestamp
+	 */
+	public long getStartTimestamp() {
+		return startTimestamp;
+	}
+
+	/**
+	 * @return the startTime
+	 */
+	public String getStartTime() {
+		return startTime;
+	}
+
 	/**
 	 * @return the lastThrow
 	 */
@@ -67,6 +86,8 @@ public class GameController implements Serializable{
 		this.diceManager = diceManager;
 		this.allMarkers = markers;
 		this.climbers = climbers;
+		this.startTimestamp = 0;
+		this.startTime = null;
 		this.gameState = GameState.INIT;
 		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
 		if (players != null && players.size() >= GameController.MINIMUM_PLAYER_NUMBER) {
@@ -288,6 +309,9 @@ public class GameController implements Serializable{
 	 */
 	public GameTransferObject doGameStart() throws  InvalidWayNumberException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.ENOUGH_PLAYER));
+		Date currentDate = new Date();
+		this.startTime = currentDate.toString();
+		this.startTimestamp = currentDate.getTime();
 		determineFirstPlayer();
 		determinePlayerOrderStandard(); 
 		// distributes Markers
@@ -600,6 +624,64 @@ public class GameController implements Serializable{
 	}
 	
 	/**
+	 * @return true if <code>MAXIMUM_PLAYER_NUMBER</code> have already joined to the game
+	 */
+	public boolean isGameFull() {
+		if (playerMap.values().size() == MAXIMUM_PLAYER_NUMBER) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * removes a player from game
+	 * @param playerId which player has the game finished 
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 */
+	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
+		this.gameState = GameState.GAME_FINISHED;
+		log.info("game was finished by player:" + playerId);
+		this.errorMessage = "GAMEWASFINISHED";
+		return this.doGetTransferObject();		
+	}
+
+	private String getJoinedPlayersList() {
+		StringBuffer result = new StringBuffer();
+		for (Player player : getPlayersInOrder()) {
+			result.append(player.getName());
+			result.append(", ");
+		}
+		
+		// deleting the last, unnecessary comma and space
+		if (getPlayersInOrder() != null && getPlayersInOrder().size() > 0) {
+			result.deleteCharAt(result.length()-1);
+			result.deleteCharAt(result.length()-1);
+		}
+
+		return result.toString();
+	}
+	
+	private String getDescription() {
+		StringBuffer result = new StringBuffer(2000);
+		result.append(getStartTime());
+		result.append(":");
+		result.append(getJoinedPlayersList());
+		if (result.length()>2000) {
+			return result.substring(0, 1999);
+		}
+		else {
+			return result.toString();
+		}
+	}
+	
+	public int getGameId() {
+		String id = getJoinedPlayersList() + getStartTimestamp();
+		return id.hashCode();
+	}
+	
+	/**
 	 * generates a Transfer Object for client apps
 	 * @return new transfer object
 	 * @throws DiceNotThrownException
@@ -630,30 +712,12 @@ public class GameController implements Serializable{
 		}
 		to.board = this.getBoard();
 		to.gameFull = this.isGameFull();
+		to.joinedPlayersList = this.getJoinedPlayersList();
+		to.startTime = this.startTime;
+		to.startTimestamp = this.startTimestamp;
+		to.description = this.getDescription();
+		to.gameId = this.getGameId();
 		return to;
 	}
 
-	/**
-	 * @return true if <code>MAXIMUM_PLAYER_NUMBER</code> have already joined to the game
-	 */
-	public boolean isGameFull() {
-		if (playerMap.values().size() == MAXIMUM_PLAYER_NUMBER) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * removes a player from game
-	 * @param playerId which player has the game finished 
-	 * @return 
-	 * @throws InvalidWayNumberException 
-	 * @throws DiceNotThrownException 
-	 */
-	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
-		this.gameState = GameState.GAME_FINISHED;
-		log.info("game was finished by player:" + playerId);
-		this.errorMessage = "GAMEWASFINISHED";
-		return this.doGetTransferObject();		
-	}
 }

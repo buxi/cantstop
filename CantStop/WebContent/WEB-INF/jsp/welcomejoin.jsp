@@ -51,7 +51,7 @@ function doAjaxPost() {
 		    $('#json_errorcode').html("");
 	        $('#gameState').html(response.gameState);
 	        $('#game_errorMessage').html(response.errorMessage);
-	        $('#joinedPlayersList').html(response.joinedPlayersListAJAX);
+	        $('#joinedPlayersList').html(response.joinedPlayersList);
 			if ($('#playerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
 				$('#startGame').show();
 			}
