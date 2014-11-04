@@ -2,9 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="utils"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5.jar"/>
-	<classpathentry kind="lib" path="libs/spring-test-4.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="libs/spring-test-4.0.6.RELEASE.jar" sourcepath="/home/buxi/development/spring-framework-4.0.6.RELEASE/libs/spring-test-4.0.6.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/buxi/development/spring-framework-4.0.6.RELEASE/libs/spring-test-4.0.6.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jstl.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-aop-4.0.6.RELEASE.jar"/>
@@ -52,6 +57,8 @@
 			<attribute name="javadoc_location" value="jar:file:/home/buxi/development/commons-compress-1.9/commons-compress-1.9-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/spring-test-dbunit-1.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/dbunit-2.4.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

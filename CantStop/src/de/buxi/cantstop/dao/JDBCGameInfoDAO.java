@@ -7,12 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 
 import de.buxi.cantstop.model.GameTransferObject;
 
@@ -25,16 +27,20 @@ public class JDBCGameInfoDAO implements GameInfoDao {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.dao.GameInfoDao#insert(java.lang.String, de.buxi.cantstop.model.GameTransferObject)
+	 */
 	@Override
 	public void insert(final String methodName, final GameTransferObject to) {
-		//serializing and packing GameTransferObject
+		
 		
 		try (ByteArrayOutputStream outZip = new ByteArrayOutputStream();
 				GzipCompressorOutputStream gzip = new GzipCompressorOutputStream(outZip);
 				ObjectOutputStream objOut = new ObjectOutputStream(gzip);) {
+			//serializing and packing GameTransferObject
 			objOut.writeObject(to);
 			gzip.finish();
-			log.info("TransferObject size:" + outZip.toByteArray().length);
+			log.debug("TransferObject size:" + outZip.toByteArray().length);
 			
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(Connection conn)
@@ -51,12 +57,22 @@ public class JDBCGameInfoDAO implements GameInfoDao {
 					return ps;
 				}
 			});
-
 		} catch (IOException | DataAccessException e) {
 			log.error(e);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.dao.GameInfoDao#readAllShortGameInfo()
+	 */
+	public List<GameInfoShortTO> readAllShortGameInfo() {
+		String sql = "SELECT GAME_ID, DESCRIPTION FROM GAMEINFO";
+		List<GameInfoShortTO> result = jdbcTemplate.query(sql,
+				ParameterizedBeanPropertyRowMapper.newInstance(GameInfoShortTO.class));
+		
+		return result;
+	}
+	
 	/*public GameTransferObject read(int id ) {
 		// unzip the data
 		ByteArrayInputStream unzipInput = new ByteArrayInputStream(decodedBase64);
