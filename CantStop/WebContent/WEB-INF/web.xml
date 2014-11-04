@@ -27,7 +27,7 @@
     <init-param>
     	<!-- Location of HSQLDB database files -->
 		<param-name>hsqldb.server.database</param-name> 
-		<param-value>./WEB-INF/database/</param-value> 
+		<param-value>database/</param-value> 
 	</init-param>
 	<init-param>
     	<!-- database files are placed in WEB-INF -->

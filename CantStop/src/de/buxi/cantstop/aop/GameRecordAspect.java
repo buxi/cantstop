@@ -11,7 +11,7 @@ import de.buxi.cantstop.dao.GameInfoDao;
 import de.buxi.cantstop.model.GameTransferObject;
 @Component
 @Aspect
-public class TestLoggingAspect {
+public class GameRecordAspect {
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	private GameInfoDao dao; 
