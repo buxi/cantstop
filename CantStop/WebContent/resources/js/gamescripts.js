@@ -10,7 +10,7 @@ function refreshBoard(board) {
 		var hutHTML = "<tr><td id='h_"+way.number+"' style='border:1px solid black; width:30px; height:30px'";		
 		var hutMarker = way.hut.marker;
 		if (hutMarker != null) {
-			 hutHTML += " bgcolor=" + marker.color;
+			 hutHTML += " bgcolor=" + hutMarker.color;
 		}
 		hutHTML += ">" + wayNumber;
 		
