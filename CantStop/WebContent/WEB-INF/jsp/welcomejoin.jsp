@@ -55,13 +55,17 @@ function doAjaxPost() {
 			if ($('#playerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
 				$('#startGame').show();
 			}
-			if ($('#playerId').val()=='' && !response.gameFull) {
-				$('#addPlayer').show();
+			if (!response.gameFull) {
 				$('#waitingForOthers').show();
 			}
 			else {
-				$('#addPlayer').hide();
 				$('#waitingForOthers').hide();
+			}
+			if ($('#playerId').val()=='' && !response.gameFull) {
+				$('#addPlayer').show();
+			}
+			else {
+				$('#addPlayer').hide();
 			}
 			
 			if (response.gameState == 'IN_SPIEL' || response.gameState == 'IN_ROUND' ) {
