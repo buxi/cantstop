@@ -69,7 +69,7 @@ public class GameServicesConsole implements GameService {
 
 
 	@Override
-	public GameTransferObject finishTurn() throws GameException {
+	public GameTransferObject finishTurn(String playerId) throws GameException {
 		try {
 			return gameController.doEndGameTurn();
 		} catch (NoMarkerIsAvailableException | RopePointInvalidUsageException

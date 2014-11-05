@@ -72,7 +72,7 @@ public class CantStopMainConsolApp {
 		    	switch (action) {
 				case "1": 
 					if (GameState.IN_ROUND.equals(gameControllerTO.gameState)) {
-						gameControllerTO = gameServices.finishTurn();
+						gameControllerTO = gameServices.finishTurn("");
 					}
 					else {
 						messages.append(getMessage("FINISH_ROUND_NOT_ALLOWED"));

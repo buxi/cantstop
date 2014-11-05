@@ -6,7 +6,7 @@ public interface GameService {
 	public GameTransferObject startGame() throws GameException;
 	public GameTransferObject startTurn() throws GameException;
 	public GameTransferObject finishGame(String playerId) throws GameException;
-	public GameTransferObject finishTurn() throws GameException;
+	public GameTransferObject finishTurn(String playerId) throws GameException;
 	
 	public GameTransferObject getAllGameInformation() throws GameException;
 	

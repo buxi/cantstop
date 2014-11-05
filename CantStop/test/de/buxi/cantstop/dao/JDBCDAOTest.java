@@ -4,6 +4,7 @@
 package de.buxi.cantstop.dao;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -21,6 +22,7 @@ import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.utils.ObjectManipulationHelper;
 import static org.junit.Assert.*;
 
 /**
@@ -39,7 +41,7 @@ public class JDBCDAOTest {
 		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean("gameInfoDao");
 		GameController gameController = (GameController)ac.getBean("gameController");
 		GameTransferObject to = gameController.doGameStart();
-		dao.insert("testMethod",to);
+		dao.insert(1, new java.sql.Timestamp(new Date().getTime()), "testMethod",1, ObjectManipulationHelper.serializeAndPack(to), to.description);
 	}
 	
 	@Test
@@ -47,7 +49,7 @@ public class JDBCDAOTest {
 		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean("gameInfoDao");
 		GameController gameController = (GameController)ac.getBean("gameController");
 		GameTransferObject to = gameController.doGameStart();
-		dao.insert("testMethod",to);
+		dao.insert(1, new java.sql.Timestamp(new Date().getTime()), "testMethod",1, ObjectManipulationHelper.serializeAndPack(to), to.description);
 		
 		List<GameInfoShortTO> result = dao.readAllShortGameInfo();
 		assertNotNull("can't be null" , result);

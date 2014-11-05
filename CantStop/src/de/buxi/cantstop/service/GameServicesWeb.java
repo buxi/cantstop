@@ -74,7 +74,7 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 	}
 
 	@Override
-	public GameTransferObject finishTurn() throws GameException {
+	public GameTransferObject finishTurn(String playerId) throws GameException {
 		try {
 			return gameController.doEndGameTurn();
 		} catch (InvalidWayNumberException | DiceNotThrownException | NoMarkerIsAvailableException | RopePointInvalidUsageException | NoClimberOnWayException | InvalidClimberMovementException e) {

@@ -109,8 +109,9 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 		
 		JsonResponse response = new JsonResponse();
 		
+		// TODO this check would be better in GameController 
 		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
-			gameService.finishTurn();
+			gameService.finishTurn(playerId);
 		}
 		else {
 			log.error("Other player is in turn:" + gameService.getAllGameInformation().actualPlayer.getName());
@@ -128,6 +129,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 		
 		JsonResponse response = new JsonResponse();
 		
+		// TODO this check would be better in GameController
 		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
 			gameService.throwDices();
 		}
@@ -148,6 +150,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 		log.info("do.executePairAJAX: Incoming playerId:" + playerId + "; chosenPairId:" + chosenPairId + "; wayNumber:"+wayNumber);
 		
 		JsonResponse response = new JsonResponse();
+		// TODO this check would be better in GameController
 		if (gameService.getAllGameInformation().getActualPlayerId().equals(playerId)) {
 			gameService.executePairs(chosenPairId, Integer.valueOf(wayNumber));
 		}
