@@ -24,4 +24,10 @@ public interface GameInfoDao {
 	 * @return list of <gameId, description> info from GAMEINFO table
 	 */
 	public List<GameInfoShortTO> readAllShortGameInfo();
+	
+	/**
+	 * @param gameId
+	 * @return list of all info from GAMEINFO table by gameId
+	 */
+	public List<GameInfoFullTO> readFullInfoByGameId(int gameId);
 }

@@ -22,7 +22,7 @@ import de.buxi.cantstop.model.DiceNotThrownException;
 import de.buxi.cantstop.model.GameController;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.model.InvalidWayNumberException;
-import de.buxi.utils.ObjectManipulationHelper;
+import de.buxi.cantstop.utils.ObjectManipulationHelper;
 import static org.junit.Assert.*;
 
 /**
@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:test/test-database-context.xml")
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
-public class JDBCDAOTest {
+public class JDBCGameInfoDAOTest {
 	@Autowired
 	protected ApplicationContext ac;
 		
@@ -53,7 +53,26 @@ public class JDBCDAOTest {
 		
 		List<GameInfoShortTO> result = dao.readAllShortGameInfo();
 		assertNotNull("can't be null" , result);
-		assertEquals("1 row expected" , 1, result.size());
+		assertTrue("minimum one row expected" , result.size() > 0);
 	}
 	
+	@Test
+	public void testReadFullInfoByGameId() throws DiceNotThrownException, InvalidWayNumberException {
+		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean("gameInfoDao");
+		GameController gameController = (GameController)ac.getBean("gameController");
+		GameTransferObject to = gameController.doGameStart();
+		dao.insert(to.gameId, new java.sql.Timestamp(new Date().getTime()), "testMethod",-1, ObjectManipulationHelper.serializeAndPack(to), to.description);
+		
+		List<GameInfoFullTO> result = dao.readFullInfoByGameId(to.gameId);
+		assertNotNull("can't be null" , result);
+		assertEquals("1 row expected" , 1, result.size());
+		
+		GameInfoFullTO gameInfoFull = result.get(0);
+		assertEquals("gameId check" , to.gameId, gameInfoFull.getGameId());
+		assertEquals("gameId check2" , to.gameId, gameInfoFull.getTransferObject().gameId);
+		assertEquals("methodName check" , "testMethod", gameInfoFull.getMethodName());
+		assertEquals("description check" , to.description, gameInfoFull.getDescription());
+		assertEquals("description check2" , to.description, gameInfoFull.getTransferObject().description);
+		assertEquals("playerId check" , -1, gameInfoFull.getPlayerId());
+	}
 }
