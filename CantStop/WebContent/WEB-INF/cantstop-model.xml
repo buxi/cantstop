@@ -99,9 +99,9 @@
  		<constructor-arg name="diceManager" ref="diceManager"/>
  		<constructor-arg name="markers">
  			<util:map key-type="de.buxi.cantstop.model.Color">
+				<entry key="BLUE"  value-ref="blueMarkers"/>
  			 	<entry key="GREEN"  value-ref="blackMarkers"/>
  			 	<entry key="YELLOW"  value-ref="yellowMarkers"/>
- 			 	<entry key="BLUE"  value-ref="blueMarkers"/>
  			 	<entry key="RED"  value-ref="redMarkers"/>
  			</util:map>
  		</constructor-arg> 

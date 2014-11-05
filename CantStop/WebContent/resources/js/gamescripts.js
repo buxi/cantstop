@@ -7,7 +7,7 @@ function refreshBoard(board) {
 		var wayTableHTML = "";
 		
 		// displaying Hut 
-		var hutHTML = "<tr><td id='h_"+way.number+"' style='border:1px solid black; width:30px; height:30px'";		
+		var hutHTML = "<tr><td id='h_"+way.number+"' style='align:center; valign: middle ;background-color:white; border:1px solid black; width:30px; height:30px'";		
 		var hutMarker = way.hut.marker;
 		if (hutMarker != null) {
 			 hutHTML += " bgcolor=" + hutMarker.color;
@@ -26,7 +26,7 @@ function refreshBoard(board) {
 		for (var j = 0; j < way.ropePoints.length; j++) {
 			var ropePoint =  way.ropePoints[arrayLength - j - 1];
 			var climber = ropePoint.climber;
-			var rpHTML = "<tr><td  style='border:1px solid black; width:30px; height:30px'>";
+			var rpHTML = "<tr><td  style='background-color:white; border:1px solid black; width:30px; height:30px'>";
 			if (climber != null) {
 				rpHTML +="<img height=15 src='resources/images/climber.png'>";
 			}	
@@ -52,7 +52,7 @@ function refreshDices(dices, widthInfo) {
 	
 	for (var i = 0; i < dices.length; i++) {
 		var dice = dices[i];
-		htmlCode += "<img width="+widthInfo+" src='resources/images/dice"+dice.diceValue+".png'/>";
+		htmlCode += "<img style='margin:1px' width="+widthInfo+" src='resources/images/dice"+dice.diceValue+".png'/>";
 	}
 	return  htmlCode;
 }
@@ -66,21 +66,21 @@ function refreshPairsToChoose(tr, choosablePairsWithId, playerId) {
 		
 		if (pair.pairChoiceInfo == 'WITHWAYINFO') {
 			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPostWithWayNumber('do.executePairAJAX', '"+playerId+"', '"+pairId+"', '"+pair.firstSum+"') \" >";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
 			htmlVal += "</a>";
 		
 			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPostWithWayNumber('do.executePairAJAX', '"+playerId+"', '"+pairId+"', '"+pair.secondSum+"') \" >";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
 			htmlVal += "</a>";
 		}
 		else {
 			htmlVal += "<a class='dicepairs' style='float:left' onclick=\"doAjaxPost('do.executePairAJAX', '"+playerId+"', '"+pairId+"') \" >";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
-			htmlVal += "<img width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.firstPair.first.diceValue+".png'/>"; 
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.firstPair.second.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.secondPair.first.diceValue+".png'/>";
+			htmlVal += "<img style='margin:1px' width=25 src='resources/images/dice"+pair.secondPair.second.diceValue+".png'/>";
 			htmlVal += "</a>";
 		}
 		htmlVal += "<br></div>";
@@ -95,7 +95,7 @@ function refreshPlayersClimbers(climbers) {
 	
 	for (var i = 0; i < climbers.length; i++) {
 		var climber = climbers[i];
-		htmlCode += "<img height=15 src='resources/images/climber.png'>";
+		htmlCode += "<img style='margin:2px' height=15 src='resources/images/climber.png'>";
 	}
 	return  htmlCode;
 }
@@ -105,7 +105,7 @@ function refreshPlayersMarkers(markers) {
 	
 	for (var i = 0; i < markers.length; i++) {
 		var marker = markers[i];
-		htmlCode += "<img height=15 src='resources/images/marker_"+marker.color+".png'>";	
+		htmlCode += "<img style='margin:2px' height=15 src='resources/images/marker_"+marker.color+".png'>";	
 	}
 	return  htmlCode;
 }
@@ -125,13 +125,13 @@ function refreshLastUsedPair(lastUsedPairInfo) {
 	htmlCode += "<div>"; 
 	
 	htmlCode += "<div style='width:50; float:left; "+border1+"'>";
-	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.first.diceValue+".png'/>";
-	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.second.diceValue+".png'/>";
+	htmlCode += "<img style='margin:1px' width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.first.diceValue+".png'/>";
+	htmlCode += "<img style='margin:1px' width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.firstPair.second.diceValue+".png'/>";
 	htmlCode += "</div>";
 
 	htmlCode += "<div style='width:50; float:left; "+border2+"'>";
-	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.first.diceValue+".png'/>";
-	htmlCode += "<img width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.second.diceValue+".png'/>";
+	htmlCode += "<img style='margin:1px' width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.first.diceValue+".png'/>";
+	htmlCode += "<img style='margin:1px' width=25 src='resources/images/dice"+lastUsedPairInfo.chosenPair.secondPair.second.diceValue+".png'/>";
 	htmlCode += "</div>";
 	
 	htmlCode += "</div>";
@@ -145,14 +145,14 @@ function refreshPlayersList(players, actualPlayerId, lastUsedPairInfo) {
 		var player = players[i];
 		if (player.order == actualPlayerId ) {
 			$('#inturn_'+player.order).show();
-			$('#inturnplayer_'+player.order).css({"border-color": "#C1E0FF", 
+			$('#inturnplayer_'+player.order).css({"border-color": "red", 
 	             "border-weight":"1px", 
 	             "border-style":"solid"});
 			
 		}
 		else {
 			$('#inturn_'+player.order).hide();
-			$('#inturnplayer_'+player.order).css({"border-color": "#FFFFFF", 
+			$('#inturnplayer_'+player.order).css({"border-color": "grey", 
 	             "border-weight":"0px", 
 	             "border-style":"solid"});
 		}

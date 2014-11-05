@@ -113,7 +113,7 @@ function refreshPage(playerId, gto) {
 </head>
 
 <body>
-<div style="width:650px">
+<div style="width:635px; height:750px; border: 2px solid black;background-color: grey;">
 <!-- BUILDING SCREEN -->
 <jsp:include page="langSelectionIncl.jsp"/>
 
@@ -122,20 +122,20 @@ function refreshPage(playerId, gto) {
 	<jsp:include page="gameStateIncl.jsp"/>
 </div>
 <!--  display board -->
-<div id="board" style="float:left; height:500px;">
+<div id="board" style="border: 2px solid black;  float:left; height:500px;">
 	<jsp:include page="boardAJAX.jsp"/>
 </div>
 
  
 <!-- display playerList -->
-<div id="playerList" style="float:right;  width: 160px; height:500px">
-	<div style="border:0px solid black; height:25px"><s:message code="ACTIVE.PLAYERS"/></div>
+<div id="playerList" style="float:right; border: 2px solid black;   width: 160px; height:500px">
+	<div style="align:center; border:0px solid black; height:25px; border-bottom: 1px solid black;"><s:message code="ACTIVE.PLAYERS"/></div>
 	<c:forEach items="${gameInfo.playerList}" var="player">
 	<div id="inturnplayer_${player.order}" style=" height:125px">
 		<div id="inturn_${player.order}" style="display: none; ">
 			<s:message code="IN_TURN"/>
 		</div>
-		<div style="align:center;  bgColor:${player.color}">${player.name}</div>
+		<div style="align:center;">${player.name}</div>
 		
 		<!-- display markers -->
 		<div id="playersMarkers_${player.order}" ></div>
