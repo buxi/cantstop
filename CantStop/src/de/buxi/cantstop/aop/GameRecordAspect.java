@@ -10,11 +10,12 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.buxi.cantstop.dao.GameInfoDao;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.utils.ObjectManipulationHelper;
+import de.buxi.cantstop.utils.ObjectManipulationHelper;
 
 /**
  * AOP Aspect to record game activities
@@ -28,10 +29,12 @@ import de.buxi.utils.ObjectManipulationHelper;
 public class GameRecordAspect {
 	private Log log = LogFactory.getLog(GameRecordAspect.class);
 	
+	@Autowired
 	private GameInfoDao dao; 
 	
 	@Around("execution(* de.buxi.cantstop.service.GameService.finishTurn(..))")
 	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
+		//fix for bug 17: Wrong playerId when finishTurn called
 		Object[] args = joinPoint.getArgs();
 		int playerId = Integer.valueOf((String)args[0]);
 		
@@ -58,6 +61,7 @@ public class GameRecordAspect {
 	 * @param to 
 	 */
 	protected void storeGameInfoCommon(JoinPoint joinPoint, int playerId, GameTransferObject to) {
+		log.debug("aop method called:" + joinPoint.getSignature().getName());
 		byte[] packedTransferObject = ObjectManipulationHelper.serializeAndPack(to);
 		dao.insert(to.getGameId(), new java.sql.Timestamp(new Date().getTime()), 
 				joinPoint.getSignature().getName(), 

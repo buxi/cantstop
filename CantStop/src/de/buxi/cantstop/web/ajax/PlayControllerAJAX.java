@@ -58,7 +58,6 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 		if (GameState.ENOUGH_PLAYER.equals(to.getGameState())) {
 			gameService.startGame();
 			model.addAttribute("gameInfo", gameService.startTurn());
-			model.addAttribute("gameInfo", gameService.getAllGameInformation());
 			return "redirect:playAJAX";
 		}
 		

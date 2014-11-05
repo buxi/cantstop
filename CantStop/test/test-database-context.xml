@@ -13,7 +13,7 @@
 	<import resource="file:src/cantstopGameBeans.xml"/>
 
 	<!-- initialize the db with the tables -->
-	<jdbc:initialize-database data-source="dataSource" ignore-failures="NONE">
+	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
     	<jdbc:script location="file:sql/schema.sql" />
 	</jdbc:initialize-database>
 

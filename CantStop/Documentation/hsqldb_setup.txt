@@ -27,3 +27,6 @@ Place: hsqldb.jar in WEB-INF/lib
 URL of HSQLDB in the application: http://localhost:9080/CantStop/hsqldb
 
 JDBC connection URL: jdbc:hsqldb:http://localhost:9080/CantStop/hsqldb
+
+Cloud:
+     jdbc:hsqldb:http://cantstop-refs.rhcloud.com/CantStop/hsqldb
