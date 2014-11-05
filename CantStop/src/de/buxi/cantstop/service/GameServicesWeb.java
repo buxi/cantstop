@@ -153,4 +153,14 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String addAutoPlayer() throws GameException {
+		try {	
+			return gameController.doAddAutoPlayer();
+		} catch (TooManyPlayerException e) {
+			log.error(e.toString());
+			throw new GameException(e);
+		}
+	}
 }

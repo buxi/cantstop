@@ -10,7 +10,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import de.buxi.cantstop.dao.GameInfoDao;
@@ -26,11 +29,13 @@ import de.buxi.cantstop.utils.ObjectManipulationHelper;
  */
 @Component
 @Aspect
-public class GameRecordAspect {
+public class GameRecordAspect implements ApplicationContextAware {
 	private Log log = LogFactory.getLog(GameRecordAspect.class);
 	
 	@Autowired
-	private GameInfoDao dao; 
+	private GameInfoDao dao;
+
+	private ApplicationContext ac; 
 	
 	@Around("execution(* de.buxi.cantstop.service.GameService.finishTurn(..))")
 	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -41,6 +46,14 @@ public class GameRecordAspect {
 		Object returnValue = joinPoint.proceed();
 		GameTransferObject to = (GameTransferObject)returnValue;
 		storeGameInfoCommon(joinPoint, playerId, to);
+		
+		// launch auto-player if it is needed
+		if (to.actualPlayer.getAutoPlayer()) {
+			log.info("Starting Autoplayer: " + to.actualPlayerNumber);
+			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
+			robot.setPlayerId(Integer.toString(to.actualPlayerNumber));
+			robot.play();
+		}
 	}
 
 	@AfterReturning(pointcut="execution(* de.buxi.cantstop.service.GameService.throwDices(..))", returning="returnValue")
@@ -61,7 +74,6 @@ public class GameRecordAspect {
 	 * @param to 
 	 */
 	protected void storeGameInfoCommon(JoinPoint joinPoint, int playerId, GameTransferObject to) {
-		log.debug("aop method called:" + joinPoint.getSignature().getName());
 		byte[] packedTransferObject = ObjectManipulationHelper.serializeAndPack(to);
 		dao.insert(to.getGameId(), new java.sql.Timestamp(new Date().getTime()), 
 				joinPoint.getSignature().getName(), 
@@ -75,5 +87,11 @@ public class GameRecordAspect {
 	 */
 	public void setDao(GameInfoDao dao) {
 		this.dao = dao;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		ac = applicationContext;
 	}
 }

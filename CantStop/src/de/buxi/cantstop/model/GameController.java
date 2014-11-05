@@ -30,6 +30,8 @@ public class GameController implements Serializable{
 	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
 	public static final int MINIMUM_PLAYER_NUMBER = 2;
 	public static final int MAXIMUM_PLAYER_NUMBER = 4;
+	public static final String DEFAULT_AUTOPLAYER_NAME = "Computer";
+	
 	private Map<Color, Player> playerMap;
 	private List<Player> playersInOrder;  
 	private Board board;
@@ -591,12 +593,15 @@ public class GameController implements Serializable{
 	 * @return playerId (currently the orderId) 
 	 * @throws TooManyPlayerException
 	 */
-	public String doAddPlayer(String playerName) throws TooManyPlayerException {
+	private String doAddPlayer(String playerName, boolean isAutoPlayer) throws TooManyPlayerException {
 		checkGameStatus(Arrays.asList(GameState.INIT, GameState.ENOUGH_PLAYER));
 		// TODO id should be generated in a better way (for example with Spring)
 		Color playerColor = getAFreeColor();
 		int playerId = playerMap.keySet().size();
 		Player newPlayer = new Player(playerId, playerName, playerColor);
+		if (isAutoPlayer) {
+			newPlayer.setAutoPlayer(true);
+		}
 		playerMap.put(playerColor, newPlayer);
 		determinePlayerOrderStandard();
 		actualPlayerNumber = playerId;
@@ -604,6 +609,15 @@ public class GameController implements Serializable{
 			this.gameState = GameState.ENOUGH_PLAYER;
 		}
 		return Integer.toString(playerId);
+	}
+	
+	public String doAddPlayer(String playerName) throws TooManyPlayerException {
+		return doAddPlayer(playerName, false);
+	}
+	
+	public String doAddAutoPlayer() throws TooManyPlayerException {
+		String generatedName = DEFAULT_AUTOPLAYER_NAME;
+		return doAddPlayer(generatedName, true);
 	}
 
 	/**

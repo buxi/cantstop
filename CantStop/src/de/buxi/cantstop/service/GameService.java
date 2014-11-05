@@ -16,6 +16,19 @@ public interface GameService {
 	public void saveState();
 	public void loadState();
 	
+	/**
+	 * @param playerName
+	 * @return playerId
+	 * @throws GameException
+	 */
 	public String addPlayer(String playerName) throws GameException;
+	
+	/**
+	 * @param playerName
+	 * @return playerId
+	 * @throws GameException
+	 */
+	public String addAutoPlayer() throws GameException;
+	
 	public GameTransferObject reinitializeGame() throws GameException;
 }

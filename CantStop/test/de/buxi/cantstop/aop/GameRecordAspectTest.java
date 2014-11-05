@@ -85,7 +85,6 @@ public class GameRecordAspectTest {
 		
 		gameService.executePairs(pairIds.iterator().next(), -1);
 		
-		
 		List<GameInfoFullTO> result = dao.readFullInfoByGameId(to.gameId);
 		assertNotNull("can't be null" , result);
 		assertEquals("2 row expected" , 2, result.size());

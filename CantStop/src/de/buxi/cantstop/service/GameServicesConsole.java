@@ -154,4 +154,10 @@ public class GameServicesConsole implements GameService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String addAutoPlayer() throws GameException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

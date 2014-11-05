@@ -14,14 +14,12 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class Player implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4829560351701437044L;
 	private String name;
 	private Color color;
 	private Collection<Marker>markers;
 	private int order;
+	private boolean autoPlayer;
 	
 	private Collection<Climber>climbers;
 
@@ -38,6 +36,7 @@ public class Player implements Serializable{
 		this.color = color;
 		this.markers = new ArrayList<Marker>(10);
 		this.climbers = new ArrayList<Climber>(3);
+		this.setAutoPlayer(false);
 	}
 
 	public Player(int order, String name, Color color) {
@@ -183,5 +182,19 @@ public class Player implements Serializable{
 		Marker marker = markers.iterator().next();
 		markers.remove(marker);
 		return marker;
+	}
+
+	/**
+	 * @return the autoPlayer
+	 */
+	public boolean getAutoPlayer() {
+		return autoPlayer;
+	}
+
+	/**
+	 * @param autoPlayer the autoPlayer to set
+	 */
+	public void setAutoPlayer(boolean autoPlayer) {
+		this.autoPlayer = autoPlayer;
 	}
 }
