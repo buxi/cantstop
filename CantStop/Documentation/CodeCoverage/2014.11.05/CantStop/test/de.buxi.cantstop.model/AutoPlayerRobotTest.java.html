@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AutoPlayerRobotTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">AutoPlayerRobotTest.java</span></div><h1>AutoPlayerRobotTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.service.GameException;
+import de.buxi.cantstop.service.GameService;
+import static org.junit.Assert.*;
+
+/**
+ * @author buxi
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;file:test/test-aop-robot-context.xml&quot;)
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
+<span class="fc" id="L30">public class AutoPlayerRobotTest {</span>
+	@Autowired
+	protected ApplicationContext ac;
+		
+	@Test
+	public void testAutoplayerStartInAspect() throws GameException {
+<span class="fc" id="L36">		GameService gameService = (GameService)ac.getBean(&quot;gameService&quot;);</span>
+<span class="fc" id="L37">		gameService.addAutoPlayer();</span>
+		
+<span class="fc" id="L39">		GameTransferObject to = gameService.startGame();</span>
+<span class="fc" id="L40">		gameService.startTurn();</span>
+<span class="fc" id="L41">		gameService.finishTurn(Integer.toString(to.actualPlayer.getOrder()));</span>
+<span class="fc" id="L42">		gameService.finishTurn(Integer.toString(to.actualPlayer.getOrder()));</span>
+		
+		// 3. player is autoplayer, at the end of its activity the 1. player should be in turn
+<span class="fc" id="L45">		GameTransferObject to4 = gameService.getAllGameInformation();</span>
+<span class="fc" id="L46">		assertEquals(&quot;Player 0 should be in turn after autoplayer&quot;, &quot;0&quot;, to4.getActualPlayerId());</span>
+<span class="fc" id="L47">	}</span>
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

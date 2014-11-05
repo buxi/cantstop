@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameControllerTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">GameControllerTest.java</span></div><h1>GameControllerTest.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.model;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Color;
+import de.buxi.cantstop.model.Dice;
+import de.buxi.cantstop.model.DiceNotGivenException;
+import de.buxi.cantstop.model.DiceNotThrownException;
+import de.buxi.cantstop.model.DicePair;
+import de.buxi.cantstop.model.GameController;
+import de.buxi.cantstop.model.GameFactory;
+import de.buxi.cantstop.model.GameState;
+import de.buxi.cantstop.model.InvalidClimberMovementException;
+import de.buxi.cantstop.model.InvalidGameStateException;
+import de.buxi.cantstop.model.InvalidPairsException;
+import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.cantstop.model.Marker;
+import de.buxi.cantstop.model.NoClimberOnWayException;
+import de.buxi.cantstop.model.NoMarkerIsAvailableException;
+import de.buxi.cantstop.model.NotAvailableClimberException;
+import de.buxi.cantstop.model.NullClimberException;
+import de.buxi.cantstop.model.Player;
+import de.buxi.cantstop.model.PlayerNotFoundException;
+import de.buxi.cantstop.model.RopePointInvalidUsageException;
+import de.buxi.cantstop.model.TwoDicesPair;
+import de.buxi.cantstop.model.Way;
+import de.buxi.cantstop.service.TooManyPlayerException;
+
+<span class="fc" id="L39">public class GameControllerTest extends SpringLoaderSuperClassModelTests{</span>
+
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L43">	}</span>
+
+	@Test(expected=PlayerNotFoundException.class)
+	public void testDistributeMarkersNoPlayerWithColor() {
+<span class="nc" id="L47">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+		// distribute Markers
+<span class="nc" id="L49">		Map&lt;Color, Collection&lt;Marker&gt;&gt; playerMarkers = new HashMap&lt;Color, Collection&lt;Marker&gt;&gt;();</span>
+<span class="nc" id="L50">		playerMarkers.put(Color.GREEN, GameFactory.createMarkersStatic(3, Color.GREEN));</span>
+<span class="nc" id="L51">		gameController.distributeMarkers(playerMarkers);</span>
+<span class="nc" id="L52">	}</span>
+
+	@Test()
+	public void testDistributeMarkersPositiveWith2Colors() {
+<span class="fc" id="L56">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+		// distribute Markers
+<span class="fc" id="L58">		Map&lt;Color, Collection&lt;Marker&gt;&gt; playerMarkers = new HashMap&lt;Color, Collection&lt;Marker&gt;&gt;();</span>
+<span class="fc" id="L59">		playerMarkers.put(Color.BLUE, GameFactory.createMarkersStatic(3, Color.BLUE));</span>
+<span class="fc" id="L60">		playerMarkers.put(Color.RED, GameFactory.createMarkersStatic(3, Color.RED));</span>
+<span class="fc" id="L61">		gameController.distributeMarkers(playerMarkers);</span>
+		
+<span class="fc" id="L63">		Player playerBLAU = gameController.getPlayer(Color.BLUE);</span>
+<span class="fc" id="L64">		assertEquals(&quot;BLUE Player should have 3 Markers&quot;, 3, playerBLAU.getMarkers().size());</span>
+<span class="fc" id="L65">		Player playerRED = gameController.getPlayer(Color.RED);</span>
+<span class="fc" id="L66">		assertEquals(&quot;RED Player should have 3 Markers&quot;, 3, playerRED.getMarkers().size());</span>
+<span class="fc" id="L67">	}</span>
+
+	@Test
+	public void testActualPlayer() throws Exception {
+<span class="fc" id="L71">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L72">		gameController.doGameStart();</span>
+<span class="fc" id="L73">		Player aktuellePlayer = gameController.getActualPlayer();</span>
+<span class="fc" id="L74">		assertEquals(&quot;actual Player should be actualPlayerNumber have&quot;, gameController.getActualPlayerNumber(), aktuellePlayer.getOrder());</span>
+<span class="fc" id="L75">	}</span>
+
+	@Test
+	public void testNextPlayer() throws Exception {
+<span class="fc" id="L79">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L80">		gameController.doGameStart();</span>
+<span class="fc" id="L81">		gameController.doStartGameTurn(); // distribute Climbers too </span>
+		
+<span class="fc" id="L83">		Player aktuellePlayer = gameController.getActualPlayer();</span>
+<span class="fc" id="L84">		assertEquals(&quot;actual Player should be actualPlayerNumber have&quot;, gameController.getActualPlayerNumber(), aktuellePlayer.getOrder());</span>
+		
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">		if (Color.BLUE.equals(aktuellePlayer.getColor())) {</span>
+<span class="fc" id="L87">			gameController.nextPlayer();</span>
+<span class="fc" id="L88">			assertEquals(&quot;next Player should be RED&quot;, Color.RED, gameController.getActualPlayer().getColor());</span>
+			
+		}
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">		if (Color.RED.equals(aktuellePlayer.getColor())) {</span>
+<span class="nc" id="L92">			gameController.nextPlayer();</span>
+<span class="nc" id="L93">			assertEquals(&quot;next Player should be BLUE&quot;, Color.BLUE, gameController.getActualPlayer().getColor());</span>
+		}
+<span class="fc" id="L95">		assertEquals(&quot;previous Player should have no Climbers&quot;, 0, aktuellePlayer.getClimbers().size());</span>
+<span class="fc" id="L96">		assertEquals(&quot;actual Player should have all 3 Climbers&quot;, 3, gameController.getActualPlayer().getClimbers().size());</span>
+<span class="fc" id="L97">		assertEquals(&quot;actual Player should have the DiceManager&quot;, gameController.getActualPlayer(), gameController.getDiceManager().getOwner());</span>
+<span class="fc" id="L98">	}</span>
+	
+	@Test
+	public void testDistributeClimber() throws Exception{
+<span class="fc" id="L102">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L103">		gameController.doGameStart();</span>
+<span class="fc" id="L104">		gameController.distributeFreeClimbers();</span>
+<span class="fc" id="L105">		assertEquals(&quot;actual Player should be have all 3 Climbers&quot;, 3, gameController.getActualPlayer().getClimbers().size());</span>
+<span class="fc" id="L106">		assertEquals(&quot;gameController should have 0 Climber&quot;, 0, gameController.getClimbers().size());</span>
+<span class="fc" id="L107">	}</span>
+
+	@Test
+	public void testStartGameRound() throws Exception {
+<span class="fc" id="L111">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L112">		gameController.doGameStart();</span>
+<span class="fc" id="L113">		gameController.distributeFreeClimbers();</span>
+<span class="fc" id="L114">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L115">		assertEquals(&quot;actual Player should be have all 3 Climbers&quot;, 3, gameController.getActualPlayer().getClimbers().size());</span>
+<span class="fc" id="L116">		assertEquals(&quot;gameController should have 0 Climber&quot;, 0, gameController.getClimbers().size());</span>
+<span class="fc" id="L117">		assertEquals(&quot;INIT State&quot;, GameState.IN_ROUND, gameController.getGameStatus());</span>
+<span class="fc" id="L118">	}</span>
+	@Test(expected=InvalidGameStateException.class)
+	public void testDoStartGameRoundInvalidState() throws Exception {
+<span class="nc" id="L121">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L122">		gameController.doStartGameTurn();</span>
+<span class="nc" id="L123">		assertEquals(&quot;IN_ROUND State expected&quot;, GameState.IN_ROUND, gameController.getGameStatus());</span>
+<span class="nc" id="L124">	}</span>
+	
+	@Test
+	public void testDoThrowPositiv() throws Exception {
+<span class="fc" id="L128">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L129">		gameController.doGameStart();</span>
+<span class="fc" id="L130">		gameController.distributeFreeClimbers();</span>
+<span class="fc" id="L131">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L132">		gameController.doThrowDices();</span>
+<span class="fc" id="L133">		assertEquals(&quot;DICES_THROWN State expected&quot;, GameState.DICES_THROWN, gameController.getGameStatus());</span>
+<span class="fc" id="L134">		List&lt;Dice&gt; dices = gameController.getDiceManager().getDices();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">		for (Dice dice : dices) {</span>
+<span class="fc" id="L136">			assertTrue(&quot;Dice must be thrown&quot;, dice.isThrown());</span>
+		}
+<span class="fc" id="L138">		assertNotNull(gameController.getWrongPairs());</span>
+<span class="fc" id="L139">	}</span>
+	
+	@Test(expected=InvalidGameStateException.class)
+	public void testDoThrowInvalidState() throws Exception {
+<span class="nc" id="L143">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L144">		gameController.doGameStart();</span>
+<span class="nc" id="L145">		gameController.distributeFreeClimbers();</span>
+<span class="nc" id="L146">		gameController.doThrowDices();</span>
+<span class="nc" id="L147">	}</span>
+	
+	@Test
+	public void testDoThrowNegativ() throws Exception {
+<span class="fc" id="L151">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L152">		gameController.doGameStart();</span>
+<span class="fc" id="L153">		gameController.doStartGameTurn();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L156">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L157">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L159">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L160">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+		//wrong pairs -&gt; Gameround finished 
+<span class="fc" id="L162">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(6,6,6,6))));</span>
+		
+<span class="fc" id="L164">		assertNotNull(gameController.getWrongPairs());</span>
+<span class="fc" id="L165">		assertEquals(&quot;IN_ROUND State expected&quot;, GameState.IN_ROUND, gameController.getGameStatus());</span>
+<span class="fc" id="L166">		assertNotNull(&quot;errorMessage should be&quot;, gameController.getErrorMessage());</span>
+<span class="fc" id="L167">	}</span>
+	@Test
+	public void testDoThrowLastThrow() throws Exception {
+<span class="fc" id="L170">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L171">		gameController.doGameStart();</span>
+<span class="fc" id="L172">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L173">		GameTransferObject to = gameController.doThrowDices();</span>
+<span class="fc" id="L174">		Collection&lt;Dice&gt; dices = to.getDices();</span>
+<span class="fc" id="L175">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="fc" id="L176">		gameController.doThrowDices();</span>
+<span class="fc" id="L177">		List&lt;Dice&gt; previousThrow = gameController.getLastThrow();</span>
+<span class="fc" id="L178">		assertEquals(&quot;must be same: &quot;, dices,  previousThrow);</span>
+<span class="fc" id="L179">	}</span>
+	
+	@Test
+	public void testDoExecutePairs() throws Exception {
+<span class="fc" id="L183">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L184">		gameController.doGameStart();</span>
+<span class="fc" id="L185">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L186">		GameTransferObject to = gameController.doThrowDices();</span>
+<span class="fc" id="L187">		to = gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="fc" id="L188">		Collection&lt;Dice&gt; dices = to.getLastThrow();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">		for (Dice dice : dices) {</span>
+<span class="fc" id="L190">			assertNotNull(&quot;dice value must be visible&quot;, dice.getDiceValue());</span>
+		}
+<span class="fc" id="L192">		UsedPairInfoTO lastUsedPairInfo = to.getLastUsedPairInfo();</span>
+<span class="fc" id="L193">		assertNotNull(&quot;first pair first dice value&quot;, lastUsedPairInfo.getChosenPair().getFirstPair().getFirst().getDiceValue());</span>
+<span class="fc" id="L194">		assertNotNull(&quot;first pair second dice value&quot;, lastUsedPairInfo.getChosenPair().getFirstPair().getSecond().getDiceValue());</span>
+<span class="fc" id="L195">		assertNotNull(&quot;first pair first dice value&quot;, lastUsedPairInfo.getChosenPair().getSecondPair().getFirst().getDiceValue());</span>
+<span class="fc" id="L196">		assertNotNull(&quot;secondpair second dice value&quot;, lastUsedPairInfo.getChosenPair().getSecondPair().getSecond().getDiceValue());</span>
+<span class="fc" id="L197">	}	</span>
+	
+	@Test
+	public void testDoGameRoundFinishedWaysNoOtherWahl() throws Exception {
+<span class="fc" id="L201">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L202">		gameController.doGameStart();</span>
+<span class="fc" id="L203">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L204">		Player oldPlayer = gameController.getActualPlayer();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L207">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L208">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L210">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L211">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+		//wrong pairs -&gt; Gameround finished 
+<span class="fc" id="L213">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(6,6,6,6))));</span>
+		
+<span class="fc" id="L215">		assertEquals(&quot;IN_ROUND State expected&quot;, GameState.IN_ROUND, gameController.getGameStatus());</span>
+<span class="fc" id="L216">		assertNotNull(&quot;errorMessage should be&quot;, gameController.getErrorMessage());</span>
+<span class="fc" id="L217">		Player actualPlayer = gameController.getActualPlayer();</span>
+<span class="fc" id="L218">		assertEquals(&quot;old Player should have no Climber&quot;, 0, oldPlayer.getClimbers().size());</span>
+<span class="fc" id="L219">		assertEquals(&quot;old Player should have all Markers&quot;, 10, oldPlayer.getMarkers().size());</span>
+		
+<span class="fc" id="L221">		assertEquals(&quot;actual Player should have 3 Climber&quot;, 3, actualPlayer.getClimbers().size());</span>
+<span class="fc" id="L222">		assertEquals(&quot;actual Player should have all Markers&quot;, 10, actualPlayer.getMarkers().size());</span>
+<span class="fc" id="L223">	}</span>
+	
+	@Test
+	public void testDoGameRoundBeendenPlayerGemacht() throws Exception {
+<span class="fc" id="L227">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L228">		gameController.doGameStart();</span>
+<span class="fc" id="L229">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L230">		Player oldPlayer = gameController.getActualPlayer();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L233">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L234">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L236">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L237">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+<span class="fc" id="L238">		gameController.doEndGameTurn();</span>
+		
+<span class="fc" id="L240">		assertEquals(&quot;IN_ROUND State expected&quot;, GameState.IN_ROUND, gameController.getGameStatus());</span>
+<span class="fc" id="L241">		Player actualPlayer = gameController.getActualPlayer();</span>
+<span class="fc" id="L242">		assertNotEquals(&quot;actual Player should be the next&quot;, oldPlayer, actualPlayer );</span>
+<span class="fc" id="L243">		Way way2 = gameController.getBoard().getWayByNumber(2);</span>
+<span class="fc" id="L244">		assertEquals(&quot;way2 down should be marked with &quot;+oldPlayer.getColor(), 0, way2.whereIsMarkerForColor(oldPlayer.getColor()));</span>
+<span class="fc" id="L245">		Way way3 = gameController.getBoard().getWayByNumber(3);</span>
+<span class="fc" id="L246">		assertEquals(&quot;way2 down should be marked with &quot;+oldPlayer.getColor(), 0, way3.whereIsMarkerForColor(oldPlayer.getColor()));</span>
+<span class="fc" id="L247">		Way way4 = gameController.getBoard().getWayByNumber(4);</span>
+<span class="fc" id="L248">		assertEquals(&quot;way2 down should be marked with &quot;+oldPlayer.getColor(), 0, way4.whereIsMarkerForColor(oldPlayer.getColor()));</span>
+		
+<span class="fc" id="L250">		assertEquals(&quot;old Player should not have Climbers&quot;, 0, oldPlayer.getClimbers().size());</span>
+<span class="fc" id="L251">		assertEquals(&quot;old Player should have all Markers&quot;, 7, oldPlayer.getMarkers().size());</span>
+		
+<span class="fc" id="L253">		assertEquals(&quot;actual Player should have 3 Climbers&quot;, 3, actualPlayer.getClimbers().size());</span>
+<span class="fc" id="L254">		assertEquals(&quot;actual Player should have all Markers&quot;, 10, actualPlayer.getMarkers().size());</span>
+<span class="fc" id="L255">	}</span>
+	
+	@Test
+	public void testDoGameRoundBeendenGameWON() throws Exception {
+<span class="fc" id="L259">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L260">		gameController.doGameStart();</span>
+<span class="fc" id="L261">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L262">		Player oldPlayer = gameController.getActualPlayer();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L265">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L266">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L268">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L269">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+
+		// move W2BS, W3BS
+<span class="fc" id="L272">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L273">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		// move W4BS
+<span class="fc" id="L275">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L276">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="fc" id="L277">		gameController.doEndGameTurn();</span>
+		
+<span class="fc" id="L279">		assertEquals(&quot;GAME_WIN State expected&quot;, GameState.GAME_WIN, gameController.getGameStatus());</span>
+<span class="fc" id="L280">		assertNotNull(&quot;errorMessage should be&quot;, gameController.getErrorMessage());</span>
+<span class="fc" id="L281">		Player actualPlayer = gameController.getActualPlayer();</span>
+<span class="fc" id="L282">		assertEquals(&quot;Player should remain&quot;, oldPlayer, actualPlayer );</span>
+		
+<span class="fc" id="L284">		Way way2 = gameController.getBoard().getWayByNumber(2);</span>
+<span class="fc" id="L285">		assertTrue(&quot;way2 Hut should be marked  with &quot;+oldPlayer.getColor(), way2.isBlockedByPlayer(oldPlayer.getColor()));</span>
+<span class="fc" id="L286">		Way way3 = gameController.getBoard().getWayByNumber(3);</span>
+<span class="fc" id="L287">		assertTrue(&quot;way3 Hut should be marked  with &quot;+oldPlayer.getColor(), way3.isBlockedByPlayer(oldPlayer.getColor()));</span>
+<span class="fc" id="L288">		Way way4 = gameController.getBoard().getWayByNumber(4);</span>
+<span class="fc" id="L289">		assertTrue(&quot;way4 Hut should be marked  with &quot;+oldPlayer.getColor(), way4.isBlockedByPlayer(oldPlayer.getColor()));</span>
+		
+<span class="fc" id="L291">		assertEquals(&quot;old Player should have no Climber&quot;, 0, oldPlayer.getClimbers().size());</span>
+<span class="fc" id="L292">		assertEquals(&quot;old Player should have all Markers&quot;, 7, oldPlayer.getMarkers().size());</span>
+<span class="fc" id="L293">		assertEquals(&quot;GameController should have all Climber&quot;, 3, gameController.getClimbers().size());</span>
+<span class="fc" id="L294">	}</span>
+	
+	@Test
+	public void testDoGameStart() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L298">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L299">		GameTransferObject to = gameController.doGameStart();</span>
+		
+<span class="fc" id="L301">		assertNotNull(&quot;start time must be filled&quot;, to.getStartTime());</span>
+<span class="fc" id="L302">		assertNotNull(&quot;start timestamp must be filled&quot;, to.getStartTimestamp());</span>
+		
+
+<span class="fc" id="L305">		assertEquals(&quot;First Player should be determined&quot;, GameController.DEFAULT_FIRST_PLAYER_NUM, gameController.getActualPlayerNumber());</span>
+<span class="fc" id="L306">		assertEquals(&quot;IN_GAME State&quot;, GameState.IN_GAME, gameController.getGameStatus());</span>
+		
+<span class="fc" id="L308">		List&lt;Player&gt; players = new ArrayList&lt;Player&gt;(gameController.getPlayerMap().values());</span>
+		// RED and BLUE Markers are distributed
+<span class="fc" id="L310">		assertEquals(&quot;10 markers with Player &quot;, 10, players.get(0).getMarkers().size());</span>
+<span class="fc" id="L311">		assertEquals(&quot;10 markers with Player &quot;, 10, players.get(1).getMarkers().size());</span>
+			
+		// test player order
+<span class="fc bfc" id="L314" title="All 2 branches covered.">		for (Player player : players) {</span>
+<span class="fc" id="L315">			int playerOrder = player.getOrder();</span>
+<span class="fc" id="L316">			assertEquals(&quot;Player with &quot; + playerOrder</span>
+<span class="fc" id="L317">					+ &quot; should be in proper Position in PlayerOrder&quot;, player,</span>
+<span class="fc" id="L318">					gameController.getPlayersInOrder().get(playerOrder));</span>
+		}
+<span class="fc" id="L320">	}</span>
+
+	@Test(expected=InvalidGameStateException.class)
+	public void testDoGameStartInvalidState() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="nc" id="L324">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L325">		gameController.doGameStart();</span>
+<span class="nc" id="L326">		gameController.doGameStart();</span>
+<span class="nc" id="L327">	}</span>
+	
+	@Test
+	public void testDoPairInputCheckWithValidWaehlbarPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+<span class="fc" id="L331">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L332">		gameController.doGameStart();</span>
+<span class="fc" id="L333">		gameController.doStartGameTurn();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L336">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L337">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="fc" id="L338">	}</span>
+	
+	@Test(expected=InvalidWayNumberException.class)
+	public void testDoPairInputCheckWithInValidWayNumber() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+<span class="nc" id="L342">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L343">		gameController.doGameStart();</span>
+<span class="nc" id="L344">		gameController.doStartGameTurn();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="nc" id="L347">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="nc" id="L348">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="nc" id="L349">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="nc" id="L350">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		
+<span class="nc" id="L352">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(6,6,6,4))));</span>
+<span class="nc" id="L353">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 11);</span>
+<span class="nc" id="L354">	}</span>
+
+	@Test(expected=InvalidPairsException.class)
+	public void testDoPairInputCheckWithInValidPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+<span class="nc" id="L358">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L359">		gameController.doGameStart();</span>
+<span class="nc" id="L360">		gameController.doStartGameTurn();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="nc" id="L363">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="nc" id="L364">		List&lt;Dice&gt; dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,2,3,4));</span>
+<span class="nc" id="L365">		TwoDicesPair basePairPair = new TwoDicesPair(</span>
+<span class="nc" id="L366">				new DicePair(dices.get(0), dices.get(1)),</span>
+<span class="nc" id="L367">				new DicePair(dices.get(2), dices.get(3)));</span>
+<span class="nc" id="L368">		gameController.doExecutePairs(basePairPair, -1);</span>
+<span class="nc" id="L369">	}</span>
+	
+	@Test()
+	public void testDoPairInputCheckWithValidAberNeuPair() throws DiceNotGivenException, DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidTestParametersException, NotAvailableClimberException, NullClimberException {
+<span class="fc" id="L373">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L374">		gameController.doGameStart();</span>
+<span class="fc" id="L375">		gameController.doStartGameTurn();</span>
+		// fake the board
+		//place Climber W2BS, W3BS
+<span class="fc" id="L378">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L379">		List&lt;Dice&gt; dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,2,1,1));</span>
+<span class="fc" id="L380">		TwoDicesPair basePairPair = new TwoDicesPair(</span>
+<span class="fc" id="L381">				new DicePair(dices.get(0), dices.get(1)),</span>
+<span class="fc" id="L382">				new DicePair(dices.get(2), dices.get(3)));</span>
+<span class="fc" id="L383">		gameController.doExecutePairs(basePairPair, -1);</span>
+<span class="fc" id="L384">	}</span>
+	
+	@Test
+	public void doAddPlayer() throws TooManyPlayerException {
+<span class="fc" id="L388">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+		//assertEquals(&quot;new PlayerId must be generated and should be 3&quot;, &quot;3&quot;, playerId);
+<span class="fc" id="L390">		gameController.doAddPlayer(&quot;aaa&quot;);</span>
+<span class="fc" id="L391">		List&lt;Player&gt; players = gameController.getPlayersInOrder();</span>
+<span class="fc" id="L392">		assertEquals(&quot;3 players should be there (2 was preloaded)&quot;, 3, players.size());</span>
+<span class="fc" id="L393">		assertEquals(&quot;markers should stay intact&quot;, 4, gameController.getAllMarkers().keySet().size());</span>
+		
+<span class="fc" id="L395">	}</span>
+	
+	@Test(expected=TooManyPlayerException.class)
+	public void doAddPlayerTooManyPlayer() throws TooManyPlayerException {
+<span class="nc" id="L399">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="nc" id="L400">		gameController.doAddPlayer(&quot;Joska&quot;);</span>
+<span class="nc" id="L401">		gameController.doAddPlayer(&quot;Joska2&quot;);</span>
+<span class="nc" id="L402">		List&lt;Player&gt; players = gameController.getPlayersInOrder();</span>
+<span class="nc" id="L403">		assertEquals(&quot;3 players should be there (2 was preloaded)&quot;, 4, players.size());</span>
+<span class="nc" id="L404">		gameController.doAddPlayer(&quot;too many&quot;);</span>
+<span class="nc" id="L405">	}</span>
+
+	@Test
+	public void testGameFull() throws TooManyPlayerException  {
+<span class="fc" id="L409">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L410">		assertFalse(&quot;Game is not full&quot;, gameController.isGameFull());</span>
+<span class="fc" id="L411">		gameController.doAddPlayer(&quot;Joska&quot;);</span>
+<span class="fc" id="L412">		assertFalse(&quot;Game is not full&quot;, gameController.isGameFull());</span>
+<span class="fc" id="L413">		gameController.doAddPlayer(&quot;Joska2&quot;);</span>
+<span class="fc" id="L414">		assertTrue(&quot;Game is full&quot;, gameController.isGameFull());</span>
+<span class="fc" id="L415">	}</span>
+	
+	@Test
+	public void testDeterminePlayerOrderStandard() {
+<span class="nc" id="L419">		fail(&quot;too simple to test, no real logic in it&quot;);</span>
+<span class="nc" id="L420">	}	</span>
+
+	@Test
+	public void testDetermineFirstPlayer() {
+<span class="nc" id="L424">		fail(&quot;too simple to test, no real logic in it&quot;);</span>
+<span class="nc" id="L425">	}	</span>
+
+	/**
+	 * from 8.way red marker was not removed
+	 */
+	@Test
+	public void testBug1() throws Exception {
+<span class="fc" id="L432">		GameController gameController = (GameController)ac.getBean(&quot;testGameController&quot;);</span>
+<span class="fc" id="L433">		gameController.doGameStart();</span>
+<span class="fc" id="L434">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L435">		Player oldPlayer = gameController.getActualPlayer();</span>
+		// fake the board
+		// player2 places climbers on the ways 2,3,4
+		//place Climber W2BS, W3BS
+<span class="fc" id="L439">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L440">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L442">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L443">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+		// player1 marking lowest ropePointon way 2,3,4 
+<span class="fc" id="L445">		gameController.doEndGameTurn();</span>
+		
+		//------ changing player
+		//player2 places climbers in the huts on way 2,3,4 
+		//place Climber W2BS, W3BS
+<span class="fc" id="L450">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L451">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L453">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L454">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+		
+		// player2 moving W2BS, W3BS into huts
+<span class="fc" id="L457">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L458">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+<span class="fc" id="L459">		Player player2 = gameController.getActualPlayer();</span>
+<span class="fc" id="L460">		gameController.doEndGameTurn();</span>
+		// way 2,3 is blocked by player2
+		// all other markers should be removed 
+<span class="fc" id="L463">		assertNotEquals(&quot;Player should be different, because 2 players are playing&quot;, oldPlayer, player2 );</span>
+		
+<span class="fc" id="L465">		Way way2 = gameController.getBoard().getWayByNumber(2);</span>
+<span class="fc" id="L466">		assertTrue(&quot;way2 Hut should be marked  with &quot;+player2.getColor(), way2.isBlockedByPlayer(player2.getColor()));</span>
+<span class="fc" id="L467">		Way way3 = gameController.getBoard().getWayByNumber(3);</span>
+<span class="fc" id="L468">		assertTrue(&quot;way3 Hut should be marked  with &quot;+player2.getColor(), way3.isBlockedByPlayer(player2.getColor()));</span>
+<span class="fc" id="L469">		assertEquals(&quot;Player2 should have no Climber&quot;, 0, player2.getClimbers().size());</span>
+<span class="fc" id="L470">		assertEquals(&quot;Player2 should have 7 Markers&quot;, 7, player2.getMarkers().size());</span>
+<span class="fc" id="L471">		Way way4 = gameController.getBoard().getWayByNumber(4);</span>
+<span class="fc" id="L472">		assertTrue(&quot;Player2 marker should be on way4&quot;, way4.isMarkerOnRope(player2.getColor()));</span>
+		
+<span class="fc" id="L474">		assertFalse(&quot;oldplayer marker should have been removed from way2&quot;, way2.isMarkerOnRope(oldPlayer.getColor()));</span>
+<span class="fc" id="L475">		assertFalse(&quot;oldplayer marker should have been removed from way3&quot;, way3.isMarkerOnRope(oldPlayer.getColor()));</span>
+		
+<span class="fc" id="L477">		assertEquals(&quot;old Player should have 9 Markers, because player2 was blocking way 2,3&quot;, 9, oldPlayer.getMarkers().size());</span>
+<span class="fc" id="L478">	}</span>
+	
+	/**
+	 * 1. we have a marker on way 3 at the bottom
+	 * 2. the same player has a figure next to the hut
+	 * 3. throws 3,3 
+	 * only one figure should be in the hut 
+	 */
+	@Test
+	public void testBug2() throws Exception {
+<span class="fc" id="L488">		GameController gameController = (GameController)ac.getBean(&quot;gameController&quot;);</span>
+<span class="fc" id="L489">		gameController.doGameStart();</span>
+<span class="fc" id="L490">		gameController.doStartGameTurn();</span>
+<span class="fc" id="L491">		Player player = gameController.getActualPlayer();</span>
+		// fake the board
+		// player2 places climbers on the ways 2,3,4
+		//place Climber W2BS, W3BS
+<span class="fc" id="L495">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,2))));</span>
+<span class="fc" id="L496">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		//place Climber W4BS
+<span class="fc" id="L498">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,2,2,3))));</span>
+<span class="fc" id="L499">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), 4);</span>
+		// player1 marking lowest ropePointon way 2,3,4 
+<span class="fc" id="L501">		gameController.doEndGameTurn();</span>
+<span class="fc" id="L502">		gameController.doEndGameTurn();</span>
+	
+		//place Climber W2BS, W12BS
+<span class="fc" id="L505">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,6,6))));</span>
+<span class="fc" id="L506">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		
+		// player2 moving W2BS into hut
+<span class="fc" id="L509">		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,1))));</span>
+<span class="fc" id="L510">		gameController.doExecutePairs(gameController.getPossiblePairs().get(0), -1);</span>
+		
+<span class="fc" id="L512">		Way way2 = gameController.getBoard().getWayByNumber(2);</span>
+<span class="fc" id="L513">		assertTrue(&quot;1 climber should be in the hut&quot;,way2.isClimberInHut());</span>
+<span class="fc" id="L514">		assertEquals(&quot;Player should have 1 Climber&quot;, 1, player.getClimbers().size());</span>
+<span class="fc" id="L515">		assertTrue(&quot;player marker should be on way2&quot;, way2.isMarkerOnRope(player.getColor()));</span>
+	
+<span class="fc" id="L517">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

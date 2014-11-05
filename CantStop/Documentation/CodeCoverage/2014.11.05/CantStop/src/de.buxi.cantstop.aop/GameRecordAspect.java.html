@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameRecordAspect.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.aop</a> &gt; <span class="el_source">GameRecordAspect.java</span></div><h1>GameRecordAspect.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.aop;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+import de.buxi.cantstop.dao.GameInfoDao;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.utils.ObjectManipulationHelper;
+
+/**
+ * AOP Aspect to record game activities
+ * Attaching to GameService methods
+ * Activities are stored in database
+ * @author buxi
+ *
+ */
+@Component
+@Aspect
+<span class="fc" id="L32">public class GameRecordAspect implements ApplicationContextAware {</span>
+<span class="fc" id="L33">	private Log log = LogFactory.getLog(GameRecordAspect.class);</span>
+	
+	@Autowired
+	private GameInfoDao dao;
+
+	private ApplicationContext ac; 
+	
+	@Around(&quot;execution(* de.buxi.cantstop.service.GameService.finishTurn(..))&quot;)
+	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
+		//fix for bug 17: Wrong playerId when finishTurn called
+<span class="fc" id="L43">		Object[] args = joinPoint.getArgs();</span>
+<span class="fc" id="L44">		int playerId = Integer.valueOf((String)args[0]);</span>
+		
+<span class="fc" id="L46">		Object returnValue = joinPoint.proceed();</span>
+<span class="fc" id="L47">		GameTransferObject to = (GameTransferObject)returnValue;</span>
+<span class="fc" id="L48">		storeGameInfoCommon(joinPoint, playerId, to);</span>
+		
+		// launch auto-player if it is needed
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (to.actualPlayer.getAutoPlayer()) {</span>
+<span class="nc" id="L52">			log.info(&quot;Starting Autoplayer: &quot; + to.actualPlayerNumber);</span>
+<span class="nc" id="L53">			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean(&quot;autoplayerRobot&quot;);</span>
+<span class="nc" id="L54">			robot.setPlayerId(Integer.toString(to.actualPlayerNumber));</span>
+<span class="nc" id="L55">			robot.play();</span>
+		}
+<span class="fc" id="L57">	}</span>
+
+	@AfterReturning(pointcut=&quot;execution(* de.buxi.cantstop.service.GameService.throwDices(..))&quot;, returning=&quot;returnValue&quot;)
+	public void recordThrowDices(JoinPoint joinPoint, Object returnValue) {
+<span class="fc" id="L61">		GameTransferObject to = (GameTransferObject)returnValue;</span>
+<span class="fc" id="L62">		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);</span>
+<span class="fc" id="L63">	}</span>
+	
+	@AfterReturning(pointcut=&quot;execution(* de.buxi.cantstop.service.GameService.executePairs(..))&quot;, returning=&quot;returnValue&quot;)
+	public void recordExecutePairs(JoinPoint joinPoint, Object returnValue) {
+<span class="fc" id="L67">		GameTransferObject to = (GameTransferObject)returnValue;</span>
+<span class="fc" id="L68">		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);</span>
+<span class="fc" id="L69">	}</span>
+
+	/**
+	 * @param joinPoint
+	 * @param returnValue
+	 * @param to 
+	 */
+	protected void storeGameInfoCommon(JoinPoint joinPoint, int playerId, GameTransferObject to) {
+<span class="fc" id="L77">		byte[] packedTransferObject = ObjectManipulationHelper.serializeAndPack(to);</span>
+<span class="fc" id="L78">		dao.insert(to.getGameId(), new java.sql.Timestamp(new Date().getTime()), </span>
+<span class="fc" id="L79">				joinPoint.getSignature().getName(), </span>
+<span class="fc" id="L80">				playerId, </span>
+<span class="fc" id="L81">				packedTransferObject, to.description</span>
+			);
+<span class="fc" id="L83">	}</span>
+
+	/**
+	 * @param dao the dao to set
+	 */
+	public void setDao(GameInfoDao dao) {
+<span class="nc" id="L89">		this.dao = dao;</span>
+<span class="nc" id="L90">	}</span>
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+<span class="fc" id="L95">		ac = applicationContext;</span>
+<span class="fc" id="L96">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

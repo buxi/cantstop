@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AbstractRopePoint.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">AbstractRopePoint.java</span></div><h1>AbstractRopePoint.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.model;
+
+/**
+ * @author buxi
+ *
+ */
+public abstract class AbstractRopePoint {
+	private Climber climber;
+
+	public AbstractRopePoint() {
+<span class="fc" id="L11">		super();</span>
+<span class="fc" id="L12">		this.climber = null;</span>
+<span class="fc" id="L13">	}</span>
+	
+	/**
+	 * @return the climber
+	 */
+	public Climber getClimber() {
+<span class="fc" id="L19">		return climber;</span>
+	}
+	
+	/**
+	 * Place a Climber on RopePoint
+	 * @param climber
+	 * @throws RopePointInvalidUsageException RopePoint already used
+	 * @throws NullClimberException 
+	 */
+	public void placeClimber(Climber climber) throws RopePointInvalidUsageException, NullClimberException {
+<span class="fc bfc" id="L29" title="All 2 branches covered.">		if (climber == null) {</span>
+<span class="fc" id="L30">			throw new NullClimberException(&quot;Input climber is null&quot;);</span>
+		}
+<span class="fc bfc" id="L32" title="All 2 branches covered.">		if (this.climber != null) {</span>
+<span class="fc" id="L33">			throw new RopePointInvalidUsageException(&quot;RopePoint already used&quot;);</span>
+		}
+<span class="fc" id="L35">		this.climber = climber;</span>
+<span class="fc" id="L36">	}</span>
+	
+	/**
+	 * removes climber from RopePoint
+	 * @return removed Climber
+	 * @throws RopePointInvalidUsageException no climber is on RopePoint
+	 */
+	public Climber removeClimber() throws RopePointInvalidUsageException {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">		if (this.climber == null) {</span>
+<span class="fc" id="L45">			throw new  RopePointInvalidUsageException(&quot;RopePoint not used&quot;);</span>
+		}
+<span class="fc" id="L47">		Climber climber = this.climber;</span>
+<span class="fc" id="L48">		this.climber = null;</span>
+<span class="fc" id="L49">		return climber;</span>
+	}
+	
+	/**
+	 * mark with Marker the RopePoint
+	 * @param marker
+	 * @throws RopePointInvalidUsageException RopePoint is already marke with this color
+	 */
+	public abstract void mark(Marker marker) throws RopePointInvalidUsageException;
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

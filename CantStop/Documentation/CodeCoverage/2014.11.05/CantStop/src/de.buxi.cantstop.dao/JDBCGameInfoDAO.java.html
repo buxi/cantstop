@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>JDBCGameInfoDAO.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.dao</a> &gt; <span class="el_source">JDBCGameInfoDAO.java</span></div><h1>JDBCGameInfoDAO.java</h1><pre class="source lang-java linenums"><span class="fc" id="L1">package de.buxi.cantstop.dao;</span>
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.utils.ObjectManipulationHelper;
+
+/**
+ * JDBC implementation of GameInfoDao
+ * @author buxi
+ *
+ */
+<span class="fc" id="L24">public class JDBCGameInfoDAO implements GameInfoDao {</span>
+<span class="fc" id="L25">	Logger log = Logger.getLogger(this.getClass());</span>
+	
+	private JdbcTemplate jdbcTemplate;
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+<span class="fc" id="L30">		this.jdbcTemplate = jdbcTemplate;</span>
+<span class="fc" id="L31">	}</span>
+
+	@Override
+	public void insert(final int gameId, final Timestamp timestamp, final String methodName,
+			final int playerId, final byte[] zippedTransferObject, final String description) {
+		// TODO Auto-generated method stub
+<span class="fc" id="L37">		jdbcTemplate.update(new PreparedStatementCreator() {</span>
+			public PreparedStatement createPreparedStatement(Connection conn)
+					throws SQLException {
+<span class="fc" id="L40">				String sql = &quot;INSERT INTO GAMEINFO (GAME_ID, TS, METHOD_NAME, PLAYER_ID, TRANSFER_OBJECT, DESCRIPTION) &quot;</span>
+							+&quot;VALUES (?, ?, ?, ?, ?, ?)&quot;;
+<span class="fc" id="L42">				PreparedStatement ps = conn.prepareStatement(sql);</span>
+<span class="fc" id="L43">				ps.setInt(1, gameId);</span>
+<span class="fc" id="L44">				ps.setTimestamp(2, timestamp);</span>
+<span class="fc" id="L45">				ps.setString(3, methodName);</span>
+<span class="fc" id="L46">				ps.setInt(4, playerId);</span>
+<span class="fc" id="L47">				ps.setBytes(5, zippedTransferObject);</span>
+<span class="fc" id="L48">				ps.setString(6, description);</span>
+<span class="fc" id="L49">				return ps;</span>
+			}
+		});
+		
+<span class="fc" id="L53">	}</span>
+
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.dao.GameInfoDao#readAllShortGameInfo()
+	 */
+	public List&lt;GameInfoShortTO&gt; readAllShortGameInfo() {
+<span class="fc" id="L59">		String sql = &quot;SELECT distinct GAME_ID, DESCRIPTION FROM GAMEINFO&quot;;</span>
+<span class="fc" id="L60">		List&lt;GameInfoShortTO&gt; result = jdbcTemplate.query(sql,</span>
+<span class="fc" id="L61">				ParameterizedBeanPropertyRowMapper.newInstance(GameInfoShortTO.class));</span>
+		
+<span class="fc" id="L63">		return result;</span>
+	}
+
+	/**
+	 * @author buxi
+	 * Inner class to map GameInfoFullTO - GAMEINFO table row
+	 */
+<span class="fc" id="L70">	public class GameInfoFullRowMapper implements ParameterizedRowMapper&lt;GameInfoFullTO&gt; {</span>
+		public GameInfoFullTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+<span class="fc" id="L72">			GameInfoFullTO gameInfoFullTO = new GameInfoFullTO();</span>
+<span class="fc" id="L73">			gameInfoFullTO.setGameId(rs.getInt(&quot;GAME_ID&quot;));</span>
+<span class="fc" id="L74">			gameInfoFullTO.setTs(rs.getTimestamp(&quot;TS&quot;));</span>
+<span class="fc" id="L75">			gameInfoFullTO.setMethodName(rs.getString(&quot;METHOD_NAME&quot;));</span>
+<span class="fc" id="L76">			gameInfoFullTO.setPlayerId(rs.getInt(&quot;PLAYER_ID&quot;));</span>
+<span class="fc" id="L77">			GameTransferObject to = (GameTransferObject)ObjectManipulationHelper.unpackAndDeserialize(rs.getBytes(&quot;TRANSFER_OBJECT&quot;));</span>
+<span class="fc" id="L78">			gameInfoFullTO.setTransferObject(to);</span>
+<span class="fc" id="L79">			gameInfoFullTO.setDescription(rs.getString(&quot;DESCRIPTION&quot;));</span>
+			
+<span class="fc" id="L81">		return gameInfoFullTO;</span>
+		}
+	}
+	
+	@Override
+	public List&lt;GameInfoFullTO&gt; readFullInfoByGameId(int gameId) {
+<span class="fc" id="L87">		String sql = &quot;SELECT * FROM GAMEINFO WHERE GAME_ID='&quot; + gameId +&quot;' order by ts&quot;;</span>
+<span class="fc" id="L88">		List&lt;GameInfoFullTO&gt; result = jdbcTemplate.query(sql, new GameInfoFullRowMapper());</span>
+<span class="fc" id="L89">		return result;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

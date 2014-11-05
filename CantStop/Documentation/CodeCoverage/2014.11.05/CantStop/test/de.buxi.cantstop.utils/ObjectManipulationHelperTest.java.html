@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ObjectManipulationHelperTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.utils</a> &gt; <span class="el_source">ObjectManipulationHelperTest.java</span></div><h1>ObjectManipulationHelperTest.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.utils;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Color;
+import de.buxi.cantstop.model.Player;
+
+<span class="fc" id="L11">public class ObjectManipulationHelperTest {</span>
+
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L15">	}</span>
+
+	@Test
+	public void testEncodeAndDecode() {
+<span class="fc" id="L19">		Player player = new Player(&quot;a&quot;, Color.BLUE);</span>
+
+		// encoding
+<span class="fc" id="L22">		byte[] encodedPlayer = ObjectManipulationHelper.serializeAndPack(player);</span>
+<span class="fc" id="L23">		assertNotNull(&quot;can't be null&quot;, encodedPlayer);</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">		assertTrue(&quot;must have values&quot;, encodedPlayer.length &gt; 0);</span>
+		
+		//decoding
+<span class="fc" id="L27">		Player decodedPlayer = (Player)ObjectManipulationHelper.unpackAndDeserialize(encodedPlayer);</span>
+<span class="fc" id="L28">		assertNotNull(&quot;can't be null&quot;, decodedPlayer);</span>
+		
+		//checking decoded object
+<span class="fc" id="L31">		assertEquals(&quot;must be same&quot;, player.getName(), decodedPlayer.getName());</span>
+<span class="fc" id="L32">		assertEquals(&quot;must be same&quot;, player.getColor(), decodedPlayer.getColor());</span>
+<span class="fc" id="L33">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

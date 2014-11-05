@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>DiceImpl.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">DiceImpl.java</span></div><h1>DiceImpl.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.model;
+
+import java.io.Serializable;
+import java.util.Random;
+
+/**
+ * @author buxi
+ * Representation of an abstract Dice
+ */
+public class DiceImpl implements Dice, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4259022213227837523L;
+
+	/**
+	 * the diceValue after a throw 
+	 */
+	private int diceValue; 
+
+	/**
+	 * true, if the dice was thrown
+	 */
+	private boolean thrown;
+	
+	/**
+	 * how much sideNumber has the dice
+	 */
+	private int sideNumber;
+	
+	
+	/**
+	 * @param newSides
+	 */
+	public DiceImpl(int newSides) {
+<span class="fc" id="L36">		super();</span>
+<span class="fc" id="L37">		this.thrown = false;</span>
+<span class="fc" id="L38">		this.sideNumber = newSides;</span>
+<span class="fc" id="L39">	}</span>
+
+	/**
+	 * @param thrown the thrown to set
+	 */
+	private void setThrown(boolean thrown) {
+<span class="fc" id="L45">		this.thrown = thrown;</span>
+<span class="fc" id="L46">	}</span>
+
+	/**
+	 * @param diceValue the diceValue to set
+	 */
+	private void setDiceValue(int number) {
+<span class="fc" id="L52">		this.diceValue = number;</span>
+<span class="fc" id="L53">	}</span>
+
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.model.Dice#isThrown()
+	 */
+	@Override
+	public boolean isThrown() {
+<span class="fc" id="L60">		return thrown;</span>
+	}
+	
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.model.Dice#getDiceValue()
+	 */
+	@Override
+	public int getDiceValue() {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">		if (!isThrown()) { </span>
+<span class="fc" id="L69">			throw new DiceNotThrownException(); </span>
+		}
+<span class="fc" id="L71">		return diceValue;</span>
+	}
+
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.model.Dice#throwDice()
+	 */
+	@Override
+	public void throwDice() {
+<span class="fc" id="L79">		Random rnd = new Random();</span>
+		// get a random value from 1 to sides
+<span class="fc" id="L81">		int randomValue = rnd.nextInt(sideNumber) + 1 ;</span>
+<span class="fc" id="L82">		setDiceValue(randomValue);</span>
+<span class="fc" id="L83">		setThrown(true);</span>
+<span class="fc" id="L84">	}</span>
+
+	/* (non-Javadoc)
+	 * @see de.buxi.cantstop.model.Dice#reset()
+	 */
+	@Override
+	public void reset() {
+<span class="fc" id="L91">		setThrown(false);</span>
+<span class="fc" id="L92">	}</span>
+
+	/**
+	 * @return the sideNumber
+	 */
+	public int getSideNumber() {
+<span class="fc" id="L98">		return sideNumber;</span>
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+<span class="fc" id="L106">		return Integer.toString(diceValue);</span>
+	}
+
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+<span class="fc" id="L116">		DiceImpl newDice = new DiceImpl(this.getSideNumber());</span>
+<span class="fc" id="L117">		newDice.setThrown(this.thrown);</span>
+<span class="fc" id="L118">		newDice.setDiceValue(this.diceValue);</span>
+<span class="fc" id="L119">		return newDice;</span>
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+<span class="nc" id="L127">		final int prime = 31;</span>
+<span class="nc" id="L128">		int result = 1;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">		result = prime * result + (thrown ? 1231 : 1237);</span>
+<span class="nc" id="L130">		result = prime * result + sideNumber;</span>
+<span class="nc" id="L131">		result = prime * result + diceValue;</span>
+<span class="nc" id="L132">		return result;</span>
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L141">			return true;</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L143">			return false;</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L145">			return false;</span>
+<span class="fc" id="L146">		DiceImpl other = (DiceImpl) obj;</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">		if (thrown != other.thrown)</span>
+<span class="nc" id="L148">			return false;</span>
+<span class="pc bpc" id="L149" title="1 of 2 branches missed.">		if (sideNumber != other.sideNumber)</span>
+<span class="nc" id="L150">			return false;</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">		if (diceValue != other.diceValue)</span>
+<span class="fc" id="L152">			return false;</span>
+<span class="fc" id="L153">		return true;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

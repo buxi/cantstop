@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ObjectManipulationHelper.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.utils</a> &gt; <span class="el_source">ObjectManipulationHelper.java</span></div><h1>ObjectManipulationHelper.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.utils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DataAccessException;
+
+/**
+ * Helper class to object manipulation methods
+ * TODO class name is not very nice 
+ * @author buxi
+ *
+ */
+<span class="nc" id="L21">public class ObjectManipulationHelper {</span>
+<span class="fc" id="L22">	static private Log log = LogFactory.getLog(ObjectManipulationHelper.class);</span>
+	
+	/**
+	 * Serializing and packing with zip an object
+	 * @param inputObject
+	 * @return serialized and zipped object
+	 */
+	public static byte[] serializeAndPack(Object inputObject) {
+<span class="fc" id="L30">		try (ByteArrayOutputStream outZip = new ByteArrayOutputStream();</span>
+<span class="fc" id="L31">				GzipCompressorOutputStream gzip = new GzipCompressorOutputStream(outZip);</span>
+<span class="fc" id="L32">				ObjectOutputStream objOut = new ObjectOutputStream(gzip);) {</span>
+			//serializing and packing GameTransferObject
+<span class="fc" id="L34">			objOut.writeObject(inputObject);</span>
+<span class="fc" id="L35">			gzip.finish();</span>
+<span class="pc" id="L36">			return outZip.toByteArray();</span>
+<span class="pc bpc" id="L37" title="21 of 24 branches missed.">		} catch (IOException | DataAccessException e) {</span>
+<span class="nc" id="L38">			log.error(e);</span>
+		}
+<span class="nc" id="L40">		return null;</span>
+	}
+	
+	/**
+	 * Unpacking (zip) and deserializing an object
+	 * @param Serialized and packed inputObject
+	 * @return unpacked and deserialized object
+	 */
+	public static Object unpackAndDeserialize(byte[] inputObject) {
+<span class="fc" id="L49">		try (ByteArrayInputStream unzipInput = new ByteArrayInputStream(inputObject);</span>
+<span class="fc" id="L50">				GzipCompressorInputStream unzipIS = new GzipCompressorInputStream(unzipInput);</span>
+<span class="fc" id="L51">				ObjectInputStream objInputStream = new ObjectInputStream(unzipIS);) {</span>
+			//serializing and packing GameTransferObject
+<span class="fc" id="L53">			Object decodedObject = objInputStream.readObject();</span>
+			
+<span class="pc" id="L55">			return decodedObject;</span>
+<span class="pc bpc" id="L56" title="21 of 24 branches missed.">		} catch (IOException | DataAccessException | ClassNotFoundException e) {</span>
+<span class="nc" id="L57">			log.error(e);</span>
+		}
+<span class="nc" id="L59">		return null;</span>
+	}
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

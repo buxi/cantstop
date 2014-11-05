@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>DiceManagerTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">DiceManagerTest.java</span></div><h1>DiceManagerTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Dice;
+import de.buxi.cantstop.model.DiceManager;
+import de.buxi.cantstop.model.DiceNotGivenException;
+import de.buxi.cantstop.model.Player;
+import static org.mockito.Mockito.*;
+
+/**
+ * @author buxi
+ *
+ */
+<span class="fc" id="L24">public class DiceManagerTest extends SpringLoaderSuperClassModelTests{</span>
+<span class="fc" id="L25">	private static List&lt;Dice&gt; emptyDicesList = new ArrayList&lt;Dice&gt;();</span>
+	
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L32">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.DiceManager#getOwner()}.
+	 * @throws DiceNotGivenException 
+	 */
+	@Test(expected=DiceNotGivenException.class)
+	public void testConstructorWithNull() {
+<span class="nc" id="L40">		new DiceManager(null);</span>
+<span class="nc" id="L41">	}</span>
+	
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.DiceManager#getOwner()}.
+	 */
+	@Test
+	public void testGetOwnerWithNull() {
+<span class="fc" id="L48">		DiceManager manager = new DiceManager(emptyDicesList);</span>
+<span class="fc" id="L49">		assertNull(&quot;Null Owner&quot;, manager.getOwner());</span>
+<span class="fc" id="L50">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.DiceManager#giveDices(de.buxi.cantstop.model.Player)}.
+	 */
+	@Test
+	public void testGrabDices() {
+<span class="fc" id="L57">		DiceManager manager = new DiceManager(emptyDicesList);</span>
+<span class="fc" id="L58">		Player newOwner = mock(Player.class);</span>
+<span class="fc" id="L59">		assertTrue(&quot;grab should be successful&quot;, manager.giveDices(newOwner));</span>
+<span class="fc" id="L60">		assertSame(&quot;gra should owner modify&quot;, newOwner, manager.getOwner());</span>
+<span class="fc" id="L61">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.DiceManager#getOwner()}.
+	 */
+	@Test
+	public void testAllThrowWith4Dices() {
+<span class="fc" id="L68">		DiceManager manager = (DiceManager)ac.getBean(&quot;diceManager&quot;);</span>
+<span class="fc" id="L69">		manager.throwAllDices();</span>
+<span class="fc" id="L70">		List&lt;Dice&gt; dicesAfterThrow = manager.getDices();</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">		for (Dice dice : dicesAfterThrow) {</span>
+<span class="fc" id="L72">			System.out.println(dice);</span>
+<span class="fc" id="L73">			assertTrue(dice.isThrown());</span>
+		}
+<span class="fc" id="L75">	}</span>
+	
+	@Test
+	public void testLastThrow() {
+<span class="fc" id="L79">		DiceManager manager = (DiceManager)ac.getBean(&quot;diceManager&quot;);</span>
+<span class="fc" id="L80">		manager.throwAllDices();</span>
+<span class="fc" id="L81">		List&lt;Dice&gt; dicesFirstThrow = manager.getDicesClone();</span>
+<span class="fc" id="L82">		manager.reset();</span>
+<span class="fc" id="L83">		List&lt;Dice&gt; previousThrow = manager.getLastThrow();</span>
+<span class="fc" id="L84">		assertEquals(&quot;must be same: &quot;, dicesFirstThrow,  previousThrow);</span>
+<span class="fc" id="L85">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

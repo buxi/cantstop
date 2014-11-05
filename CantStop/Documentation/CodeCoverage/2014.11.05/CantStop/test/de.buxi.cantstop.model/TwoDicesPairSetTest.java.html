@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>TwoDicesPairSetTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">TwoDicesPairSetTest.java</span></div><h1>TwoDicesPairSetTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import de.buxi.cantstop.model.Dice;
+import de.buxi.cantstop.model.DiceNotThrownException;
+import de.buxi.cantstop.model.DicePair;
+import de.buxi.cantstop.model.TwoDicesPair;
+import de.buxi.cantstop.model.TwoDicesPairSet;
+
+/**
+ * @author buxi
+ *
+ */
+<span class="fc" id="L24">public class TwoDicesPairSetTest {</span>
+	private TwoDicesPairSet twoDicePairSet;
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+<span class="fc" id="L31">		twoDicePairSet = new TwoDicesPairSet();</span>
+<span class="fc" id="L32">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.TwoDicesPairSet#add(de.buxi.cantstop.model.TwoDicesPair)}.
+	 * @throws DiceNotThrownException 
+	 * @throws InvalidTestParametersException 
+	 */
+	@Test
+	public void testAddOnes() throws DiceNotThrownException, InvalidTestParametersException {
+<span class="fc" id="L41">		List&lt;Dice&gt; dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,2,3,4));</span>
+<span class="fc" id="L42">		TwoDicesPair basePairPair = new TwoDicesPair(</span>
+<span class="fc" id="L43">				new DicePair(dices.get(0), dices.get(1)),</span>
+<span class="fc" id="L44">				new DicePair(dices.get(2), dices.get(3)));</span>
+		
+<span class="fc" id="L46">		boolean wasAdded = twoDicePairSet.add(basePairPair);</span>
+<span class="fc" id="L47">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+<span class="fc" id="L48">		assertEquals(1, twoDicePairSet.getResultSet().size());</span>
+<span class="fc" id="L49">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.TwoDicesPairSet#add(de.buxi.cantstop.model.TwoDicesPair)}.
+	 * @throws DiceNotThrownException 
+	 * @throws InvalidTestParametersException 
+	 */
+	@Test
+	public void testAddTwo() throws DiceNotThrownException, InvalidTestParametersException {
+<span class="fc" id="L58">		List&lt;Dice&gt; dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,2,3,4));</span>
+<span class="fc" id="L59">		TwoDicesPair basePairPair = new TwoDicesPair(</span>
+<span class="fc" id="L60">				new DicePair(dices.get(0), dices.get(1)),</span>
+<span class="fc" id="L61">				new DicePair(dices.get(2), dices.get(3)));</span>
+
+<span class="fc" id="L63">		List&lt;Dice&gt; dices2 = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(4,5,6,3));</span>
+<span class="fc" id="L64">		TwoDicesPair other = new TwoDicesPair(</span>
+<span class="fc" id="L65">				new DicePair(dices2.get(0), dices2.get(1)),</span>
+<span class="fc" id="L66">				new DicePair(dices2.get(2), dices2.get(3)));</span>
+
+		
+<span class="fc" id="L69">		boolean wasAdded = twoDicePairSet.add(basePairPair);</span>
+<span class="fc" id="L70">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+		
+<span class="fc" id="L72">		wasAdded = twoDicePairSet.add(other);</span>
+<span class="fc" id="L73">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+		
+		
+<span class="fc" id="L76">		assertEquals(2, twoDicePairSet.getResultSet().size());</span>
+<span class="fc" id="L77">	}</span>
+
+	/**
+	 * Test method for {@link de.buxi.cantstop.model.TwoDicesPairSet#add(de.buxi.cantstop.model.TwoDicesPair)}.
+	 * @throws DiceNotThrownException 
+	 * @throws InvalidTestParametersException 
+	 */
+	@Test
+	public void testAddThree() throws DiceNotThrownException, InvalidTestParametersException {
+<span class="fc" id="L86">		List&lt;Dice&gt; dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,2,3,4));</span>
+<span class="fc" id="L87">		TwoDicesPair basePairPair = new TwoDicesPair(</span>
+<span class="fc" id="L88">				new DicePair(dices.get(0), dices.get(1)),</span>
+<span class="fc" id="L89">				new DicePair(dices.get(2), dices.get(3)));</span>
+
+<span class="fc" id="L91">		List&lt;Dice&gt; dices2 = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(4,5,6,3));</span>
+<span class="fc" id="L92">		TwoDicesPair other = new TwoDicesPair(</span>
+<span class="fc" id="L93">				new DicePair(dices2.get(0), dices2.get(1)),</span>
+<span class="fc" id="L94">				new DicePair(dices2.get(2), dices2.get(3)));</span>
+
+		
+<span class="fc" id="L97">		List&lt;Dice&gt; dices3 = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(1,1,1,1));</span>
+<span class="fc" id="L98">		TwoDicesPair other2 = new TwoDicesPair(</span>
+<span class="fc" id="L99">				new DicePair(dices3.get(0), dices3.get(1)),</span>
+<span class="fc" id="L100">				new DicePair(dices3.get(2), dices3.get(3)));</span>
+		
+<span class="fc" id="L102">		boolean wasAdded = twoDicePairSet.add(basePairPair);</span>
+<span class="fc" id="L103">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+		
+<span class="fc" id="L105">		wasAdded = twoDicePairSet.add(other);</span>
+<span class="fc" id="L106">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+		
+<span class="fc" id="L108">		wasAdded = twoDicePairSet.add(other2);</span>
+<span class="fc" id="L109">		assertTrue(&quot;should be added&quot;, wasAdded);</span>
+		
+<span class="fc" id="L111">		assertEquals(3, twoDicePairSet.getResultSet().size());</span>
+<span class="fc" id="L112">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

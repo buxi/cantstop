@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameTransferObject.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">GameTransferObject.java</span></div><h1>GameTransferObject.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author buxi
+ * Transfer Object for GameController
+ * is a must http://www.oracle.com/technetwork/articles/javaee/transferobject-139757.html
+ * 
+ */
+
+<span class="fc" id="L18">public class GameTransferObject implements Serializable{</span>
+	private static final long serialVersionUID = 2743607355384994736L;
+	public GameState gameState;
+	public Player actualPlayer;
+	public List&lt;TwoDicesPair&gt; possiblePairs;
+	public String boardDisplay;
+	public int actualPlayerNumber;
+	public List&lt;Player&gt; playerList;
+	public Collection&lt;Dice&gt; dices;
+	public String errorMessage;
+	public String errorMessageString;
+	public Map&lt;String, TwoDicesPair&gt; choosablePairsWithId;
+	public Board board;
+	public List&lt;Dice&gt; lastThrow;
+	public UsedPairInfoTO lastUsedPairInfo;
+	public Boolean gameFull;
+	public String startTime;
+	public long startTimestamp;
+	public String joinedPlayersList;
+	public String description;
+	public int gameId;
+	
+	/**
+	 * @return the joinedPlayersList
+	 */
+	public String getJoinedPlayersList() {
+<span class="fc" id="L44">		return joinedPlayersList;</span>
+	}
+
+	/**
+	 * @return the errorMessageString
+	 */
+	public String getErrorMessageString() {
+<span class="nc" id="L51">		return errorMessageString;</span>
+	}
+
+	/**
+	 * @param errorMessageString the errorMessageString to set
+	 */
+	public void setErrorMessageString(String errorMessageString) {
+<span class="nc" id="L58">		this.errorMessageString = errorMessageString;</span>
+<span class="nc" id="L59">	}</span>
+
+	/**
+	 * @return the gameFull
+	 */
+	public Boolean getGameFull() {
+<span class="nc" id="L65">		return gameFull;</span>
+	}
+
+	/**
+	 * @return the lastUsedPairInfo
+	 */
+	public UsedPairInfoTO getLastUsedPairInfo() {
+<span class="fc" id="L72">		return lastUsedPairInfo;</span>
+	}
+
+	/**
+	 * @return the lastThrow
+	 */
+	public List&lt;Dice&gt; getLastThrow() {
+<span class="fc" id="L79">		return lastThrow;</span>
+	}
+
+	/**
+	 * @return the board
+	 */
+	public Board getBoard() {
+<span class="nc" id="L86">		return board;</span>
+	}
+
+	/**
+	 * @return the choosablePairsWithId
+	 */
+	public Map&lt;String, TwoDicesPair&gt; getChoosablePairsWithId() {
+<span class="fc" id="L93">		return choosablePairsWithId;</span>
+	}
+	
+	/**
+	 * @return the gameState
+	 */
+	public GameState getGameState() {
+<span class="nc" id="L100">		return gameState;</span>
+	}
+	/**
+	 * @param gameState the gameState to set
+	 */
+	public void setGameState(GameState gameState) {
+<span class="nc" id="L106">		this.gameState = gameState;</span>
+<span class="nc" id="L107">	}</span>
+	/**
+	 * @return the actualPlayer
+	 */
+	public Player getActualPlayer() {
+<span class="nc" id="L112">		return actualPlayer;</span>
+	}
+	/**
+	 * @param actualPlayer the actualPlayer to set
+	 */
+	public void setActualPlayer(Player actualPlayer) {
+<span class="nc" id="L118">		this.actualPlayer = actualPlayer;</span>
+<span class="nc" id="L119">	}</span>
+	/**
+	 * @return the possiblePairs
+	 */
+	public List&lt;TwoDicesPair&gt; getPossiblePairs() {
+<span class="nc" id="L124">		return possiblePairs;</span>
+	}
+	/**
+	 * @param possiblePairs the possiblePairs to set
+	 */
+	public void setPossiblePairs(List&lt;TwoDicesPair&gt; possiblePairs) {
+<span class="nc" id="L130">		this.possiblePairs = possiblePairs;</span>
+<span class="nc" id="L131">	}</span>
+	/**
+	 * @return the boardDisplay
+	 */
+	public String getBoardDisplay() {
+<span class="nc" id="L136">		return boardDisplay;</span>
+	}
+	/**
+	 * @param boardDisplay the boardDisplay to set
+	 */
+	public void setBoardDisplay(String boardDisplay) {
+<span class="nc" id="L142">		this.boardDisplay = boardDisplay;</span>
+<span class="nc" id="L143">	}</span>
+	/**
+	 * @return the actualPlayerNumber
+	 */
+	public int getActualPlayerNumber() {
+<span class="nc" id="L148">		return actualPlayerNumber;</span>
+	}
+	/**
+	 * @param actualPlayerNumber the actualPlayerNumber to set
+	 */
+	public void setActualPlayerNumber(int actualPlayerNumber) {
+<span class="nc" id="L154">		this.actualPlayerNumber = actualPlayerNumber;</span>
+<span class="nc" id="L155">	}</span>
+	/**
+	 * @return the playerList
+	 */
+	public List&lt;Player&gt; getPlayerList() {
+<span class="fc" id="L160">		return playerList;</span>
+	}
+	/**
+	 * @param playerList the playerList to set
+	 */
+	public void setPlayerList(List&lt;Player&gt; playerList) {
+<span class="nc" id="L166">		this.playerList = playerList;</span>
+<span class="nc" id="L167">	}</span>
+	/**
+	 * @return the dices
+	 */
+	public Collection&lt;Dice&gt; getDices() {
+<span class="fc" id="L172">		return dices;</span>
+	}
+	/**
+	 * @param dices the dices to set
+	 */
+	public void setDices(Collection&lt;Dice&gt; dices) {
+<span class="nc" id="L178">		this.dices = dices;</span>
+<span class="nc" id="L179">	}</span>
+	/**
+	 * @return the errorMessage
+	 */
+	public String getErrorMessage() {
+<span class="nc" id="L184">		return errorMessage;</span>
+	}
+	/**
+	 * @param errorMessage the errorMessage to set
+	 */
+	public void setErrorMessage(String errorMessage) {
+<span class="nc" id="L190">		this.errorMessage = errorMessage;</span>
+<span class="nc" id="L191">	}</span>
+	public String getActualPlayerId() {
+<span class="fc" id="L193">		return Integer.toString(actualPlayerNumber);</span>
+	}
+	
+	public int getGameId() {
+<span class="fc" id="L197">		return this.gameId;</span>
+	}
+
+	public long getStartTimestamp() {
+<span class="fc" id="L201">		return this.startTimestamp;</span>
+	}
+
+	public String getDescription() {
+<span class="fc" id="L205">		return this.description;</span>
+	}
+
+	public String getStartTime() {
+<span class="fc" id="L209">		return this.startTime;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

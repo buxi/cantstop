@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * @author buxi
+ *
+ */
+public class Player implements Serializable{
+	private static final long serialVersionUID = 4829560351701437044L;
+	private String name;
+	private Color color;
+	private Collection&lt;Marker&gt;markers;
+	private int order;
+	private boolean autoPlayer;
+	
+	private Collection&lt;Climber&gt;climbers;
+
+	/**
+	 * @param name
+	 * @param color
+	 * @param steine
+	 * @param order
+	 * @param climbers
+	 */
+	public Player(String name, Color color) {
+<span class="fc" id="L34">		super();</span>
+<span class="fc" id="L35">		this.name = name;</span>
+<span class="fc" id="L36">		this.color = color;</span>
+<span class="fc" id="L37">		this.markers = new ArrayList&lt;Marker&gt;(10);</span>
+<span class="fc" id="L38">		this.climbers = new ArrayList&lt;Climber&gt;(3);</span>
+<span class="fc" id="L39">		this.setAutoPlayer(false);</span>
+<span class="fc" id="L40">	}</span>
+
+	public Player(int order, String name, Color color) {
+<span class="fc" id="L43">		super();</span>
+<span class="fc" id="L44">		this.name = name;</span>
+<span class="fc" id="L45">		this.color = color;</span>
+<span class="fc" id="L46">		this.order = order;</span>
+		
+<span class="fc" id="L48">		this.markers = new ArrayList&lt;Marker&gt;(10);</span>
+<span class="fc" id="L49">		this.climbers = new ArrayList&lt;Climber&gt;(3);</span>
+<span class="fc" id="L50">	}</span>
+
+	/**
+	 * @return the markers
+	 */
+	public Collection&lt;Marker&gt; getMarkers() {
+<span class="fc" id="L56">		return markers;</span>
+	}
+
+	/**
+	 * @param markers the markers to set
+	 */
+	public void addMarkers(Collection&lt;Marker&gt; markers) {
+<span class="fc" id="L63">		this.markers.addAll(markers);</span>
+<span class="fc" id="L64">	}</span>
+
+	/**
+	 * @return the climbers
+	 */
+	public Collection&lt;Climber&gt; getClimbers() {
+<span class="fc" id="L70">		return climbers;</span>
+	}
+
+	/**
+	 * @param add climbers to ClimberList
+	 */
+	public void addClimbers(Collection&lt;Climber&gt; newClimbers) {
+<span class="fc" id="L77">		this.climbers.addAll(newClimbers) ;</span>
+<span class="fc" id="L78">	}</span>
+	
+	/**
+	 * @param add climbers to ClimberList
+	 */
+	public Collection&lt;Climber&gt; removeClimbers() {
+<span class="fc" id="L84">		Collection&lt;Climber&gt; oldClimbers = this.climbers;</span>
+<span class="fc" id="L85">		this.climbers = new ArrayList&lt;Climber&gt;(3);</span>
+<span class="fc" id="L86">		return oldClimbers;</span>
+	}
+	
+	/**
+	 * @return the color
+	 */
+	public Color getColor() {
+<span class="fc" id="L93">		return color;</span>
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+<span class="fc" id="L100">		return name;</span>
+	}
+
+	/**
+	 * @return the order
+	 */
+	public int getOrder() {
+<span class="fc" id="L107">		return order;</span>
+	}
+
+	/**
+	 * @param order the order to set
+	 */
+	public void setOrder(int order) {
+<span class="fc" id="L114">		this.order = order;</span>
+<span class="fc" id="L115">	}</span>
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+<span class="nc" id="L122">		StringBuilder builder = new StringBuilder();</span>
+<span class="nc" id="L123">		builder.append(&quot;Player [name=&quot;);</span>
+<span class="nc" id="L124">		builder.append(name);</span>
+<span class="nc" id="L125">		builder.append(&quot;, color=&quot;);</span>
+<span class="nc" id="L126">		builder.append(color);</span>
+<span class="nc" id="L127">		builder.append(&quot;, markers=&quot;);</span>
+<span class="nc" id="L128">		builder.append(markers);</span>
+<span class="nc" id="L129">		builder.append(&quot;, order=&quot;);</span>
+<span class="nc" id="L130">		builder.append(order);</span>
+<span class="nc" id="L131">		builder.append(&quot;, climbers=&quot;);</span>
+<span class="nc" id="L132">		builder.append(climbers);</span>
+<span class="nc" id="L133">		builder.append(&quot;]&quot;);</span>
+<span class="nc" id="L134">		return builder.toString();</span>
+	}
+
+	public String display() {
+<span class="nc" id="L138">		StringBuffer builder = new StringBuffer();</span>
+<span class="nc" id="L139">		builder.append(StringUtils.rightPad(name, 7));</span>
+<span class="nc" id="L140">		builder.append(&quot;(&quot;);</span>
+<span class="nc" id="L141">		builder.append(StringUtils.rightPad(color.toString(), 6));</span>
+<span class="nc" id="L142">		builder.append(&quot;)&quot;);</span>
+		
+<span class="nc" id="L144">		StringBuffer climbersStr = new StringBuffer();</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">		for (Climber climber : climbers) {</span>
+<span class="nc" id="L146">			climbersStr.append(climber.display());</span>
+		}
+<span class="nc" id="L148">		builder.append(StringUtils.center(climbersStr.toString(), 6));</span>
+		
+<span class="nc" id="L150">		StringBuffer markersStr = new StringBuffer();</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">		for (Marker marker : markers) {</span>
+<span class="nc" id="L152">			markersStr.append(marker.display());</span>
+		}
+<span class="nc" id="L154">		builder.append(StringUtils.leftPad(markersStr.toString(), 6));</span>
+
+<span class="nc" id="L156">		return builder.toString();</span>
+	}
+
+	/**
+	 * gives a climber, if there is more
+	 * @return Climber
+	 * @throws NotAvailableClimberException 
+	 */
+	public Climber aquireOneClimber() throws NotAvailableClimberException {
+<span class="pc bpc" id="L165" title="1 of 4 branches missed.">		if (climbers == null || climbers.isEmpty()) {</span>
+<span class="fc" id="L166">			throw new NotAvailableClimberException(&quot;Player have no more climber&quot;);</span>
+		}
+<span class="fc" id="L168">		Climber climber = climbers.iterator().next();</span>
+<span class="fc" id="L169">		climbers.remove(climber);</span>
+<span class="fc" id="L170">		return climber;</span>
+	}
+
+	/**
+	 * gives a marker, if there is more
+	 * @throws NoMarkerIsAvailableException
+	 */
+	public Marker aquireOneMarker() throws NoMarkerIsAvailableException {
+<span class="pc bpc" id="L178" title="1 of 4 branches missed.">		if (markers == null || markers.isEmpty()) {</span>
+<span class="fc" id="L179">			throw new NoMarkerIsAvailableException(&quot;Player have no more marker:&quot; + this.getName());</span>
+		}
+		
+<span class="fc" id="L182">		Marker marker = markers.iterator().next();</span>
+<span class="fc" id="L183">		markers.remove(marker);</span>
+<span class="fc" id="L184">		return marker;</span>
+	}
+
+	/**
+	 * @return the autoPlayer
+	 */
+	public boolean getAutoPlayer() {
+<span class="fc" id="L191">		return autoPlayer;</span>
+	}
+
+	/**
+	 * @param autoPlayer the autoPlayer to set
+	 */
+	public void setAutoPlayer(boolean autoPlayer) {
+<span class="fc" id="L198">		this.autoPlayer = autoPlayer;</span>
+<span class="fc" id="L199">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>DiceManager.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">DiceManager.java</span></div><h1>DiceManager.java</h1><pre class="source lang-java linenums">/**
+ * Manager of dices. It has to be always in one hand or free to be 
+ */
+package de.buxi.cantstop.model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * @author buxi
+ *
+ */
+public class DiceManager implements Serializable{
+
+<span class="fc" id="L19">	Log log = LogFactory.getLog(DiceManager.class);</span>
+	
+	private static final long serialVersionUID = -2229098432462786519L;
+	private List&lt;Dice&gt; dices;
+	private Player owner;
+
+	private List&lt;Dice&gt; lastThrow; 
+
+	/**
+	 * @param dices
+	 * @throws DiceNotGivenException no input dices 
+	 */
+	public DiceManager(List&lt;Dice&gt; dices) throws DiceNotGivenException {
+<span class="fc" id="L32">		super();</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">		if (dices == null) {</span>
+<span class="fc" id="L34">			throw new DiceNotGivenException(&quot;No dices given to DiceManager&quot;);</span>
+		}
+<span class="fc" id="L36">		this.dices = dices;</span>
+<span class="fc" id="L37">		setOwner(null);</span>
+<span class="fc" id="L38">	}</span>
+
+	/**
+	 * @return the dices
+	 */
+	/**
+	 * @return
+	 */
+	public List&lt;Dice&gt; getDices() {
+<span class="fc" id="L47">		return dices;</span>
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public Player getOwner() {
+<span class="fc" id="L54">		return owner;</span>
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	private void setOwner(Player owner) {
+<span class="fc" id="L61">		this.owner = owner;</span>
+<span class="fc" id="L62">	}</span>
+	
+	/**
+	 * change the owner of dices
+	 * @param newOwner
+	 * @return true, if the change was successful
+	 */
+	public boolean giveDices(Player newOwner) {
+<span class="fc" id="L70">		setOwner(newOwner);</span>
+<span class="fc" id="L71">		lastThrow = null;</span>
+<span class="fc" id="L72">		return true;</span>
+	}
+	
+	
+	/**
+	 * Throw all dices
+	 */
+	public void throwAllDices() {
+		//TODO in Multithreaded Env reset and throwDice needs to be atomic
+<span class="fc bfc" id="L81" title="All 2 branches covered.">		for (Dice dice : dices) {</span>
+<span class="fc" id="L82">			dice.reset();</span>
+<span class="fc" id="L83">			dice.throwDice();</span>
+		}
+<span class="fc" id="L85">		log.info(&quot;dices were thrown:&quot;+dices);</span>
+<span class="fc" id="L86">	}</span>
+
+	/**
+	 * 
+	 */
+	protected List&lt;Dice&gt; getDicesClone() {
+<span class="fc" id="L92">		List&lt;Dice&gt; lastThrow = new ArrayList&lt;Dice&gt;(4);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">		for (Dice dice : dices) {</span>
+			try {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">				if (dice.isThrown()) {</span>
+<span class="fc" id="L96">					lastThrow.add((Dice) dice.clone());</span>
+				}
+<span class="pc" id="L98">			} catch (CloneNotSupportedException e) {</span>
+				//this can not happen
+<span class="nc" id="L100">				log.error(e.getMessage());</span>
+			}
+		}
+<span class="fc" id="L103">		return lastThrow;</span>
+	}
+	
+	/**
+	 * @return generates all possible pairs of 4 NormalDice
+	 * @throws DiceNotThrownException
+	 */
+	public List&lt;TwoDicesPair&gt; getAllPossiblePairs() throws DiceNotThrownException {
+<span class="fc" id="L111">		List&lt;Dice&gt; dices = getDices();</span>
+
+<span class="fc" id="L113">		TwoDicesPairSet paarSet = new TwoDicesPairSet();</span>
+<span class="fc" id="L114">		DicePair dicePair01 = new DicePair(dices.get(0), dices.get(1));</span>
+<span class="fc" id="L115">		DicePair dicePair23= new DicePair(dices.get(2), dices.get(3));</span>
+<span class="fc" id="L116">		TwoDicesPair firstKombination = new TwoDicesPair(dicePair01, dicePair23);</span>
+<span class="fc" id="L117">		paarSet.add(firstKombination);</span>
+		
+<span class="fc" id="L119">		DicePair dicePair02 = new DicePair(dices.get(0), dices.get(2));</span>
+<span class="fc" id="L120">		DicePair dicePair13 = new DicePair(dices.get(1), dices.get(3));</span>
+<span class="fc" id="L121">		TwoDicesPair secondKombination = new TwoDicesPair(dicePair02, dicePair13);</span>
+<span class="fc" id="L122">		paarSet.add(secondKombination);</span>
+	
+<span class="fc" id="L124">		DicePair dicePair03 = new DicePair(dices.get(0), dices.get(3));</span>
+<span class="fc" id="L125">		DicePair dicePair12 = new DicePair(dices.get(1), dices.get(2));</span>
+<span class="fc" id="L126">		TwoDicesPair thirdKombination = new TwoDicesPair(dicePair03, dicePair12);</span>
+<span class="fc" id="L127">		paarSet.add(thirdKombination);</span>
+<span class="fc" id="L128">		return paarSet.getResultSet();</span>
+	}
+
+	/**
+	 * @return previous throw 
+	 */
+	public List&lt;Dice&gt; getLastThrow() {
+<span class="fc" id="L135">		return this.lastThrow;</span>
+	}
+
+	/**
+	 * reset diceManager, sets dices to notThrown and stores last throw
+	 */
+	public void reset() {
+		// storing last throw
+<span class="fc" id="L143">		this.lastThrow = getDicesClone();</span>
+<span class="fc" id="L144">		log.debug(&quot;storing last throw:&quot; + this.lastThrow);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">		for (Dice dice : dices) {</span>
+<span class="fc" id="L146">			dice.reset();</span>
+		}
+<span class="fc" id="L148">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

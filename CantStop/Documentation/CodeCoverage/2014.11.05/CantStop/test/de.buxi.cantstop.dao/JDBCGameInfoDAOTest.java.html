@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>JDBCGameInfoDAOTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">test</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.dao</a> &gt; <span class="el_source">JDBCGameInfoDAOTest.java</span></div><h1>JDBCGameInfoDAOTest.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.dao;
+
+
+import java.util.Date;
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+
+import de.buxi.cantstop.model.DiceNotThrownException;
+import de.buxi.cantstop.model.GameController;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.cantstop.utils.ObjectManipulationHelper;
+import static org.junit.Assert.*;
+
+/**
+ * @author buxi
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(&quot;file:test/test-database-context.xml&quot;)
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
+<span class="fc" id="L35">public class JDBCGameInfoDAOTest {</span>
+	@Autowired
+	protected ApplicationContext ac;
+		
+	@Test
+	public void testInsert() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L41">		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean(&quot;gameInfoDao&quot;);</span>
+<span class="fc" id="L42">		GameController gameController = (GameController)ac.getBean(&quot;gameController&quot;);</span>
+<span class="fc" id="L43">		GameTransferObject to = gameController.doGameStart();</span>
+<span class="fc" id="L44">		dao.insert(1, new java.sql.Timestamp(new Date().getTime()), &quot;testMethod&quot;,1, ObjectManipulationHelper.serializeAndPack(to), to.description);</span>
+<span class="fc" id="L45">	}</span>
+	
+	@Test
+	public void testReadAllShortGameInfo() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L49">		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean(&quot;gameInfoDao&quot;);</span>
+<span class="fc" id="L50">		GameController gameController = (GameController)ac.getBean(&quot;gameController&quot;);</span>
+<span class="fc" id="L51">		GameTransferObject to = gameController.doGameStart();</span>
+<span class="fc" id="L52">		dao.insert(1, new java.sql.Timestamp(new Date().getTime()), &quot;testMethod&quot;,1, ObjectManipulationHelper.serializeAndPack(to), to.description);</span>
+		
+<span class="fc" id="L54">		List&lt;GameInfoShortTO&gt; result = dao.readAllShortGameInfo();</span>
+<span class="fc" id="L55">		assertNotNull(&quot;can't be null&quot; , result);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">		assertTrue(&quot;minimum one row expected&quot; , result.size() &gt; 0);</span>
+<span class="fc" id="L57">	}</span>
+	
+	@Test
+	public void testReadFullInfoByGameId() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L61">		JDBCGameInfoDAO dao = (JDBCGameInfoDAO)ac.getBean(&quot;gameInfoDao&quot;);</span>
+<span class="fc" id="L62">		GameController gameController = (GameController)ac.getBean(&quot;gameController&quot;);</span>
+<span class="fc" id="L63">		GameTransferObject to = gameController.doGameStart();</span>
+<span class="fc" id="L64">		dao.insert(to.gameId, new java.sql.Timestamp(new Date().getTime()), &quot;testMethod&quot;,-1, ObjectManipulationHelper.serializeAndPack(to), to.description);</span>
+		
+<span class="fc" id="L66">		List&lt;GameInfoFullTO&gt; result = dao.readFullInfoByGameId(to.gameId);</span>
+<span class="fc" id="L67">		assertNotNull(&quot;can't be null&quot; , result);</span>
+<span class="fc" id="L68">		assertEquals(&quot;1 row expected&quot; , 1, result.size());</span>
+		
+<span class="fc" id="L70">		GameInfoFullTO gameInfoFull = result.get(0);</span>
+<span class="fc" id="L71">		assertEquals(&quot;gameId check&quot; , to.gameId, gameInfoFull.getGameId());</span>
+<span class="fc" id="L72">		assertEquals(&quot;gameId check2&quot; , to.gameId, gameInfoFull.getTransferObject().gameId);</span>
+<span class="fc" id="L73">		assertEquals(&quot;methodName check&quot; , &quot;testMethod&quot;, gameInfoFull.getMethodName());</span>
+<span class="fc" id="L74">		assertEquals(&quot;description check&quot; , to.description, gameInfoFull.getDescription());</span>
+<span class="fc" id="L75">		assertEquals(&quot;description check2&quot; , to.description, gameInfoFull.getTransferObject().description);</span>
+<span class="fc" id="L76">		assertEquals(&quot;playerId check&quot; , -1, gameInfoFull.getPlayerId());</span>
+<span class="fc" id="L77">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

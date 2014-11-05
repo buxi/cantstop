@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameServicesWeb.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.service</a> &gt; <span class="el_source">GameServicesWeb.java</span></div><h1>GameServicesWeb.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.buxi.cantstop.service;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+import de.buxi.cantstop.model.DiceNotThrownException;
+import de.buxi.cantstop.model.GameController;
+import de.buxi.cantstop.model.GameTransferObject;
+import de.buxi.cantstop.model.InvalidClimberMovementException;
+import de.buxi.cantstop.model.InvalidWayNumberException;
+import de.buxi.cantstop.model.NoClimberOnWayException;
+import de.buxi.cantstop.model.NoMarkerIsAvailableException;
+import de.buxi.cantstop.model.NotAvailableClimberException;
+import de.buxi.cantstop.model.NullClimberException;
+import de.buxi.cantstop.model.RopePointInvalidUsageException;
+/**
+ * @author buxi
+ *
+ */
+public class GameServicesWeb implements GameService, ApplicationContextAware {
+	private GameController gameController;
+<span class="fc" id="L29">	private Log log = LogFactory.getLog(GameServicesWeb.class);</span>
+	private ApplicationContext context;
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+<span class="fc" id="L35">		this.context = applicationContext;</span>
+<span class="fc" id="L36">	}</span>
+	
+	@Autowired
+	public GameServicesWeb(GameController gameController) {
+<span class="fc" id="L40">		super();</span>
+<span class="fc" id="L41">		this.gameController = gameController;</span>
+<span class="fc" id="L42">	}</span>
+	
+	@Override
+	public GameTransferObject reinitializeGame() throws GameException {
+<span class="nc" id="L46">		log.debug(&quot;Reinitializing GameController and loading a new instance&quot;);</span>
+<span class="nc" id="L47">		this.gameController = (GameController) context.getBean(&quot;gameController&quot;);</span>
+		try {
+<span class="nc" id="L49">			return gameController.doGetTransferObject();</span>
+<span class="nc" id="L50">		} catch (DiceNotThrownException | InvalidWayNumberException e) {</span>
+<span class="nc" id="L51">			log.error(e.toString());</span>
+<span class="nc" id="L52">			throw new GameException(e);</span>
+		}
+	}
+	
+	@Override
+	public GameTransferObject startGame() throws GameException {
+		try {
+<span class="fc" id="L59">			return gameController.doGameStart();</span>
+<span class="nc" id="L60">		} catch (InvalidWayNumberException | DiceNotThrownException e) {</span>
+<span class="nc" id="L61">			log.error(e.toString());</span>
+<span class="nc" id="L62">			throw new GameException(e);</span>
+		}
+	}
+
+	@Override
+	public GameTransferObject startTurn() throws GameException {
+		try {
+<span class="fc" id="L69">			return gameController.doStartGameTurn();</span>
+<span class="nc" id="L70">		} catch (InvalidWayNumberException | DiceNotThrownException e) {</span>
+<span class="nc" id="L71">			log.error(e.toString());</span>
+<span class="nc" id="L72">			throw new GameException(e);</span>
+		}
+	}
+
+	@Override
+	public GameTransferObject finishTurn(String playerId) throws GameException {
+		try {
+<span class="fc" id="L79">			return gameController.doEndGameTurn();</span>
+<span class="nc" id="L80">		} catch (InvalidWayNumberException | DiceNotThrownException | NoMarkerIsAvailableException | RopePointInvalidUsageException | NoClimberOnWayException | InvalidClimberMovementException e) {</span>
+<span class="nc" id="L81">			log.error(e.toString());</span>
+<span class="nc" id="L82">			throw new GameException(e);</span>
+		}
+	}
+
+	@Override
+	public GameTransferObject getAllGameInformation() throws GameException {
+		try {
+<span class="fc" id="L89">			return gameController.doGetTransferObject();</span>
+<span class="nc" id="L90">		} catch (InvalidWayNumberException | DiceNotThrownException e) {</span>
+<span class="nc" id="L91">			log.error(e.toString());</span>
+<span class="nc" id="L92">			throw new GameException(e);</span>
+		}
+	}
+
+	@Override
+	public GameTransferObject throwDices() throws GameException {
+		try {
+<span class="fc" id="L99">			return gameController.doThrowDices();</span>
+<span class="nc" id="L100">		} catch (InvalidWayNumberException | DiceNotThrownException | NoMarkerIsAvailableException | RopePointInvalidUsageException | NoClimberOnWayException | InvalidClimberMovementException e) {</span>
+<span class="nc" id="L101">			log.error(e.toString());</span>
+<span class="nc" id="L102">			throw new GameException(e);</span>
+		}
+	}
+
+	@Override
+	public GameTransferObject executePairs(String chosenPairId,	int wayNumber) throws GameException {
+		try {
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">			if (gameController.getPairsToChooseWithId().containsKey(chosenPairId)) {</span>
+<span class="fc" id="L110">				return gameController.doExecutePairs(gameController.getPairsToChooseWithId().get(chosenPairId), wayNumber);	</span>
+			} 
+			else {
+<span class="nc" id="L113">				throw new GameException(&quot;Invalid pairId:&quot; +chosenPairId);</span>
+			}
+			
+<span class="nc" id="L116">		} catch (InvalidWayNumberException | DiceNotThrownException | RopePointInvalidUsageException | NotAvailableClimberException | InvalidClimberMovementException | NoMarkerIsAvailableException | NullClimberException | NoClimberOnWayException e) {</span>
+<span class="nc" id="L117">			log.error(e.toString());</span>
+<span class="nc" id="L118">			throw new GameException(e);</span>
+		}
+	}
+	
+	@Override
+	public String addPlayer(String playerName) throws GameException {
+		try {	
+<span class="nc" id="L125">			return gameController.doAddPlayer(playerName);</span>
+<span class="nc" id="L126">		} catch (TooManyPlayerException e) {</span>
+<span class="nc" id="L127">			log.error(e.toString());</span>
+<span class="nc" id="L128">			throw new GameException(e);</span>
+		}
+	}
+	
+	@Override
+	public GameTransferObject finishGame(String playerId) throws GameException {
+		try {	
+<span class="nc" id="L135">			gameController.doEndGame(playerId);</span>
+			// reinitialize the game after it was finished
+<span class="nc" id="L137">			return this.reinitializeGame();</span>
+<span class="nc" id="L138">		} catch ( DiceNotThrownException | InvalidWayNumberException e) {</span>
+<span class="nc" id="L139">			log.error(e.toString());</span>
+<span class="nc" id="L140">			throw new GameException(e);</span>
+		}
+		
+	}
+
+	@Override
+	public void saveState() {
+		// TODO Auto-generated method stub
+		
+<span class="nc" id="L149">	}</span>
+
+	@Override
+	public void loadState() {
+		// TODO Auto-generated method stub
+		
+<span class="nc" id="L155">	}</span>
+
+	@Override
+	public String addAutoPlayer() throws GameException {
+		try {	
+<span class="fc" id="L160">			return gameController.doAddAutoPlayer();</span>
+<span class="nc" id="L161">		} catch (TooManyPlayerException e) {</span>
+<span class="nc" id="L162">			log.error(e.toString());</span>
+<span class="nc" id="L163">			throw new GameException(e);</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>

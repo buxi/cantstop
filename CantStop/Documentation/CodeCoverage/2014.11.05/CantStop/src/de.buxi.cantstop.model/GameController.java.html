@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>GameController.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">test (05.11.2014 11:11:17)</a> &gt; <a href="../../index.html" class="el_group">CantStop</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">de.buxi.cantstop.model</a> &gt; <span class="el_source">GameController.java</span></div><h1>GameController.java</h1><pre class="source lang-java linenums">package de.buxi.cantstop.model;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+import de.buxi.cantstop.aop.AutoPlayerRobot;
+import de.buxi.cantstop.service.GameException;
+import de.buxi.cantstop.service.TooManyPlayerException;
+
+/**
+ * It controls the whole game
+ * @author buxi
+ *
+ */
+public class GameController implements Serializable, ApplicationContextAware{
+			
+<span class="fc" id="L32">	Log log = LogFactory.getLog(GameController.class);</span>
+	
+	private static final long serialVersionUID = -6919670618517317954L;
+	public static final int DEFAULT_FIRST_PLAYER_NUM = 0;
+	public static final int MINIMUM_PLAYER_NUMBER = 2;
+	public static final int MAXIMUM_PLAYER_NUMBER = 4;
+	public static final String DEFAULT_AUTOPLAYER_NAME = &quot;Computer&quot;;
+	
+	private Map&lt;Color, Player&gt; playerMap;
+	private List&lt;Player&gt; playersInOrder;  
+	private Board board;
+	private DiceManager diceManager;
+	private Map&lt;Color, Collection&lt;Marker&gt;&gt; allMarkers;
+	private List&lt;Climber&gt; climbers;
+	private int actualPlayerNumber;
+	private GameState gameState;
+	private Collection&lt;TwoDicesPair&gt; wrongPairs;
+	private String errorMessage;
+
+	private UsedPairInfoTO lastUsedPairInfo;
+
+	private long startTimestamp;
+	private String startTime;
+
+	private ApplicationContext ac;
+	
+	
+	/**
+	 * @return the startTimestamp
+	 */
+	public long getStartTimestamp() {
+<span class="fc" id="L63">		return startTimestamp;</span>
+	}
+
+	/**
+	 * @return the startTime
+	 */
+	public String getStartTime() {
+<span class="fc" id="L70">		return startTime;</span>
+	}
+
+	/**
+	 * @return the lastThrow
+	 */
+	public List&lt;Dice&gt; getLastThrow() {
+<span class="fc" id="L77">		return diceManager.getLastThrow();</span>
+	}
+
+	/**
+	 * @return the errorMessage
+	 */
+	public String getErrorMessage() {
+<span class="fc" id="L84">		return errorMessage;</span>
+	}
+
+	public GameController(Map&lt;Color, Player&gt;players, Board board,
+			DiceManager diceManager,
+			Map&lt;Color, Collection&lt;Marker&gt;&gt; markers,
+			List&lt;Climber&gt; climbers) {
+<span class="fc" id="L91">		super();</span>
+<span class="fc" id="L92">		this.playerMap = players;</span>
+<span class="fc" id="L93">		this.playersInOrder = new ArrayList&lt;Player&gt;(4);</span>
+<span class="fc" id="L94">		this.board = board;</span>
+<span class="fc" id="L95">		this.diceManager = diceManager;</span>
+<span class="fc" id="L96">		this.allMarkers = markers;</span>
+<span class="fc" id="L97">		this.climbers = climbers;</span>
+<span class="fc" id="L98">		this.startTimestamp = 0;</span>
+<span class="fc" id="L99">		this.startTime = null;</span>
+<span class="fc" id="L100">		this.gameState = GameState.INIT;</span>
+<span class="fc" id="L101">		this.wrongPairs = new ArrayList&lt;TwoDicesPair&gt;(3);</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">		if (players != null &amp;&amp; players.size() &gt;= GameController.MINIMUM_PLAYER_NUMBER) {</span>
+<span class="fc" id="L103">			this.gameState = GameState.ENOUGH_PLAYER;</span>
+		}
+<span class="fc" id="L105">	}</span>
+
+	/**
+	 * @return the wrongPairs
+	 */
+	public Collection&lt;TwoDicesPair&gt; getWrongPairs() {
+<span class="fc" id="L111">		return wrongPairs;</span>
+	}
+	
+	/**
+	 * @return the gameState
+	 */
+	public GameState getGameStatus() {
+<span class="fc" id="L118">		return gameState;</span>
+	}
+
+	/**
+	 * place the players in standard order
+	 */
+	public void determinePlayerOrderStandard() {
+		//tested in GameControllerSetupTest
+<span class="fc" id="L126">		this.playersInOrder = new ArrayList&lt;Player&gt;(4);</span>
+<span class="fc" id="L127">		Set&lt;Entry&lt;Color, Player&gt;&gt; players = playerMap.entrySet();</span>
+<span class="fc" id="L128">		int i = 0;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">		for (Entry&lt;Color, Player&gt; entry : players) {</span>
+<span class="fc" id="L130">			playersInOrder.add(entry.getValue());</span>
+<span class="fc" id="L131">			entry.getValue().setOrder(i);</span>
+<span class="fc" id="L132">			i++; </span>
+		}
+<span class="fc" id="L134">	}</span>
+
+	/**
+	 * distribute markers onto players, player color and marker color will be the same
+	 * @param markers to distribute
+	 */
+	protected void distributeMarkers(Map&lt;Color, Collection&lt;Marker&gt;&gt; markers) {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">		for (Color markerColor : markers.keySet()) {</span>
+<span class="fc" id="L142">			Player player = this.playerMap.get(markerColor);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">			if (player == null ) {</span>
+<span class="fc" id="L144">				throw new PlayerNotFoundException(markerColor + &quot; Player not found&quot;);</span>
+			}
+<span class="fc" id="L146">			player.addMarkers(markers.get(player.getColor()));</span>
+		}
+<span class="fc" id="L148">	}</span>
+	
+	/**
+	 * @return the playerMap
+	 */
+	public Map&lt;Color, Player&gt; getPlayerMap() {
+<span class="fc" id="L154">		return playerMap;</span>
+	}
+
+	/**
+	 * @return the board
+	 */
+	public Board getBoard() {
+<span class="fc" id="L161">		return board;</span>
+	}
+
+	/**
+	 * @return the diceManager
+	 */
+	public DiceManager getDiceManager() {
+<span class="fc" id="L168">		return diceManager;</span>
+	}
+
+	/**
+	 * @return the allMarkers
+	 */
+	public Map&lt;Color, Collection&lt;Marker&gt;&gt; getAllMarkers() {
+<span class="fc" id="L175">		return allMarkers;</span>
+	}
+
+	/**
+	 * @return the climbers
+	 */
+	public List&lt;Climber&gt; getClimbers() {
+<span class="fc" id="L182">		return climbers;</span>
+	}
+	
+	/**
+	 * @return the playersInOrder
+	 */
+	public List&lt;Player&gt; getPlayersInOrder() {
+<span class="fc" id="L189">		return playersInOrder;</span>
+	}
+	
+	/**
+	 * @return the actualPlayerNumber
+	 */
+	public int getActualPlayerNumber() {
+<span class="fc" id="L196">		return actualPlayerNumber;</span>
+	}
+	
+	public Player getPlayer(Color color) {
+<span class="fc" id="L200">		Player player = this.playerMap.get(color);</span>
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">		if (player == null ) {</span>
+<span class="nc" id="L202">			throw new PlayerNotFoundException(color + &quot; Player not found&quot;);</span>
+		}
+<span class="fc" id="L204">		return player;</span>
+	}
+	
+	/**
+	 * gives the free climbers to the actual player
+	 */
+	protected void distributeFreeClimbers() {
+<span class="fc" id="L211">		this.getActualPlayer().addClimbers(this.getClimbers());</span>
+<span class="fc" id="L212">		this.climbers.clear();</span>
+<span class="fc" id="L213">	}</span>
+	
+	/**
+	 * starts a new round of the game
+	 * distributes the free climbers to the aktual player
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 */
+	public GameTransferObject doStartGameTurn() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L223">		checkGameStatus(Arrays.asList(GameState.IN_GAME));</span>
+<span class="fc" id="L224">		distributeFreeClimbers();</span>
+<span class="fc" id="L225">		this.gameState = GameState.IN_ROUND;</span>
+<span class="fc" id="L226">		this.lastUsedPairInfo = null;</span>
+<span class="fc" id="L227">		return this.doGetTransferObject();</span>
+	}
+	
+	/**
+	 * @return 
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NoMarkerIsAvailableException 
+	 * @throws NoClimberOnWayException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 */
+	public GameTransferObject doEndGameTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
+<span class="fc" id="L240">		checkGameStatus(Arrays.asList(GameState.IN_ROUND, GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED));</span>
+		// marks the climbers
+<span class="fc" id="L242">		this.errorMessage = null;</span>
+<span class="fc" id="L243">		endGameturn();</span>
+<span class="fc" id="L244">		return this.doGetTransferObject();</span>
+	}
+
+	/**
+	 * @throws NoMarkerIsAvailableException
+	 * @throws RopePointInvalidUsageException
+	 * @throws InvalidClimberMovementException
+	 * @throws NoClimberOnWayException
+	 * @throws InvalidWayNumberException
+	 */
+	protected void endGameturn() throws NoMarkerIsAvailableException,
+			RopePointInvalidUsageException, InvalidClimberMovementException,
+			NoClimberOnWayException, InvalidWayNumberException {
+<span class="fc" id="L257">		Player actualPlayer = getActualPlayer();</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">		if (GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED.equals(gameState)) {</span>
+<span class="fc" id="L259">			this.climbers = board.removeClimbers();</span>
+<span class="fc" id="L260">		}</span>
+		else {
+<span class="fc" id="L262">			this.climbers = board.markClimbers(actualPlayer);</span>
+<span class="fc" id="L263">			Collection&lt;Hut&gt; usedHuts = board.getBlockedHuts(actualPlayer);</span>
+			//remove other markers from the rope 
+<span class="fc" id="L265">			Map&lt;Color,Collection&lt;Marker&gt;&gt; freeMarkers = board.removeMarkersFromBlockedWays(usedHuts);</span>
+			// free Markers back to player
+<span class="fc" id="L267">			distributeMarkers(freeMarkers);</span>
+			// TODO GameEnde Condition
+<span class="fc bfc" id="L269" title="All 2 branches covered.">			if (usedHuts.size() == 3) {</span>
+<span class="fc" id="L270">				this.gameState = GameState.GAME_WIN;</span>
+<span class="fc" id="L271">				this.errorMessage=&quot;STATE_GAME_WIN&quot;;</span>
+<span class="fc" id="L272">				return;</span>
+			}
+		}
+		
+<span class="fc" id="L276">		this.nextPlayer();</span>
+<span class="fc" id="L277">		distributeFreeClimbers();</span>
+		// notify diceManager the throw was used, needs to be reset
+<span class="fc" id="L279">		this.diceManager.reset();</span>
+<span class="fc" id="L280">		this.gameState = GameState.IN_ROUND;</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">		if (this.getActualPlayer().getAutoPlayer() ) {</span>
+<span class="fc" id="L282">			log.info(&quot;Starting Autoplayer: &quot; + actualPlayerNumber);</span>
+<span class="fc" id="L283">			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean(&quot;autoplayerRobot&quot;);</span>
+<span class="fc" id="L284">			robot.setPlayerId(Integer.toString(actualPlayerNumber));</span>
+			
+			try {
+<span class="fc" id="L287">				robot.play();</span>
+<span class="pc" id="L288">			} catch (GameException e) {</span>
+<span class="nc" id="L289">				log.error(&quot;Robot player failed:&quot; +e);</span>
+			}
+		}
+<span class="fc" id="L292">	}</span>
+	
+	/**
+	 * choose the next player and gives diceManager and climbers
+	 */
+	protected void nextPlayer() {
+<span class="fc" id="L298">		Player oldPlayer = getActualPlayer(); </span>
+<span class="fc" id="L299">		this.actualPlayerNumber++;</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">		if (actualPlayerNumber &gt; playersInOrder.size()-1) {</span>
+<span class="fc" id="L301">			actualPlayerNumber = 0;</span>
+		}
+<span class="fc" id="L303">		diceManager.giveDices(getActualPlayer());</span>
+<span class="fc" id="L304">		getActualPlayer().addClimbers(oldPlayer.removeClimbers());</span>
+<span class="fc" id="L305">	}</span>
+
+	/**
+	 * @return actual Player
+	 */
+	public Player getActualPlayer() {
+<span class="fc" id="L311">		return playersInOrder.get(this.actualPlayerNumber);</span>
+	}
+	
+	/**
+	 * @param expectedStatuses with or
+	 * @throws InvalidGameStateException 
+	 */
+	private void checkGameStatus(List&lt;GameState&gt; expectedStatuses) {
+<span class="fc bfc" id="L319" title="All 2 branches covered.">		if (!expectedStatuses.contains(this.getGameStatus())) {</span>
+<span class="fc" id="L320">			throw new InvalidGameStateException(&quot;actual status:&quot;+this.getGameStatus()+&quot; expected statuses:&quot;+expectedStatuses);</span>
+		}
+<span class="fc" id="L322">	}</span>
+	/**
+	 * determine first player and gives DiceManager
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 * @throws NotEnoughPlayerException 
+	 */
+	public GameTransferObject doGameStart() throws  InvalidWayNumberException, DiceNotThrownException {
+<span class="fc" id="L331">		checkGameStatus(Arrays.asList(GameState.ENOUGH_PLAYER));</span>
+<span class="fc" id="L332">		Date currentDate = new Date();</span>
+<span class="fc" id="L333">		this.startTime = currentDate.toString();</span>
+<span class="fc" id="L334">		this.startTimestamp = currentDate.getTime();</span>
+<span class="fc" id="L335">		determineFirstPlayer();</span>
+<span class="fc" id="L336">		determinePlayerOrderStandard(); </span>
+		// distributes Markers
+<span class="fc" id="L338">		Map&lt;Color, Collection&lt;Marker&gt;&gt; playerMarkers = new HashMap&lt;Color, Collection&lt;Marker&gt;&gt;();</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">		for (Player player: playersInOrder) {</span>
+<span class="fc" id="L340">			playerMarkers.put(player.getColor(), this.allMarkers.get(player.getColor()));</span>
+<span class="fc" id="L341">			this.allMarkers.remove(player.getColor());</span>
+		}
+<span class="fc" id="L343">		distributeMarkers(playerMarkers);</span>
+
+<span class="fc" id="L345">		this.gameState = GameState.IN_GAME;</span>
+		 
+<span class="fc" id="L347">		diceManager.giveDices(getActualPlayer());</span>
+<span class="fc" id="L348">		return this.doGetTransferObject();</span>
+	}
+
+	
+
+	/**
+	 * DEFAULT_FIRST_PLAYER_NUM = 0
+	 */
+	protected void determineFirstPlayer() {
+<span class="fc" id="L357">		this.actualPlayerNumber = DEFAULT_FIRST_PLAYER_NUM;</span>
+<span class="fc" id="L358">	}</span>
+	
+	public Collection&lt;Dice&gt; getDices() {
+<span class="fc" id="L361">		DiceManager diceManager = getDiceManager();</span>
+<span class="fc" id="L362">		return diceManager.getDicesClone();</span>
+	}
+
+	public List&lt;TwoDicesPair&gt; getPossiblePairs() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L366">		List&lt;TwoDicesPair&gt; possiblePairs = diceManager.getAllPossiblePairs();</span>
+		// decorate with choosable Information
+<span class="fc" id="L368">		return addChoosableInformation(possiblePairs);</span>
+	}
+	
+	//TODO UNITTEST ?
+	public List&lt;TwoDicesPair&gt; getPairsToChoose() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L373">		List&lt;TwoDicesPair&gt; possiblePairs = this.getPossiblePairs();</span>
+<span class="fc" id="L374">		List&lt;TwoDicesPair&gt; choosablePairs = new ArrayList&lt;TwoDicesPair&gt;();</span>
+<span class="fc bfc" id="L375" title="All 2 branches covered.">		for (TwoDicesPair twoDicesPair : possiblePairs) {</span>
+<span class="pc bpc" id="L376" title="1 of 2 branches missed.">			if (!PairChoiceInfo.NOTCHOOSABLE.equals(twoDicesPair.getPairChoiceInfo())) {</span>
+<span class="fc" id="L377">				choosablePairs.add(twoDicesPair);</span>
+			}
+		}
+<span class="fc" id="L380">		return choosablePairs;</span>
+	}
+	
+	public Map&lt;String, TwoDicesPair&gt; getPairsToChooseWithId() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L384">		Map&lt;String, TwoDicesPair&gt; result = new HashMap&lt;String, TwoDicesPair&gt;();</span>
+<span class="fc" id="L385">		List&lt;TwoDicesPair&gt; possiblePairs = this.getPairsToChoose();</span>
+<span class="fc bfc" id="L386" title="All 2 branches covered.">		for (TwoDicesPair twoDicesPair : possiblePairs) {</span>
+<span class="fc" id="L387">			result.put(twoDicesPair.generateId(), twoDicesPair);</span>
+		}
+<span class="fc" id="L389">		return result;</span>
+	}
+	
+	/**
+	 * Decorate the pairs with PairChoiceInfo
+	 * @param possiblePairs
+	 * @return
+	 * @throws InvalidWayNumberException
+	 * @throws DiceNotThrownException
+	 */
+	protected List&lt;TwoDicesPair&gt; addChoosableInformation(
+			List&lt;TwoDicesPair&gt; possiblePairs) throws InvalidWayNumberException, DiceNotThrownException {
+<span class="fc" id="L401">		Player player = this.getActualPlayer(); </span>
+<span class="fc bfc" id="L402" title="All 2 branches covered.">		for (TwoDicesPair twoDicePair : possiblePairs) {</span>
+<span class="fc" id="L403">			Way way1 = board.getWayByNumber(twoDicePair.getFirstSum());</span>
+<span class="fc" id="L404">			Way way2 = board.getWayByNumber(twoDicePair.getSecondSum());</span>
+			
+			// blocked Ways can not be chosen
+<span class="fc bfc" id="L407" title="All 4 branches covered.">			if (way1.isBlocked() &amp;&amp; way2.isBlocked() ||</span>
+<span class="pc bpc" id="L408" title="1 of 4 branches missed.">				way1.isBlocked() &amp;&amp; way2.isClimberInHut() ||</span>
+<span class="pc bpc" id="L409" title="3 of 4 branches missed.">				way2.isBlocked() &amp;&amp; way1.isClimberInHut() ||</span>
+<span class="fc bfc" id="L410" title="All 4 branches covered.">				way1.isClimberInHut() &amp;&amp; way2.isClimberInHut()</span>
+				) {
+<span class="fc" id="L412">				twoDicePair.setPairChoiceInfo(PairChoiceInfo.NOTCHOOSABLE);</span>
+<span class="fc" id="L413">				continue;</span>
+			} 
+			// all climber on the board
+<span class="fc bfc" id="L416" title="All 2 branches covered.">			if (player.getClimbers().size() == 0) {</span>
+<span class="fc bfc" id="L417" title="All 4 branches covered.">				if ( !way1.isClimberOnRope() &amp;&amp; !way2.isClimberOnRope()) {</span>
+<span class="fc" id="L418">					twoDicePair.setPairChoiceInfo(PairChoiceInfo.NOTCHOOSABLE);</span>
+<span class="fc" id="L419">					continue;</span>
+				}
+<span class="pc bpc" id="L421" title="3 of 4 branches missed.">				if (way1.isClimberInHut() &amp;&amp; !way2.isClimberOnRope()) {</span>
+<span class="nc" id="L422">					twoDicePair.setPairChoiceInfo(PairChoiceInfo.NOTCHOOSABLE);</span>
+<span class="nc" id="L423">					continue;</span>
+				}
+<span class="pc bpc" id="L425" title="3 of 4 branches missed.">				if (way2.isClimberInHut() &amp;&amp; !way1.isClimberOnRope()) {</span>
+<span class="nc" id="L426">					twoDicePair.setPairChoiceInfo(PairChoiceInfo.NOTCHOOSABLE);</span>
+<span class="nc" id="L427">					continue;</span>
+				}
+			}
+			// one climber in the hand
+<span class="fc bfc" id="L431" title="All 2 branches covered.">			if (player.getClimbers().size() == 1) {</span>
+					// WITHWAYINFO case
+					/*  if already 2 Climbers were placed and
+					    the pair's sum results no Way, where are the climbers */
+<span class="pc bpc" id="L435" title="1 of 4 branches missed.">					if (way1.isFree() &amp;&amp; way2.isFree() &amp;&amp; </span>
+<span class="fc bfc" id="L436" title="All 4 branches covered.">						!way1.isClimberOnRope() &amp;&amp; !way2.isClimberOnRope() &amp;&amp;</span>
+<span class="fc bfc" id="L437" title="All 4 branches covered.">						!way1.isClimberInHut() &amp;&amp; !way2.isClimberInHut()) {</span>
+<span class="fc bfc" id="L438" title="All 2 branches covered.">						if (way1.getNumber() == way2.getNumber()) {</span>
+<span class="fc" id="L439">							twoDicePair.setPairChoiceInfo(PairChoiceInfo.CHOOSABLE);</span>
+<span class="fc" id="L440">						}else {</span>
+<span class="fc" id="L441">							twoDicePair.setPairChoiceInfo(PairChoiceInfo.WITHWAYINFO);</span>
+						}
+<span class="fc" id="L443">						continue;</span>
+					}
+			}
+<span class="fc" id="L446">			twoDicePair.setPairChoiceInfo(PairChoiceInfo.CHOOSABLE);</span>
+		}
+<span class="fc" id="L448">		return possiblePairs;</span>
+	}
+
+	/**
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws NoClimberOnWayException 
+	 * @throws RopePointInvalidUsageException 
+	 * @throws NoMarkerIsAvailableException 
+	 */
+	public GameTransferObject doThrowDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
+<span class="fc" id="L461">		checkGameStatus(Arrays.asList(GameState.IN_ROUND));</span>
+<span class="fc" id="L462">		this.errorMessage = null;</span>
+<span class="fc" id="L463">		diceManager.throwAllDices();</span>
+<span class="fc" id="L464">		this.gameState=GameState.DICES_THROWN;</span>
+<span class="fc" id="L465">		this.wrongPairs = new ArrayList&lt;TwoDicesPair&gt;(3);</span>
+		// checks pairs if they are choosable
+<span class="fc bfc" id="L467" title="All 2 branches covered.">		if (!isTherePossiblePair(this.getPossiblePairs())) {</span>
+			// GameRound must be finished
+<span class="fc" id="L469">			this.gameState=GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;</span>
+<span class="fc" id="L470">			this.errorMessage = &quot;STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED&quot;;</span>
+<span class="fc" id="L471">			log.info(&quot;turn finished, no available pair&quot;);</span>
+<span class="fc" id="L472">			endGameturn();</span>
+		}
+<span class="fc" id="L474">		return this.doGetTransferObject();</span>
+	}
+	
+	/**
+	 * JUST FOR TESTING
+	 * same as doThrow() but we can set a DiceManager 
+	 * @param diceManager 
+	 */
+	protected void testDoThrow(DiceManager diceManager) throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
+<span class="fc" id="L483">		this.setDiceManager(diceManager);</span>
+<span class="fc" id="L484">		doThrowDices();</span>
+<span class="fc" id="L485">	}</span>
+	/**
+	 * JUST FOR TESTING
+	 * @param diceManager the diceManager to set
+	 */
+	private void setDiceManager(DiceManager diceManager) {
+<span class="fc" id="L491">		this.diceManager = diceManager;</span>
+<span class="fc" id="L492">	}</span>
+
+	/**
+	 * @return true is there is minimum one CHOOSABLE or WITHWAYINFO pair
+	 * @throws DiceNotThrownException
+	 * @throws InvalidWayNumberException
+	 */
+	protected boolean isTherePossiblePair(List&lt;TwoDicesPair&gt; possiblePairs)
+			throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L501">		boolean isThereChoosable = false;;</span>
+<span class="fc bfc" id="L502" title="All 2 branches covered.">		for (TwoDicesPair twoDicePair : possiblePairs) {</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">			if (PairChoiceInfo.CHOOSABLE.equals(twoDicePair.getPairChoiceInfo()) ||</span>
+<span class="fc bfc" id="L504" title="All 2 branches covered.">				PairChoiceInfo.WITHWAYINFO.equals(twoDicePair.getPairChoiceInfo())) {</span>
+<span class="fc" id="L505">				isThereChoosable = true;</span>
+			}
+		}
+<span class="fc" id="L508">		return isThereChoosable;</span>
+	}
+	
+	/**
+	 * Executing the chosen pair(with chosen wayNumber) on board
+	 * @param wayNumber if a way should be chosen
+	 * @return transfer object
+	 */
+	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
+<span class="fc" id="L517">		checkGameStatus(Arrays.asList(GameState.DICES_THROWN));</span>
+<span class="fc" id="L518">		this.errorMessage = null;</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">		if (!this.getPossiblePairs().contains(chosenPair)) {</span>
+<span class="fc" id="L520">			throw new InvalidPairsException(&quot;Pair:&quot; + chosenPair + &quot;, wayNumber:&quot; + wayNumber);</span>
+		}
+<span class="pc bpc" id="L522" title="1 of 2 branches missed.">		if (PairChoiceInfo.NOTCHOOSABLE.equals(chosenPair.getPairChoiceInfo())) {</span>
+<span class="nc" id="L523">			throw new InvalidPairsException(&quot;Pair is not choosable:&quot; + chosenPair + &quot;, wayNumber:&quot; + wayNumber);</span>
+		}  
+<span class="fc bfc" id="L525" title="All 2 branches covered.">		if (PairChoiceInfo.WITHWAYINFO.equals(chosenPair.getPairChoiceInfo()) &amp;&amp;</span>
+<span class="pc bpc" id="L526" title="1 of 4 branches missed.">			(wayNumber != chosenPair.getFirstSum() &amp;&amp; wayNumber != chosenPair.getSecondSum())) {</span>
+<span class="fc" id="L527">				throw new InvalidWayNumberException(&quot;Pair:&quot; + chosenPair + &quot;, wayNumber:&quot; + wayNumber);</span>
+		}
+
+<span class="fc" id="L530">		pairExecute(chosenPair, wayNumber, getActualPlayer());</span>
+<span class="fc" id="L531">		return this.doGetTransferObject();</span>
+	}
+	/**
+	 * moves climber
+	 * @param chosenWayNumber 
+	 * @param player
+	 * @throws NotAvailableClimberException 
+	 * @throws InvalidWayNumberException 
+	 * @throws InvalidClimberMovementException 
+	 * @throws NoMarkerIsAvailableException 
+	 * @throws NullClimberException 
+	 * @throws NoClimberOnWayException 
+	 */
+	protected void pairExecute(TwoDicesPair chosenPair, int chosenWayNumber, Player player) throws DiceNotThrownException, RopePointInvalidUsageException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
+<span class="fc bfc" id="L545" title="All 2 branches covered.">		if (chosenWayNumber&gt;0) {</span>
+<span class="fc" id="L546">			Way way = board.getWayByNumber(chosenWayNumber);</span>
+			try {
+<span class="fc" id="L548">				choseWay(player, way);</span>
+<span class="pc" id="L549">			} catch (NotAvailableClimberException e) {</span>
+<span class="nc" id="L550">				log.warn(e.getMessage());</span>
+			}
+<span class="nc" id="L552">		}</span>
+		else {
+<span class="fc" id="L554">			int wayNumber1 = chosenPair.getFirstSum();</span>
+<span class="fc" id="L555">			int wayNumber2 = chosenPair.getSecondSum();</span>
+<span class="fc" id="L556">			Way way1 = board.getWayByNumber(wayNumber1);</span>
+<span class="fc" id="L557">			Way way2= board.getWayByNumber(wayNumber2);</span>
+			try {
+<span class="fc" id="L559">				choseWay(player, way1);</span>
+<span class="pc" id="L560">			} catch (NotAvailableClimberException e) {</span>
+<span class="nc" id="L561">				log.warn(e.getMessage());</span>
+
+			}
+			try {
+<span class="fc" id="L565">				choseWay(player, way2);</span>
+<span class="fc" id="L566">			} catch (NotAvailableClimberException e) {</span>
+<span class="fc" id="L567">				log.warn(e.getMessage());</span>
+			}
+		}
+		
+		// minimum one Pair successful
+<span class="fc" id="L572">		this.gameState=GameState.IN_ROUND;</span>
+<span class="fc" id="L573">		this.lastUsedPairInfo = new UsedPairInfoTO(chosenPair, chosenWayNumber, player);</span>
+		// notify diceManager the throw was used, needs to be reset
+<span class="fc" id="L575">		this.diceManager.reset();</span>
+<span class="fc" id="L576">		errorMessage = &quot;STATE_PAIR_USED&quot;;</span>
+<span class="fc" id="L577">	}</span>
+
+	/**
+	 * Places oder moves climber on the way
+	 * if there is no marker on the way then places the climber position 0
+	 * if there is a marker on the way then places the climber after the marker 
+	 * if there is already a climber on the way then moves it forward (also in the hut)
+	 * @param player
+	 * @param way
+	 * @throws NotAvailableClimberException
+	 */
+	protected void choseWay(Player player, Way way)
+			throws RopePointInvalidUsageException,
+			NotAvailableClimberException, InvalidClimberMovementException, NullClimberException {
+		// fixing bug2
+<span class="pc bpc" id="L592" title="1 of 4 branches missed.">		if (way.isFree() &amp;&amp; !way.isClimberInHut()) {</span>
+<span class="fc bfc" id="L593" title="All 2 branches covered.">			if (!way.isClimberOnRope() ) {</span>
+				// no climber on the way
+<span class="fc bfc" id="L595" title="All 2 branches covered.">				if (way.isMarkerOnRope(player.getColor())) {</span>
+<span class="fc" id="L596">					way.placeClimberAfterMarker(player.aquireOneClimber(), player.getColor());</span>
+<span class="fc" id="L597">				} else {</span>
+<span class="fc" id="L598">					way.placeClimberOntoFirstRopePoint(player.aquireOneClimber());	</span>
+				}
+				
+<span class="fc" id="L601">			} else {</span>
+				// climber on the way
+<span class="fc" id="L603">				way.moveClimber();</span>
+			}
+		}
+<span class="fc" id="L606">	}</span>
+	
+	/**
+	 * Adds a player to the player list
+	 * @param playerName
+	 * @return playerId (currently the orderId) 
+	 * @throws TooManyPlayerException
+	 */
+	private String doAddPlayer(String playerName, boolean isAutoPlayer) throws TooManyPlayerException {
+<span class="fc" id="L615">		checkGameStatus(Arrays.asList(GameState.INIT, GameState.ENOUGH_PLAYER));</span>
+		// TODO id should be generated in a better way (for example with Spring)
+<span class="fc" id="L617">		Color playerColor = getAFreeColor();</span>
+<span class="fc" id="L618">		int playerId = playerMap.keySet().size();</span>
+<span class="fc" id="L619">		Player newPlayer = new Player(playerId, playerName, playerColor);</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">		if (isAutoPlayer) {</span>
+<span class="fc" id="L621">			newPlayer.setAutoPlayer(true);</span>
+		}
+<span class="fc" id="L623">		playerMap.put(playerColor, newPlayer);</span>
+<span class="fc" id="L624">		determinePlayerOrderStandard();</span>
+<span class="fc" id="L625">		actualPlayerNumber = playerId;</span>
+<span class="fc bfc" id="L626" title="All 2 branches covered.">		if (this.playerMap.keySet().size() &gt;= GameController.MINIMUM_PLAYER_NUMBER) {</span>
+<span class="fc" id="L627">			this.gameState = GameState.ENOUGH_PLAYER;</span>
+		}
+<span class="fc" id="L629">		return Integer.toString(playerId);</span>
+	}
+	
+	public String doAddPlayer(String playerName) throws TooManyPlayerException {
+<span class="fc" id="L633">		return doAddPlayer(playerName, false);</span>
+	}
+	
+	public String doAddAutoPlayer() throws TooManyPlayerException {
+<span class="fc" id="L637">		String generatedName = DEFAULT_AUTOPLAYER_NAME;</span>
+<span class="fc" id="L638">		return doAddPlayer(generatedName, true);</span>
+	}
+
+	/**
+	 * used in game init phase
+	 * returns a free color, which is not allocated to any players 
+	 * @return a not allocated Color
+	 * @throws TooManyPlayerException when there is no free Color left 
+	 */
+	protected Color getAFreeColor() throws TooManyPlayerException {
+<span class="fc" id="L648">		Collection&lt;Color&gt; remainingColorSet = new HashSet&lt;Color&gt;(this.allMarkers.keySet());</span>
+<span class="fc" id="L649">		remainingColorSet.removeAll(this.getPlayerMap().keySet());</span>
+<span class="fc bfc" id="L650" title="All 2 branches covered.">		if (remainingColorSet.isEmpty()) {</span>
+<span class="fc" id="L651">			throw new TooManyPlayerException(&quot;No available color&quot;);</span>
+		}
+<span class="fc" id="L653">		Color[] remainingColors = remainingColorSet.toArray(new Color[0]);</span>
+<span class="fc" id="L654">		Color playerColor = remainingColors[0];</span>
+<span class="fc" id="L655">		return playerColor;</span>
+	}
+	
+	/**
+	 * @return true if &lt;code&gt;MAXIMUM_PLAYER_NUMBER&lt;/code&gt; have already joined to the game
+	 */
+	public boolean isGameFull() {
+<span class="fc bfc" id="L662" title="All 2 branches covered.">		if (playerMap.values().size() == MAXIMUM_PLAYER_NUMBER) {</span>
+<span class="fc" id="L663">			return true;</span>
+		}
+<span class="fc" id="L665">		return false;</span>
+	}
+
+	/**
+	 * removes a player from game
+	 * @param playerId which player has the game finished 
+	 * @return 
+	 * @throws InvalidWayNumberException 
+	 * @throws DiceNotThrownException 
+	 */
+	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
+<span class="nc" id="L676">		this.gameState = GameState.GAME_FINISHED;</span>
+<span class="nc" id="L677">		log.info(&quot;game was finished by player:&quot; + playerId);</span>
+<span class="nc" id="L678">		this.errorMessage = &quot;GAMEWASFINISHED&quot;;</span>
+<span class="nc" id="L679">		return this.doGetTransferObject();		</span>
+	}
+
+	private String getJoinedPlayersList() {
+<span class="fc" id="L683">		StringBuffer result = new StringBuffer();</span>
+<span class="fc bfc" id="L684" title="All 2 branches covered.">		for (Player player : getPlayersInOrder()) {</span>
+<span class="fc" id="L685">			result.append(player.getName());</span>
+<span class="fc" id="L686">			result.append(&quot;, &quot;);</span>
+		}
+		
+		// deleting the last, unnecessary comma and space
+<span class="pc bpc" id="L690" title="1 of 4 branches missed.">		if (getPlayersInOrder() != null &amp;&amp; getPlayersInOrder().size() &gt; 0) {</span>
+<span class="fc" id="L691">			result.deleteCharAt(result.length()-1);</span>
+<span class="fc" id="L692">			result.deleteCharAt(result.length()-1);</span>
+		}
+
+<span class="fc" id="L695">		return result.toString();</span>
+	}
+	
+	private String getDescription() {
+<span class="fc" id="L699">		StringBuffer result = new StringBuffer(2000);</span>
+<span class="fc" id="L700">		result.append(getStartTime());</span>
+<span class="fc" id="L701">		result.append(&quot;:&quot;);</span>
+<span class="fc" id="L702">		result.append(getJoinedPlayersList());</span>
+<span class="pc bpc" id="L703" title="1 of 2 branches missed.">		if (result.length()&gt;2000) {</span>
+<span class="nc" id="L704">			return result.substring(0, 1999);</span>
+		}
+		else {
+<span class="fc" id="L707">			return result.toString();</span>
+		}
+	}
+	
+	public int getGameId() {
+<span class="fc" id="L712">		String id = getJoinedPlayersList() + getStartTimestamp();</span>
+<span class="fc" id="L713">		return id.hashCode();</span>
+	}
+	
+	/**
+	 * generates a Transfer Object for client apps
+	 * @return new transfer object
+	 * @throws DiceNotThrownException
+	 * @throws InvalidWayNumberException 
+	 */
+	public GameTransferObject doGetTransferObject() throws DiceNotThrownException, InvalidWayNumberException {
+<span class="fc" id="L723">		GameTransferObject to = new GameTransferObject();</span>
+<span class="fc" id="L724">		to.gameState = this.gameState;</span>
+<span class="fc" id="L725">		to.actualPlayer = null;</span>
+<span class="fc" id="L726">		to.actualPlayerNumber = -1;</span>
+<span class="pc bpc" id="L727" title="1 of 4 branches missed.">		if (!GameState.INIT.equals(gameState) &amp;&amp; !GameState.GAME_FINISHED.equals(gameState) ) {</span>
+<span class="fc" id="L728">			to.actualPlayer = this.getActualPlayer();</span>
+<span class="fc" id="L729">			to.actualPlayerNumber = this.getActualPlayerNumber();</span>
+		}
+<span class="fc" id="L731">		to.boardDisplay = this.getBoard().display();</span>
+<span class="fc" id="L732">		to.playerList = this.getPlayersInOrder();</span>
+<span class="fc" id="L733">		to.errorMessage = this.errorMessage;</span>
+<span class="fc" id="L734">		to.errorMessageString = &quot;&quot;;</span>
+<span class="fc" id="L735">		to.possiblePairs = null;</span>
+<span class="fc" id="L736">		to.choosablePairsWithId = null;</span>
+<span class="fc" id="L737">		to.dices = null;</span>
+<span class="fc" id="L738">		to.lastThrow = this.getLastThrow();</span>
+<span class="fc" id="L739">		to.lastUsedPairInfo = this.lastUsedPairInfo;</span>
+<span class="fc bfc" id="L740" title="All 2 branches covered.">		if (GameState.DICES_THROWN.equals(gameState) ) {</span>
+<span class="fc" id="L741">			to.possiblePairs = this.getPossiblePairs();</span>
+<span class="fc" id="L742">			to.choosablePairsWithId = this.getPairsToChooseWithId();</span>
+<span class="fc" id="L743">			to.dices = this.getDices();</span>
+		}
+<span class="fc" id="L745">		to.board = this.getBoard();</span>
+<span class="fc" id="L746">		to.gameFull = this.isGameFull();</span>
+<span class="fc" id="L747">		to.joinedPlayersList = this.getJoinedPlayersList();</span>
+<span class="fc" id="L748">		to.startTime = this.startTime;</span>
+<span class="fc" id="L749">		to.startTimestamp = this.startTimestamp;</span>
+<span class="fc" id="L750">		to.description = this.getDescription();</span>
+<span class="fc" id="L751">		to.gameId = this.getGameId();</span>
+<span class="fc" id="L752">		return to;</span>
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+<span class="fc" id="L758">		ac = applicationContext;</span>
+<span class="fc" id="L759">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span>test (05.11.2014 11:11:17)</div></body></html>
