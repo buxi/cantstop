@@ -10,8 +10,12 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-		<property name="url"
-			value="jdbc:hsqldb:http://localhost:9080/CantStop/hsqldb;create=true" />
+		
+		<property name="url" value="jdbc:hsqldb:http://localhost:980/CantStop/hsqldb;create=true" />
+		
+		<!-- CLOUD Settings -->
+		<!-- <property name="url" value="jdbc:hsqldb:http://cantstop-refs.rhcloud.com/CantStop/hsqldb" /> -->
+		
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>
