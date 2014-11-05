@@ -66,6 +66,31 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 	}
 	
 	/**
+	 * Called when robot player was invited
+	 * Called from: welcomejoin.jsp
+	 * @param playerId
+	 * @param model
+	 * @return
+	 * @throws GameException
+	 */
+	@RequestMapping(value= "do.inviteRobot", method = RequestMethod.POST)
+	public String doInviteRobot(@RequestParam("playerId") String playerId,
+			Model model) throws GameException {
+		GameTransferObject to = gameService.getAllGameInformation();
+		log.debug("do.inviteRobot:Incoming playerId:" + playerId);
+		model.addAttribute("playerId", playerId);
+		if (GameState.ENOUGH_PLAYER.equals(to.getGameState()) || 
+			GameState.INIT.equals(to.getGameState())	) {
+			gameService.addAutoPlayer();
+			gameService.startGame();
+			model.addAttribute("gameInfo", gameService.startTurn());
+			return "redirect:playAJAX";
+		}
+		
+		model.addAttribute("gameInfo", gameService.getAllGameInformation());
+		return "redirect:playAJAX";
+	}
+	/**
 	 * Finishes the game and goes to an gameover.jsp page
 	 * Called from: playAJAX.jsp
 	 * @param playerId initiator of the action

@@ -29,6 +29,7 @@ function doAjaxPost() {
 	      	    $('#playerId').val(response.methodResult);
 	      	  	$('#addPlayer').hide();
 	      	  	$('#waitingForOthers').show();
+	      	  	$('#inviteRobot').show();
 		    }else{
 			  	$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
@@ -107,6 +108,13 @@ function doAjaxPost() {
   <input type="button" value="<s:message code='JOIN.BUTTON'/>" onclick="doAjaxPost()">
 </div>
 <div style="display: none;" id="waitingForOthers"><s:message code='WAITING.OTHERPLAYER'/> </div>
+<div style="display: none;" id="inviteRobot">
+ 	<form action="do.inviteRobot" method="post">
+		<input type="submit" value="<s:message code="ACTION.INVITEROBOT"/>" />
+		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
+	</form>
+</div>
+
 <div style="display: none;" id="startGame">
  	<form action="do.startgame" method="post">
 		<input type="submit" value="<s:message code="ACTION.STARTGAME"/>" />

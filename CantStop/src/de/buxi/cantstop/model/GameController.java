@@ -14,7 +14,12 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
+import de.buxi.cantstop.aop.AutoPlayerRobot;
+import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.TooManyPlayerException;
 
 /**
@@ -22,7 +27,7 @@ import de.buxi.cantstop.service.TooManyPlayerException;
  * @author buxi
  *
  */
-public class GameController implements Serializable{
+public class GameController implements Serializable, ApplicationContextAware{
 			
 	Log log = LogFactory.getLog(GameController.class);
 	
@@ -47,6 +52,8 @@ public class GameController implements Serializable{
 
 	private long startTimestamp;
 	private String startTime;
+
+	private ApplicationContext ac;
 	
 	
 	/**
@@ -271,6 +278,17 @@ public class GameController implements Serializable{
 		// notify diceManager the throw was used, needs to be reset
 		this.diceManager.reset();
 		this.gameState = GameState.IN_ROUND;
+		if (this.getActualPlayer().getAutoPlayer() ) {
+			log.info("Starting Autoplayer: " + actualPlayerNumber);
+			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
+			robot.setPlayerId(Integer.toString(actualPlayerNumber));
+			
+			try {
+				robot.play();
+			} catch (GameException e) {
+				log.error("Robot player failed:" +e);
+			}
+		}
 	}
 	
 	/**
@@ -734,4 +752,9 @@ public class GameController implements Serializable{
 		return to;
 	}
 
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		ac = applicationContext;
+	}
 }

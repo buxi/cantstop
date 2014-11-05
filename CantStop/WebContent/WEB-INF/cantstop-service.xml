@@ -17,4 +17,8 @@
 	<bean id="gameService" class="de.buxi.cantstop.service.GameServicesWeb">
 		<constructor-arg name="gameController" ref="gameController" />
 	</bean>
+	
+	<bean id="autoplayerRobot" class="de.buxi.cantstop.aop.AutoPlayerRobot">
+		<constructor-arg name="gameService" ref="gameService"/>
+	</bean>
 </beans>
