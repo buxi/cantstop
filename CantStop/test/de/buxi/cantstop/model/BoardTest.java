@@ -47,7 +47,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	@Test
 	public void testGetWayByNumber() throws InvalidWayNumberException {
 		Way way = mock(Way.class);
-		List<Way> ways = new ArrayList<Way>();
+		List<Way> ways = new ArrayList<>();
 		ways.add(way);
 		Board board = new Board(ways);
 		Way resultWay = board.getWayByNumber(2);
@@ -62,7 +62,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	
 	@Test(expected=InvalidWayNumberException.class)
 	public void testGetWayByNumberNegativ2() throws InvalidWayNumberException {
-		List<Way> ways = new ArrayList<Way>();
+		List<Way> ways = new ArrayList<>();
 		Board board = new Board(ways);
 		board.getWayByNumber(1);
 	}
@@ -70,7 +70,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	@Test
 	public void testMarkClimbersAllDown() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		Collection<Climber> placedClimbers = BoardTestHelper.placeClimberOnTheWayAllDown(board, wayNumberList);
 		Player player = new Player(1, "1", Color.BLUE);
 		player.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));
@@ -89,7 +89,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	@Test
 	public void testMarkClimbersAllInHut() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		Collection<Climber> placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);
 		Player player = new Player(1, "1", Color.BLUE);
 		player.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));
@@ -109,7 +109,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	public void testRemoveClimbersFromHuts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, InvalidClimberMovementException {
 		//tests with  small Board
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		Collection<Climber> placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);
 		
 		Collection<Climber> freeClimbers = board.removeClimbers();
@@ -128,7 +128,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	public void testRemoveClimbersFromRope() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, InvalidClimberMovementException {
 		//test with small board
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		Collection<Climber> placedClimbers = BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);
 		
 		Collection<Climber> freeClimbers = board.removeClimbers();
@@ -147,7 +147,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	public void testGetBlockedHuts3Huts() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException {
 		//test with small board
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Marker> markers = BoardTestHelper.markHuts(board, new ArrayList<Integer>(Arrays.asList(2,3,4)), Color.BLUE);
+		Collection<Marker> markers = BoardTestHelper.markHuts(board, new ArrayList<>(Arrays.asList(2,3,4)), Color.BLUE);
 		Collection<Hut> huts = board.getBlockedHuts(new Player(1, "1", Color.BLUE));
 		assertEquals("3 Huts should be blocked with BLAU", 3, huts.size());
 		for (Hut hut : huts) {
@@ -167,7 +167,7 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 	@Test
 	public void testRemoveMarkersFromBlockedWays() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidWayNumberException, NullClimberException {
 		Board board = (Board)ac.getBean("smallBoard");
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		
 		// marks the Ways next to the hut with BLUE
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);

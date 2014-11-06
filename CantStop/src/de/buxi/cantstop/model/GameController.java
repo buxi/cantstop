@@ -84,7 +84,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 			List<Climber> climbers) {
 		super();
 		this.playerMap = players;
-		this.playersInOrder = new ArrayList<Player>(4);
+		this.playersInOrder = new ArrayList<>(4);
 		this.board = board;
 		this.diceManager = diceManager;
 		this.allMarkers = markers;
@@ -92,7 +92,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 		this.startTimestamp = 0;
 		this.startTime = null;
 		this.gameState = GameState.INIT;
-		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
+		this.wrongPairs = new ArrayList<>(3);
 		if (players != null && players.size() >= GameController.MINIMUM_PLAYER_NUMBER) {
 			this.gameState = GameState.ENOUGH_PLAYER;
 		}
@@ -118,7 +118,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	 */
 	public void determinePlayerOrderStandard() {
 		//tested in GameControllerSetupTest
-		this.playersInOrder = new ArrayList<Player>(4);
+		this.playersInOrder = new ArrayList<>(4);
 		Set<Entry<Color, Player>> players = playerMap.entrySet();
 		int i = 0;
 		for (Entry<Color, Player> entry : players) {
@@ -329,7 +329,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 		determineFirstPlayer();
 		determinePlayerOrderStandard(); 
 		// distributes Markers
-		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
+		Map<Color, Collection<Marker>> playerMarkers = new HashMap<>();
 		for (Player player: playersInOrder) {
 			playerMarkers.put(player.getColor(), this.allMarkers.get(player.getColor()));
 			this.allMarkers.remove(player.getColor());
@@ -365,7 +365,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	//TODO UNITTEST ?
 	public List<TwoDicesPair> getPairsToChoose() throws DiceNotThrownException, InvalidWayNumberException {
 		List<TwoDicesPair> possiblePairs = this.getPossiblePairs();
-		List<TwoDicesPair> choosablePairs = new ArrayList<TwoDicesPair>();
+		List<TwoDicesPair> choosablePairs = new ArrayList<>();
 		for (TwoDicesPair twoDicesPair : possiblePairs) {
 			if (!PairChoiceInfo.NOTCHOOSABLE.equals(twoDicesPair.getPairChoiceInfo())) {
 				choosablePairs.add(twoDicesPair);
@@ -375,7 +375,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	}
 	
 	public Map<String, TwoDicesPair> getPairsToChooseWithId() throws DiceNotThrownException, InvalidWayNumberException {
-		Map<String, TwoDicesPair> result = new HashMap<String, TwoDicesPair>();
+		Map<String, TwoDicesPair> result = new HashMap<>();
 		List<TwoDicesPair> possiblePairs = this.getPairsToChoose();
 		for (TwoDicesPair twoDicesPair : possiblePairs) {
 			result.put(twoDicesPair.generateId(), twoDicesPair);
@@ -456,7 +456,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 		diceManager.throwAllDices();
 		this.gameState=GameState.DICES_THROWN;
 		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "PLAYERTHROWN", GameMessageType.INFO));
-		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
+		this.wrongPairs = new ArrayList<>(3);
 		// checks pairs if they are choosable
 		if (!isTherePossiblePair(this.getPossiblePairs())) {
 			// GameRound must be finished
@@ -640,7 +640,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	 * @throws TooManyPlayerException when there is no free Color left 
 	 */
 	protected Color getAFreeColor() throws TooManyPlayerException {
-		Collection<Color> remainingColorSet = new HashSet<Color>(this.allMarkers.keySet());
+		Collection<Color> remainingColorSet = new HashSet<>(this.allMarkers.keySet());
 		remainingColorSet.removeAll(this.getPlayerMap().keySet());
 		if (remainingColorSet.isEmpty()) {
 			throw new TooManyPlayerException("No available color");

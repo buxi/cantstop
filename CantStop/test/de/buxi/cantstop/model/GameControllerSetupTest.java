@@ -39,7 +39,7 @@ public class GameControllerSetupTest extends SpringLoaderSuperClassModelTests{
 	public void testGameController() {
 		GameController gameController = (GameController)ac.getBean("gameController");
 	
-		List<Player> players = new ArrayList<Player>(gameController.getPlayerMap().values());
+		List<Player> players = new ArrayList<>(gameController.getPlayerMap().values());
 		assertNotNull("Players is null", players);
 		assertTrue("Playernumber must be between 2 and 4", players.size() >= GameController.MINIMUM_PLAYER_NUMBER && players.size() <= GameController.MAXIMUM_PLAYER_NUMBER);
 		

@@ -46,7 +46,7 @@ public class PlayerTest {
 	@Test(expected=NotAvailableClimberException.class)
 	public void testGetOneClimberWith2Climber() throws NotAvailableClimberException {
 		Player player = new Player(1, "testPlayer", Color.BLUE);
-		Collection<Climber> climbers = new ArrayList<Climber>(2);
+		Collection<Climber> climbers = new ArrayList<>(2);
 		climbers.add(new Climber());
 		climbers.add(new Climber());
 		player.addClimbers(climbers);
@@ -73,7 +73,7 @@ public class PlayerTest {
 	@Test(expected=NoMarkerIsAvailableException.class)
 	public void testGetOneMarkerWith2Markers() throws NoMarkerIsAvailableException {
 		Player player = new Player(1, "testPlayer", Color.BLUE);
-		Collection<Marker> steine = new ArrayList<Marker>(2);
+		Collection<Marker> steine = new ArrayList<>(2);
 		steine.add(new Marker(Color.BLUE));
 		steine.add(new Marker(Color.BLUE));
 		player.addMarkers(steine);

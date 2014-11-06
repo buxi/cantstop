@@ -67,7 +67,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		gameController.determineFirstPlayer();
 
 		Board board = gameController.getBoard();
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		//Player has 3 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber(), new Climber(), new Climber())));
 				
@@ -88,7 +88,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		gameController.determineFirstPlayer();
 
 		Board board = gameController.getBoard();
-		Collection<Integer> wayNumberList = new ArrayList<Integer>(Arrays.asList(2,3,4));
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
 		
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);
 		List<Dice> dices = DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(2,3,3,3));
@@ -228,7 +228,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		//Player have 1 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber())));
 		
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.NOTCHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,2,2,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(2,2,2,3), PairChoiceInfo.WITHWAYINFO));
@@ -255,7 +255,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		//Player has 1 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber())));
 				
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.NOTCHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,2,2,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(2,2,2,3), PairChoiceInfo.WITHWAYINFO));
@@ -278,7 +278,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		//Player has 3 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber(), new Climber(), new Climber())));
 				
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,2,2,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(2,2,2,3), PairChoiceInfo.CHOOSABLE));
@@ -303,7 +303,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		//Player has 2 BS
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList(new Climber(), new Climber())));
 				
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,2,2,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(2,2,2,3), PairChoiceInfo.CHOOSABLE));
@@ -327,7 +327,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		//Player have 1 BS 
 		gameController.getActualPlayer().addClimbers(new ArrayList<Climber>(Arrays.asList( new Climber())));
 				
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		// Throw 2 x
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,3,2), PairChoiceInfo.CHOOSABLE));
@@ -362,7 +362,7 @@ public class GameControllerPairsDekoratorTest extends SpringLoaderSuperClassMode
 		Board board = gameController.getBoard();
 		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, new ArrayList<Integer>(Arrays.asList(2,3,4)));
 				
-		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<GameControllerPairsDekoratorTest.DiceValuesPairChoosableContainter>();
+		List<DiceValuesPairChoosableContainter> testPatternList = new ArrayList<>();
 		// Throw 2 x
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,1,2), PairChoiceInfo.CHOOSABLE));
 		testPatternList.add(new DiceValuesPairChoosableContainter(Arrays.asList(1,1,3,2), PairChoiceInfo.CHOOSABLE));

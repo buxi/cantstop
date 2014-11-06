@@ -23,7 +23,7 @@ public class RopePoint extends AbstractRopePoint implements Serializable {
 	
 	public RopePoint() {
 		super();
-		this.markers = new ArrayList<Marker>();
+		this.markers = new ArrayList<>();
 	}
 
 	/**

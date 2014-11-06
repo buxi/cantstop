@@ -89,7 +89,7 @@ public class DiceManager implements Serializable{
 	 * 
 	 */
 	protected List<Dice> getDicesClone() {
-		List<Dice> lastThrow = new ArrayList<Dice>(4);
+		List<Dice> lastThrow = new ArrayList<>(4);
 		for (Dice dice : dices) {
 			try {
 				if (dice.isThrown()) {

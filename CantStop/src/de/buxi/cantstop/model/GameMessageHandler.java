@@ -24,7 +24,7 @@ public class GameMessageHandler {
 	public GameMessageHandler(int maxMessages) {
 		super();
 		this.maxMessages = maxMessages;
-		this.messages = new LinkedList<GameMessage>();
+		this.messages = new LinkedList<>();
 	}
 	
 	public void reset() {
@@ -32,7 +32,7 @@ public class GameMessageHandler {
 	};
 	
 	public List<GameMessage> listMessages() {
-		return new ArrayList<GameMessage>(messages);
+		return new ArrayList<>(messages);
 	}
 	
 	public void addMessage(GameMessage message) {

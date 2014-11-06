@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
  *
  */
 public class DiceManagerTest extends SpringLoaderSuperClassModelTests{
-	private static List<Dice> emptyDicesList = new ArrayList<Dice>();
+	private static List<Dice> emptyDicesList = new ArrayList<>();
 	
 	/**
 	 * @throws java.lang.Exception

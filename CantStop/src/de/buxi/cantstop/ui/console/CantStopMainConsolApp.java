@@ -168,7 +168,7 @@ public class CantStopMainConsolApp {
 					}
 			    	System.out.println();
 			    	// temporarily translating webIds to consoleIds 
-			    	pairIdTranslate = new HashMap<String, String>();
+			    	pairIdTranslate = new HashMap<>();
 			    	for (Entry<String, TwoDicesPair> pairEntry : gameControllerTO.getChoosablePairsWithId().entrySet()) {
 						System.out.print(StringUtils.center(pairEntry.getValue().display(), 15));
 						pairIdTranslate.put(Integer.toString(choosablePairNumber), pairEntry.getKey());

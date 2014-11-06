@@ -11,7 +11,7 @@ import java.util.List;
  *
  */
 public class TwoDicesPairSet {
-	private List<TwoDicesPair> resultSet = new ArrayList<TwoDicesPair>(); 
+	private List<TwoDicesPair> resultSet = new ArrayList<>(); 
 	
 	/**
 	 * @param newPair

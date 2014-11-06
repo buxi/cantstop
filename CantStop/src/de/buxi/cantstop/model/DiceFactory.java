@@ -13,7 +13,7 @@ public class DiceFactory {
 	 * @return Dice with side sides
 	 */
 	public List<Dice> createNormalDiceSet(int sides, int number) {
-		List<Dice> diceSet = new ArrayList<Dice>(number);
+		List<Dice> diceSet = new ArrayList<>(number);
 		for (int i = 0; i < number; i++) {
 			diceSet.add(new DiceImpl(sides));
 		}

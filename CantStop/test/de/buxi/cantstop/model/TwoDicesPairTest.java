@@ -178,11 +178,11 @@ public class TwoDicesPairTest {
 				new DicePair(dices2.get(0), dices2.get(1)),
 				new DicePair(dices2.get(2), dices2.get(3)));
 		
-		Collection<TwoDicesPair> collA = new ArrayList<TwoDicesPair>();
+		Collection<TwoDicesPair> collA = new ArrayList<>();
 		collA.add(basePairPair);
 		collA.add(other);
 		
-		Collection<TwoDicesPair> collB = new ArrayList<TwoDicesPair>();
+		Collection<TwoDicesPair> collB = new ArrayList<>();
 		TwoDicesPair basePairPair2 = new TwoDicesPair(
 				new DicePair(dices.get(0), dices.get(1)),
 				new DicePair(dices.get(2), dices.get(3)));

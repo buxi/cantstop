@@ -115,7 +115,7 @@ public class Board implements Serializable {
 	 * @throws NoClimberOnWayException 
 	 */
 	public List<Climber> markClimbers(Player player) throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException {
-		List<Climber> freeClimber = new ArrayList<Climber>(3);
+		List<Climber> freeClimber = new ArrayList<>(3);
 		for (Way way : ways) {
 			if (way.isClimberOnRope() || way.isClimberInHut()) {
 				Climber climber;
@@ -157,7 +157,7 @@ public class Board implements Serializable {
 	}
 
 	public Collection<Hut>getBlockedHuts(Player actualPlayer) {
-		Collection<Hut> usedHuts = new ArrayList<Hut>();
+		Collection<Hut> usedHuts = new ArrayList<>();
 		for (Way way : ways) {
 			if (way.isBlockedByPlayer(actualPlayer.getColor())) {
 				usedHuts.add(way.getHut());	
@@ -176,11 +176,11 @@ public class Board implements Serializable {
 	public Map<Color, Collection<Marker>> removeMarkersFromBlockedWays(
 			Collection<Hut> usedHuts) throws InvalidWayNumberException, RopePointInvalidUsageException {
 		// Initialize return Map
-		Map<Color, Collection<Marker>> freeMarkers = new HashMap<Color, Collection<Marker>>();
+		Map<Color, Collection<Marker>> freeMarkers = new HashMap<>();
 		for (Hut hut : usedHuts) {
 			Way way = this.getWayByNumber(hut.getWayNumber());
 			for (RopePoint ropePoint : way.getRopePoints()) {
-				List<Marker> markersToRemove = new ArrayList<Marker>(4);
+				List<Marker> markersToRemove = new ArrayList<>(4);
 				for (Marker marker : ropePoint.getMarkers()) {
 					if (!freeMarkers.containsKey(marker.getColor())) {
 						freeMarkers.put(marker.getColor(), new ArrayList<Marker>());

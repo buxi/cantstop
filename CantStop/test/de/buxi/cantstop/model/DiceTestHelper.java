@@ -24,18 +24,18 @@ public class DiceTestHelper {
 	 * @throws InvalidTestParametersException 
 	 * @throws DiceNotThrownException 
 	 */
-	public static List<Dice> generateXpreSetNormalDice(List<Integer> valuee) throws InvalidTestParametersException {
-		if (valuee == null) {
+	public static List<Dice> generateXpreSetNormalDice(List<Integer> value) throws InvalidTestParametersException {
+		if (value == null) {
 			throw new InvalidTestParametersException();
 		}
-		List<Dice> dices = new ArrayList<Dice>(valuee.size());
+		List<Dice> dices = new ArrayList<>(value.size());
 
-		for (int i = 0; i<valuee.size(); i++ ) {
+		for (int i = 0; i<value.size(); i++ ) {
 			// create a MockObjekt with values
 			Dice mockDice = mock(Dice.class);
-			when(mockDice.getDiceValue()).thenReturn(valuee.get(i));
+			when(mockDice.getDiceValue()).thenReturn(value.get(i));
 			when(mockDice.isThrown()).thenReturn(true);
-			when(mockDice.toString()).thenReturn(valuee.get(i).toString());
+			when(mockDice.toString()).thenReturn(value.get(i).toString());
 			dices.add(mockDice);
 		}
 
@@ -52,7 +52,7 @@ public class DiceTestHelper {
 	 * @throws DiceNotThrownException
 	 */
 	public static String generatePairControllString(List<TwoDicesPair> pairs) throws DiceNotThrownException {
-		List<Integer> paarSumn = new ArrayList<Integer>();
+		List<Integer> paarSumn = new ArrayList<>();
 		
 		for (TwoDicesPair twoDicePair : pairs) {
 			DicePair dicePair1 = twoDicePair.getFirstPair();

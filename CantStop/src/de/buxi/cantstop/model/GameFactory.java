@@ -23,7 +23,7 @@ public class GameFactory {
 	 */
 	public Board createBoard(Map<Integer,Integer> wayDefinitions) {
 		Set<Entry<Integer, Integer>> wayDefinitionsEntries = wayDefinitions.entrySet();
-		List<Way> ways = new ArrayList<Way>(11);
+		List<Way> ways = new ArrayList<>(11);
 		
 		for (Entry<Integer, Integer> entry : wayDefinitionsEntries) {
 			int number = entry.getKey();
@@ -43,7 +43,7 @@ public class GameFactory {
 	protected Way createWay(int number, int length) {
 		Hut hut = new Hut(number);
 		
-		List<RopePoint> ropePoints = new ArrayList<RopePoint>();
+		List<RopePoint> ropePoints = new ArrayList<>();
 		for (int i = 0; i < length ; i++) {
 			ropePoints.add(new RopePoint());
 		}
@@ -57,7 +57,7 @@ public class GameFactory {
 	 * @return new markers with color 
 	 */
 	public Collection<Marker> createMarkers(int number, Color color){
-		List<Marker> markers = new ArrayList<Marker>(number);
+		List<Marker> markers = new ArrayList<>(number);
 		for (int i = 0; i < number; i++) {
 			markers.add(new Marker(color));
 		}		
@@ -72,7 +72,7 @@ public class GameFactory {
 	 * @return new climbers 
 	 */
 	public Collection<Climber> createClimbers(int number){
-		List<Climber> climberList = new ArrayList<Climber>(number);
+		List<Climber> climberList = new ArrayList<>(number);
 		for (int i = 0; i < number; i++) {
 			climberList.add(new Climber());
 		}		

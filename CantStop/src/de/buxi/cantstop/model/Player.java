@@ -34,8 +34,8 @@ public class Player implements Serializable{
 		super();
 		this.name = name;
 		this.color = color;
-		this.markers = new ArrayList<Marker>(10);
-		this.climbers = new ArrayList<Climber>(3);
+		this.markers = new ArrayList<>(10);
+		this.climbers = new ArrayList<>(3);
 		this.setAutoPlayer(false);
 	}
 
@@ -45,8 +45,8 @@ public class Player implements Serializable{
 		this.color = color;
 		this.order = order;
 		
-		this.markers = new ArrayList<Marker>(10);
-		this.climbers = new ArrayList<Climber>(3);
+		this.markers = new ArrayList<>(10);
+		this.climbers = new ArrayList<>(3);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Player implements Serializable{
 	 */
 	public Collection<Climber> removeClimbers() {
 		Collection<Climber> oldClimbers = this.climbers;
-		this.climbers = new ArrayList<Climber>(3);
+		this.climbers = new ArrayList<>(3);
 		return oldClimbers;
 	}
 	

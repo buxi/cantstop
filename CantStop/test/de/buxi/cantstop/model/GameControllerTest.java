@@ -46,7 +46,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 	public void testDistributeMarkersNoPlayerWithColor() {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		// distribute Markers
-		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
+		Map<Color, Collection<Marker>> playerMarkers = new HashMap<>();
 		playerMarkers.put(Color.GREEN, GameFactory.createMarkersStatic(3, Color.GREEN));
 		gameController.distributeMarkers(playerMarkers);
 	}
@@ -55,7 +55,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 	public void testDistributeMarkersPositiveWith2Colors() {
 		GameController gameController = (GameController)ac.getBean("testGameController");
 		// distribute Markers
-		Map<Color, Collection<Marker>> playerMarkers = new HashMap<Color, Collection<Marker>>();
+		Map<Color, Collection<Marker>> playerMarkers = new HashMap<>();
 		playerMarkers.put(Color.BLUE, GameFactory.createMarkersStatic(3, Color.BLUE));
 		playerMarkers.put(Color.RED, GameFactory.createMarkersStatic(3, Color.RED));
 		gameController.distributeMarkers(playerMarkers);
@@ -305,7 +305,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 		assertEquals("First Player should be determined", GameController.DEFAULT_FIRST_PLAYER_NUM, gameController.getActualPlayerNumber());
 		assertEquals("IN_GAME State", GameState.IN_GAME, gameController.getGameStatus());
 		
-		List<Player> players = new ArrayList<Player>(gameController.getPlayerMap().values());
+		List<Player> players = new ArrayList<>(gameController.getPlayerMap().values());
 		// RED and BLUE Markers are distributed
 		assertEquals("10 markers with Player ", 10, players.get(0).getMarkers().size());
 		assertEquals("10 markers with Player ", 10, players.get(1).getMarkers().size());
