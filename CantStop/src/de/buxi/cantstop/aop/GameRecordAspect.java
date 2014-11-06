@@ -28,7 +28,6 @@ import de.buxi.cantstop.utils.ObjectManipulationHelper;
  * @author buxi
  *
  */
-@Component
 @Aspect
 public class GameRecordAspect implements ApplicationContextAware {
 	private Log log = LogFactory.getLog(GameRecordAspect.class);
@@ -59,12 +58,14 @@ public class GameRecordAspect implements ApplicationContextAware {
 
 	@AfterReturning(pointcut="execution(* de.buxi.cantstop.service.GameService.throwDices(..))", returning="returnValue")
 	public void recordThrowDices(JoinPoint joinPoint, Object returnValue) {
+		log.info("recordThrowDices called");
 		GameTransferObject to = (GameTransferObject)returnValue;
 		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);
 	}
 	
 	@AfterReturning(pointcut="execution(* de.buxi.cantstop.service.GameService.executePairs(..))", returning="returnValue")
 	public void recordExecutePairs(JoinPoint joinPoint, Object returnValue) {
+		log.info("recordExecutePairs called");
 		GameTransferObject to = (GameTransferObject)returnValue;
 		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);
 	}
