@@ -14,6 +14,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import de.buxi.cantstop.dao.GameInfoDao;
@@ -75,11 +76,15 @@ public class GameRecordAspect implements ApplicationContextAware {
 	 */
 	protected void storeGameInfoCommon(JoinPoint joinPoint, int playerId, GameTransferObject to) {
 		byte[] packedTransferObject = ObjectManipulationHelper.serializeAndPack(to);
-		dao.insert(to.getGameId(), new java.sql.Timestamp(new Date().getTime()), 
+		try {
+			dao.insert(to.getGameId(), new java.sql.Timestamp(new Date().getTime()), 
 				joinPoint.getSignature().getName(), 
 				playerId, 
 				packedTransferObject, to.description
 			);
+		} catch (DataAccessException e) {
+			log.warn("Problem mit database in Aspect:" + e);
+		}
 	}
 
 	/**
