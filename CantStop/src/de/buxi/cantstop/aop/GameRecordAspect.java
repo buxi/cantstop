@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Component;
-
 import de.buxi.cantstop.dao.GameInfoDao;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.utils.ObjectManipulationHelper;
@@ -52,7 +50,8 @@ public class GameRecordAspect implements ApplicationContextAware {
 			log.info("Starting Autoplayer: " + to.actualPlayerNumber);
 			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
 			robot.setPlayerId(Integer.toString(to.actualPlayerNumber));
-			robot.play();
+			Thread robotThread = new Thread(robot);
+			robotThread.start();
 		}
 	}
 

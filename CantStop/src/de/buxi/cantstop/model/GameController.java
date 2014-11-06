@@ -19,7 +19,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import de.buxi.cantstop.aop.AutoPlayerRobot;
-import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.TooManyPlayerException;
 
 /**
@@ -277,18 +276,16 @@ public class GameController implements Serializable, ApplicationContextAware{
 		distributeFreeClimbers();
 		// notify diceManager the throw was used, needs to be reset
 		this.diceManager.reset();
-		this.gameState = GameState.IN_ROUND;
-		if (this.getActualPlayer().getAutoPlayer() ) {
+		
+		// calling autoplayer if it is in turn
+		if (GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED.equals(gameState) && this.getActualPlayer().getAutoPlayer() ) {
 			log.info("Starting Autoplayer: " + actualPlayerNumber);
 			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
 			robot.setPlayerId(Integer.toString(actualPlayerNumber));
-			
-			try {
-				robot.play();
-			} catch (GameException e) {
-				log.error("Robot player failed:" +e);
-			}
+			Thread robotThread = new Thread(robot);
+			robotThread.start();
 		}
+		this.gameState = GameState.IN_ROUND;
 	}
 	
 	/**
