@@ -5,12 +5,15 @@ function refreshBoard(board) {
 		
 		var wayTable = document.getElementById("wayTable_"+wayNumber);
 		var wayTableHTML = "";
-		
+		//debugger;
 		// displaying Hut 
-		var hutHTML = "<tr><td id='h_"+way.number+"' style='align:center; valign: middle ;background-color:white; border:1px solid black; width:30px; height:30px'";		
+		var hutHTML = "<tr><td id='h_"+way.number+"' style='align:center; valign: middle ; border:1px solid black; width:30px; height:30px'";		
 		var hutMarker = way.hut.marker;
 		if (hutMarker != null) {
 			 hutHTML += " bgcolor=" + hutMarker.color;
+		}
+		else {
+			hutHTML += " bgcolor=white";
 		}
 		hutHTML += ">" + wayNumber;
 		
