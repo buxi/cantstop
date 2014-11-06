@@ -30,7 +30,7 @@ function poll(){
 			    $('#json_status').html("polling called");
 			    $('#json_errorcode').html("");
 		        $('#gameState').html(response.gameState);
-		        $('#game_errorMessage').html(response.errorMessageString);
+		        $('#game_messages').html(refreshMessages(response.messages));
 				if (response.gameState == 'INIT' ) {
 					window.location = "do.showGameOver?playerId=" + $('#playerId').val();
 				}
@@ -39,7 +39,7 @@ function poll(){
 		        //Setup the next poll recursively
 		        poll();
 	      }, dataType: "json"});
-	  }, 3000);
+	  }, 5000);
 	   	$('#ajaxLoading').hide(); 
 	}
 (poll());
@@ -60,11 +60,11 @@ function doAjaxPostWithWayNumber(command, playerIdForm, pairId, wayNumberForm ) 
 	    	if(response.status == "SUCCESS"){
 	    		$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessageString);
+	      	  	$('#game_messages').html(refreshMessages(response.gto.messages));
 		    }else{
 			  	$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessageString)
+	      	  	$('#game_messages').html(refreshMessages(response.gto.messages))
 		    }
 	    	refreshPage(playerIdForm, response.gto);
 	    },  
@@ -113,7 +113,7 @@ function refreshPage(playerId, gto) {
 </head>
 
 <body>
-<div style="width:635px; height:750px; border: 2px solid black;background-color: grey;">
+<div style="width:675px; height:750px; border: 2px solid black;background-color: grey;">
 <!-- BUILDING SCREEN -->
 <jsp:include page="langSelectionIncl.jsp"/>
 
@@ -128,7 +128,7 @@ function refreshPage(playerId, gto) {
 
  
 <!-- display playerList -->
-<div id="playerList" style="float:right; border: 2px solid black;   width: 160px; height:500px">
+<div id="playerList" style="float:right; border: 2px solid black;   width: 200px; height:500px">
 	<div style="align:center; border:0px solid black; height:25px; border-bottom: 1px solid black;"><s:message code="ACTIVE.PLAYERS"/></div>
 	<c:forEach items="${gameInfo.playerList}" var="player">
 	<div id="inturnplayer_${player.order}" style=" height:125px">

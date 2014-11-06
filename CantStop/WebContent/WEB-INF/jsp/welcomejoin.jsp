@@ -11,6 +11,7 @@
 <title><s:message code="WELCOME.TITLE" text="Welcome" /></title>
 <!-- AJAX scripts START -->
 <script src="resources/js/jquery.js"></script>
+<script src="resources/js/gamescripts.js"></script>
 <script type="text/javascript">
 function doAjaxPost() {  
 	  // get the form values  
@@ -25,7 +26,7 @@ function doAjaxPost() {
 	    	if(response.status == "SUCCESS"){
 	    		$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessage);
+	      	  	$('#game_messages').html(refreshMessages(response.gto.messages));
 	      	    $('#playerId').val(response.methodResult);
 	      	  	$('#addPlayer').hide();
 	      	  	$('#waitingForOthers').show();
@@ -33,7 +34,7 @@ function doAjaxPost() {
 		    }else{
 			  	$('#json_status').html(response.status);
 	      	  	$('#json_errorMessage').html(response.errorMessage);
-	      	  	$('#game_errorMessage').html(response.gto.errorMessage)
+	      	  	$('#game_messages').html(refreshMessages(response.gto.messages));
 		    }	
 	    },  
 	    error: function(e){  
@@ -51,7 +52,7 @@ function doAjaxPost() {
 		    $('#json_status').html("polling called");
 		    $('#json_errorcode').html("");
 	        $('#gameState').html(response.gameState);
-	        $('#game_errorMessage').html(response.errorMessage);
+	        $('#game_messages').html(refreshMessages(response.messages));
 	        $('#joinedPlayersList').html(response.joinedPlayersList);
 			if ($('#playerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
 				$('#startGame').show();
@@ -76,7 +77,7 @@ function doAjaxPost() {
 	        //Setup the next poll recursively
 	        poll();
 	      }, dataType: "json"});
-	  }, 3000);
+	  }, 5000);
 	   $('#ajaxLoading').hide();
 	})();
 </script>

@@ -35,6 +35,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	public static final int MINIMUM_PLAYER_NUMBER = 2;
 	public static final int MAXIMUM_PLAYER_NUMBER = 4;
 	public static final String DEFAULT_AUTOPLAYER_NAME = "Computer";
+	public static final int MAX_MESSAGES_COUNT = 3; // restricting message number in the message handler queue
 	
 	private Map<Color, Player> playerMap;
 	private List<Player> playersInOrder;  
@@ -45,7 +46,6 @@ public class GameController implements Serializable, ApplicationContextAware{
 	private int actualPlayerNumber;
 	private GameState gameState;
 	private Collection<TwoDicesPair> wrongPairs;
-	private String errorMessage;
 
 	private UsedPairInfoTO lastUsedPairInfo;
 
@@ -53,6 +53,8 @@ public class GameController implements Serializable, ApplicationContextAware{
 	private String startTime;
 
 	private ApplicationContext ac;
+
+	private GameMessageHandler messageHandler;
 	
 	
 	/**
@@ -76,13 +78,6 @@ public class GameController implements Serializable, ApplicationContextAware{
 		return diceManager.getLastThrow();
 	}
 
-	/**
-	 * @return the errorMessage
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
 	public GameController(Map<Color, Player>players, Board board,
 			DiceManager diceManager,
 			Map<Color, Collection<Marker>> markers,
@@ -101,6 +96,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 		if (players != null && players.size() >= GameController.MINIMUM_PLAYER_NUMBER) {
 			this.gameState = GameState.ENOUGH_PLAYER;
 		}
+		messageHandler = new GameMessageHandler(MAX_MESSAGES_COUNT);
 	}
 
 	/**
@@ -238,7 +234,6 @@ public class GameController implements Serializable, ApplicationContextAware{
 	public GameTransferObject doEndGameTurn() throws NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException, InvalidWayNumberException, DiceNotThrownException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND, GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED));
 		// marks the climbers
-		this.errorMessage = null;
 		endGameturn();
 		return this.doGetTransferObject();
 	}
@@ -267,11 +262,11 @@ public class GameController implements Serializable, ApplicationContextAware{
 			// TODO GameEnde Condition
 			if (usedHuts.size() == 3) {
 				this.gameState = GameState.GAME_WIN;
-				this.errorMessage="STATE_GAME_WIN";
+				messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "STATE_GAME_WIN", GameMessageType.INFO));
 				return;
 			}
 		}
-		
+		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "STATE_ROUND_FINISHED", GameMessageType.INFO));
 		this.nextPlayer();
 		distributeFreeClimbers();
 		// notify diceManager the throw was used, needs to be reset
@@ -285,6 +280,8 @@ public class GameController implements Serializable, ApplicationContextAware{
 			Thread robotThread = new Thread(robot);
 			robotThread.start();
 		}
+		
+
 		this.gameState = GameState.IN_ROUND;
 	}
 	
@@ -456,15 +453,15 @@ public class GameController implements Serializable, ApplicationContextAware{
 	 */
 	public GameTransferObject doThrowDices() throws DiceNotThrownException, InvalidWayNumberException, NoMarkerIsAvailableException, RopePointInvalidUsageException, NoClimberOnWayException, InvalidClimberMovementException {
 		checkGameStatus(Arrays.asList(GameState.IN_ROUND));
-		this.errorMessage = null;
 		diceManager.throwAllDices();
 		this.gameState=GameState.DICES_THROWN;
+		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "PLAYERTHROWN", GameMessageType.INFO));
 		this.wrongPairs = new ArrayList<TwoDicesPair>(3);
 		// checks pairs if they are choosable
 		if (!isTherePossiblePair(this.getPossiblePairs())) {
 			// GameRound must be finished
 			this.gameState=GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED;
-			this.errorMessage = "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED";
+			messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "STATE_NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED", GameMessageType.INFO));
 			log.info("turn finished, no available pair");
 			endGameturn();
 		}
@@ -512,7 +509,6 @@ public class GameController implements Serializable, ApplicationContextAware{
 	 */
 	public GameTransferObject doExecutePairs(TwoDicesPair chosenPair, int wayNumber) throws DiceNotThrownException, RopePointInvalidUsageException, NotAvailableClimberException, InvalidWayNumberException, InvalidClimberMovementException, NoMarkerIsAvailableException, NullClimberException, NoClimberOnWayException {
 		checkGameStatus(Arrays.asList(GameState.DICES_THROWN));
-		this.errorMessage = null;
 		if (!this.getPossiblePairs().contains(chosenPair)) {
 			throw new InvalidPairsException("Pair:" + chosenPair + ", wayNumber:" + wayNumber);
 		}
@@ -570,7 +566,8 @@ public class GameController implements Serializable, ApplicationContextAware{
 		this.lastUsedPairInfo = new UsedPairInfoTO(chosenPair, chosenWayNumber, player);
 		// notify diceManager the throw was used, needs to be reset
 		this.diceManager.reset();
-		errorMessage = "STATE_PAIR_USED";
+		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "STATE_PAIR_USED", GameMessageType.INFO));
+
 	}
 
 	/**
@@ -623,6 +620,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 		if (this.playerMap.keySet().size() >= GameController.MINIMUM_PLAYER_NUMBER) {
 			this.gameState = GameState.ENOUGH_PLAYER;
 		}
+		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "PLAYERADDED", GameMessageType.INFO));
 		return Integer.toString(playerId);
 	}
 	
@@ -672,7 +670,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
 		this.gameState = GameState.GAME_FINISHED;
 		log.info("game was finished by player:" + playerId);
-		this.errorMessage = "GAMEWASFINISHED";
+		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "GAMEWASFINISHED", GameMessageType.INFO));
 		return this.doGetTransferObject();		
 	}
 
@@ -727,8 +725,9 @@ public class GameController implements Serializable, ApplicationContextAware{
 		}
 		to.boardDisplay = this.getBoard().display();
 		to.playerList = this.getPlayersInOrder();
-		to.errorMessage = this.errorMessage;
-		to.errorMessageString = "";
+		
+		to.messages = this.getGameMessages();
+		
 		to.possiblePairs = null;
 		to.choosablePairsWithId = null;
 		to.dices = null;
@@ -747,6 +746,10 @@ public class GameController implements Serializable, ApplicationContextAware{
 		to.description = this.getDescription();
 		to.gameId = this.getGameId();
 		return to;
+	}
+
+	public List<GameMessage> getGameMessages() {
+		return messageHandler.listMessages();
 	}
 
 	@Override

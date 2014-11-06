@@ -51,9 +51,20 @@ public class AutoPlayerRobot implements Runnable{
 		GameTransferObject toThrow;
 		try {
 			toThrow = gameService.throwDices();
-			Set<String> pairIds = toThrow.getChoosablePairsWithId().keySet();
+			try {
+				Thread.sleep(1000l);
+			} catch (InterruptedException e) {
+				log.warn(e);
+			}
 			
+			Set<String> pairIds = toThrow.getChoosablePairsWithId().keySet();
 			gameService.executePairs(pairIds.iterator().next(), -1);
+			try {
+				Thread.sleep(1000l);
+			} catch (InterruptedException e) {
+				log.warn(e);
+			}
+
 			gameService.finishTurn(playerId);
 		} catch (GameException e) {
 			log.error("Robot player failed:" +e);

@@ -3,6 +3,7 @@ package de.buxi.cantstop.web.ajax;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +22,7 @@ import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
+import de.buxi.cantstop.utils.MessageHelper;
 
 
 @Controller
@@ -65,7 +67,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 		if (StringUtils.isEmpty(playerName)) {
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.NAMEISREQUIRED", null, locale)); 
-			response.setGto(gameService.getAllGameInformation());
+			response.setGto(MessageHelper.decorateWithLocalizedMessage(gameService.getAllGameInformation(), locale, ac));
 			return response;
 		} 
 		
@@ -86,7 +88,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 			request.getSession().invalidate();
 		    request.getSession();
 		}
-		response.setGto(gameService.getAllGameInformation());
+		response.setGto(MessageHelper.decorateWithLocalizedMessage(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 

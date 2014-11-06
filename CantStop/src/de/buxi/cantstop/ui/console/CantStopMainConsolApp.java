@@ -126,8 +126,8 @@ public class CantStopMainConsolApp {
 				} 
 		    	/* BUILDING SCREEN START */
 		    	System.out.println(messages.toString());
-				if (StringUtils.isNoneEmpty(gameControllerTO.errorMessage)) {
-					System.out.println(getMessage("GAME_MESSAGE", new Object[]{getMessage(gameControllerTO.errorMessage)}));
+				if (!gameControllerTO.messages.isEmpty()) {
+					System.out.println(getMessage("GAME_MESSAGE", new Object[]{getMessage(gameControllerTO.messages.get(0).getMessage())}));
 				}
 				
 		    	System.out.print(getMessage("GAME_STATUS"));

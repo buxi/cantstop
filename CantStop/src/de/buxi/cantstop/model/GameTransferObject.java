@@ -24,8 +24,6 @@ public class GameTransferObject implements Serializable{
 	public int actualPlayerNumber;
 	public List<Player> playerList;
 	public Collection<Dice> dices;
-	public String errorMessage;
-	public String errorMessageString;
 	public Map<String, TwoDicesPair> choosablePairsWithId;
 	public Board board;
 	public List<Dice> lastThrow;
@@ -36,26 +34,20 @@ public class GameTransferObject implements Serializable{
 	public String joinedPlayersList;
 	public String description;
 	public int gameId;
+	public List<GameMessage> messages;
 	
+	/**
+	 * @return the messages
+	 */
+	public List<GameMessage> getMessages() {
+		return messages;
+	}
+
 	/**
 	 * @return the joinedPlayersList
 	 */
 	public String getJoinedPlayersList() {
 		return joinedPlayersList;
-	}
-
-	/**
-	 * @return the errorMessageString
-	 */
-	public String getErrorMessageString() {
-		return errorMessageString;
-	}
-
-	/**
-	 * @param errorMessageString the errorMessageString to set
-	 */
-	public void setErrorMessageString(String errorMessageString) {
-		this.errorMessageString = errorMessageString;
 	}
 
 	/**
@@ -177,18 +169,7 @@ public class GameTransferObject implements Serializable{
 	public void setDices(Collection<Dice> dices) {
 		this.dices = dices;
 	}
-	/**
-	 * @return the errorMessage
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-	/**
-	 * @param errorMessage the errorMessage to set
-	 */
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+	
 	public String getActualPlayerId() {
 		return Integer.toString(actualPlayerNumber);
 	}

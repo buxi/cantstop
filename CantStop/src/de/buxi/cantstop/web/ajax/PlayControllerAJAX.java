@@ -8,6 +8,7 @@ import de.buxi.cantstop.model.GameState;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
+import de.buxi.cantstop.utils.MessageHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -143,7 +144,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale)); 
 		}
 				
-		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
+		response.setGto(MessageHelper.decorateWithLocalizedMessage(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 
@@ -162,7 +163,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setStatus(JsonResponse.ERROR);
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale)); 
 		}
-		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
+		response.setGto(MessageHelper.decorateWithLocalizedMessage(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 	
@@ -184,7 +185,7 @@ public class PlayControllerAJAX implements ApplicationContextAware {
 			response.setErrorMessage(ac.getMessage("ERROR.OTHERPLAYERINTURN", null, locale));
 		}
 		//TODO can be better 
-		response.setGto(MessageHelper.decorateWithErrorString(gameService.getAllGameInformation(), locale, ac));
+		response.setGto(MessageHelper.decorateWithLocalizedMessage(gameService.getAllGameInformation(), locale, ac));
 		return response;
 	}
 	

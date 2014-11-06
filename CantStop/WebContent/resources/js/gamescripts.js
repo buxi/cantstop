@@ -171,3 +171,17 @@ function refreshPlayersList(players, actualPlayerId, lastUsedPairInfo) {
 	}
 }
 
+function refreshMessages(messages) {
+	var htmlCode = "";
+	if (messages == null) { return htmlCode; }
+	
+	for (var i = 0; i < messages.length; i++) {
+		var message = messages[i];
+		var fontSize = "small";
+		if (i == messages.length-1) { 
+			fontSize = "large"; 
+		}
+		htmlCode += "<div style='align:left; font-size: "+fontSize +";'>" + message.playerName+ ":" + message.localizedMessage + "</div>";	
+	}
+	$('#game_messages').html(htmlCode);
+}

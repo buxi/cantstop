@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import de.buxi.cantstop.model.GameTransferObject;
 import de.buxi.cantstop.service.GameException;
 import de.buxi.cantstop.service.GameService;
+import de.buxi.cantstop.utils.MessageHelper;
 
 @Controller
 public class PollingController implements ApplicationContextAware {
@@ -46,7 +48,7 @@ public class PollingController implements ApplicationContextAware {
 		GameTransferObject gameInfo = gameService.getAllGameInformation();
 		model.addAttribute("gameInfo", gameInfo);
 		Locale locale = LocaleContextHolder.getLocale();
-		MessageHelper.decorateWithErrorString(gameInfo, locale, ac);
+		MessageHelper.decorateWithLocalizedMessage(gameInfo, locale, ac);
 		return gameInfo;
 	}
 	

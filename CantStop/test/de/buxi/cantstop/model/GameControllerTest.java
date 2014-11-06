@@ -163,7 +163,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 		
 		assertNotNull(gameController.getWrongPairs());
 		assertEquals("IN_ROUND State expected", GameState.IN_ROUND, gameController.getGameStatus());
-		assertNotNull("errorMessage should be", gameController.getErrorMessage());
+		assertNotNull("errorMessage should be", gameController.getGameMessages().get(0));
 	}
 	@Test
 	public void testDoThrowLastThrow() throws Exception {
@@ -213,7 +213,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 		gameController.testDoThrow(new HackedDiceManager(DiceTestHelper.generateXpreSetNormalDice(Arrays.asList(6,6,6,6))));
 		
 		assertEquals("IN_ROUND State expected", GameState.IN_ROUND, gameController.getGameStatus());
-		assertNotNull("errorMessage should be", gameController.getErrorMessage());
+		assertNotNull("errorMessage should be", gameController.getGameMessages().get(0));
 		Player actualPlayer = gameController.getActualPlayer();
 		assertEquals("old Player should have no Climber", 0, oldPlayer.getClimbers().size());
 		assertEquals("old Player should have all Markers", 10, oldPlayer.getMarkers().size());
@@ -277,7 +277,7 @@ public class GameControllerTest extends SpringLoaderSuperClassModelTests{
 		gameController.doEndGameTurn();
 		
 		assertEquals("GAME_WIN State expected", GameState.GAME_WIN, gameController.getGameStatus());
-		assertNotNull("errorMessage should be", gameController.getErrorMessage());
+		assertNotNull("errorMessage should be", gameController.getGameMessages().get(0));
 		Player actualPlayer = gameController.getActualPlayer();
 		assertEquals("Player should remain", oldPlayer, actualPlayer );
 		
