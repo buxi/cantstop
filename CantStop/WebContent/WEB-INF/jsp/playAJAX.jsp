@@ -174,12 +174,12 @@ function refreshPage(playerId, gto) {
 	<c:if test="${not empty playerId}">
 		<form action="do.finishgame" method="post" style="float:left; display:inline;">
 		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
-		<input type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
+		<input name="finishGameButton" type="submit" value="<s:message code="ACTION.FINISHGAME"/>" />
 		</form>
 	</c:if>
 	<div id="commandsInTurn" style="float:right; display: none; ">
-		<input type="button" value="<s:message code='ACTION.FINISHTURN'/>" onclick="doAjaxPost('do.finishturnAJAX', '${playerId}', null)">
-		<input type="button" value="<s:message code='ACTION.THROW'/>" onclick="doAjaxPost('do.throwAJAX', '${playerId}', null)">
+		<input name="finishTurnButton" type="button" value="<s:message code='ACTION.FINISHTURN'/>" onclick="doAjaxPost('do.finishturnAJAX', '${playerId}', null)">
+		<input name="throwButton" type="button" value="<s:message code='ACTION.THROW'/>" onclick="doAjaxPost('do.throwAJAX', '${playerId}', null)">
 	</div>
 </div>
 

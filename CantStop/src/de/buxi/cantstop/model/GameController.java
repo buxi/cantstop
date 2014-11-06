@@ -54,7 +54,7 @@ public class GameController implements Serializable, ApplicationContextAware{
 
 	private ApplicationContext ac;
 
-	private GameMessageHandler messageHandler;
+	transient private GameMessageHandler messageHandler;
 	
 	
 	/**
@@ -670,7 +670,9 @@ public class GameController implements Serializable, ApplicationContextAware{
 	public GameTransferObject doEndGame(String playerId) throws DiceNotThrownException, InvalidWayNumberException {
 		this.gameState = GameState.GAME_FINISHED;
 		log.info("game was finished by player:" + playerId);
-		messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "GAMEWASFINISHED", GameMessageType.INFO));
+		if (this.getActualPlayer() != null ) {
+			messageHandler.addMessage(new GameMessage(this.getActualPlayer().getName(), "GAMEWASFINISHED", GameMessageType.INFO));
+		}
 		return this.doGetTransferObject();		
 	}
 

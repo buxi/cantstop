@@ -4,6 +4,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/utils"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test_production"/>
         <property name="context-root" value="CantStop"/>
         <property name="java-output-path" value="/CantStop/bin"/>
     </wb-module>

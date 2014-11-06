@@ -106,19 +106,19 @@ function doAjaxPost() {
 <div id="addPlayer" style="display: none;">
   <s:message code='JOIN.MESSAGE'/><br/>
   <input type="text" id="playerName">
-  <input type="button" value="<s:message code='JOIN.BUTTON'/>" onclick="doAjaxPost()">
+  <input name="addPlayerButton" type="button" value="<s:message code='JOIN.BUTTON'/>" onclick="doAjaxPost()">
 </div>
 <div style="display: none;" id="waitingForOthers"><s:message code='WAITING.OTHERPLAYER'/> </div>
 <div style="display: none;" id="inviteRobot">
  	<form action="do.inviteRobot" method="post">
-		<input type="submit" value="<s:message code="ACTION.INVITEROBOT"/>" />
+		<input name="inviteRobotButton" type="submit" value="<s:message code="ACTION.INVITEROBOT"/>" />
 		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
 	</form>
 </div>
 
 <div style="display: none;" id="startGame">
  	<form action="do.startgame" method="post">
-		<input type="submit" value="<s:message code="ACTION.STARTGAME"/>" />
+		<input name="startGameButton" type="submit" value="<s:message code="ACTION.STARTGAME"/>" />
 		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
 	</form>
 </div>
