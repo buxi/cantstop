@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="CantStop">
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/utils"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test_production"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-model/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-model/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-service/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-service/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-persist/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-persist/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-utils/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cantstop-utils/src/test/java"/>
         <property name="context-root" value="CantStop"/>
-        <property name="java-output-path" value="/CantStop/bin"/>
+        <property name="java-output-path" value="/CantStop/target/classes"/>
     </wb-module>
 </project-modules>

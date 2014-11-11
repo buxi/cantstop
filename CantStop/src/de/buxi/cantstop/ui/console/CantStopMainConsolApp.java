@@ -17,13 +17,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import de.buxi.cantstop.model.Dice;
-import de.buxi.cantstop.model.GameState;
-import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.model.PairChoiceInfo;
-import de.buxi.cantstop.model.Player;
-import de.buxi.cantstop.model.TwoDicesPair;
-import de.buxi.cantstop.service.GameService;
+import de.vt.cantstop.model.Dice;
+import de.vt.cantstop.model.GameState;
+import de.vt.cantstop.model.GameTransferObject;
+import de.vt.cantstop.model.PairChoiceInfo;
+import de.vt.cantstop.model.Player;
+import de.vt.cantstop.model.TwoDicesPair;
+import de.vt.cantstop.service.GameService;
 /**
  * @author buxi
  *

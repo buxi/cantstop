@@ -86,7 +86,7 @@
 		<constructor-arg name="color" type="de.buxi.cantstop.model.Color" value="BLUE"/>
 	</bean>
 	
-	<bean id="gameServices" class="de.buxi.cantstop.service.GameServicesConsole">
+	<bean id="gameServices" class="de.vt.cantstop.service.GameServicesConsole">
 		<constructor-arg name="gameController" ref="gameController"/>
 	</bean>
 	

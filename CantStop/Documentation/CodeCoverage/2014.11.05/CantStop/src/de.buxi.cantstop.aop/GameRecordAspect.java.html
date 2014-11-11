@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import de.buxi.cantstop.dao.GameInfoDao;
 import de.buxi.cantstop.model.GameTransferObject;
-import de.buxi.cantstop.utils.ObjectManipulationHelper;
+import de.vt.cantstop.utils.ObjectManipulationHelper;
 
 /**
  * AOP Aspect to record game activities
@@ -37,7 +37,7 @@ import de.buxi.cantstop.utils.ObjectManipulationHelper;
 
 	private ApplicationContext ac; 
 	
-	@Around(&quot;execution(* de.buxi.cantstop.service.GameService.finishTurn(..))&quot;)
+	@Around(&quot;execution(* de.vt.cantstop.service.GameService.finishTurn(..))&quot;)
 	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
 		//fix for bug 17: Wrong playerId when finishTurn called
 <span class="fc" id="L43">		Object[] args = joinPoint.getArgs();</span>
@@ -56,13 +56,13 @@ import de.buxi.cantstop.utils.ObjectManipulationHelper;
 		}
 <span class="fc" id="L57">	}</span>
 
-	@AfterReturning(pointcut=&quot;execution(* de.buxi.cantstop.service.GameService.throwDices(..))&quot;, returning=&quot;returnValue&quot;)
+	@AfterReturning(pointcut=&quot;execution(* de.vt.cantstop.service.GameService.throwDices(..))&quot;, returning=&quot;returnValue&quot;)
 	public void recordThrowDices(JoinPoint joinPoint, Object returnValue) {
 <span class="fc" id="L61">		GameTransferObject to = (GameTransferObject)returnValue;</span>
 <span class="fc" id="L62">		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);</span>
 <span class="fc" id="L63">	}</span>
 	
-	@AfterReturning(pointcut=&quot;execution(* de.buxi.cantstop.service.GameService.executePairs(..))&quot;, returning=&quot;returnValue&quot;)
+	@AfterReturning(pointcut=&quot;execution(* de.vt.cantstop.service.GameService.executePairs(..))&quot;, returning=&quot;returnValue&quot;)
 	public void recordExecutePairs(JoinPoint joinPoint, Object returnValue) {
 <span class="fc" id="L67">		GameTransferObject to = (GameTransferObject)returnValue;</span>
 <span class="fc" id="L68">		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);</span>
