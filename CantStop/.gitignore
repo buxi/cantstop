@@ -1,3 +1,4 @@
-/bin/
-/saved.dat
+/.classpath
+/.project
 /target/
+/.settings/
