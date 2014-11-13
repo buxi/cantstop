@@ -1,4 +1,4 @@
-package de.vt.cantstop.utils;
+package de.vt.cantstop.messageutils;
 
 import java.util.List;
 import java.util.Locale;

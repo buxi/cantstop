@@ -25,7 +25,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="gameInfoDao" class="de.buxi.cantstop.dao.JDBCGameInfoDAO">
+	<bean id="gameInfoDao" class="de.vt.cantstop.dao.JDBCGameInfoDAO">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 	

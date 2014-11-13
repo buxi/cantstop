@@ -27,7 +27,7 @@ public class HackedDiceManager extends DiceManager {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.model.DiceManager#throwAllDices()
+	 * @see de.vt.cantstop.model.DiceManager#throwAllDices()
 	 * disable the throw
 	 */
 	@Override

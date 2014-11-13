@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 
+
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -21,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 
+import de.vt.cantstop.messageutils.MessageHelper;
 import de.vt.cantstop.model.GameTransferObject;
 import de.vt.cantstop.service.GameException;
 import de.vt.cantstop.service.GameService;
-import de.vt.cantstop.utils.MessageHelper;
 
 @Controller
 public class PollingController implements ApplicationContextAware {

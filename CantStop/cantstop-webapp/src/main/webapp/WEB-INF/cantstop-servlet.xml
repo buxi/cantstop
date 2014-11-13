@@ -15,7 +15,7 @@
 	<mvc:annotation-driven />
 	
 	<!-- searching for annotated servlets -->
-	<context:component-scan base-package="de.buxi.cantstop.web.ajax"/>
+	<context:component-scan base-package="de.vt.cantstop.ajax"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
 	<!-- automatic locale change on incoming language parameter -->

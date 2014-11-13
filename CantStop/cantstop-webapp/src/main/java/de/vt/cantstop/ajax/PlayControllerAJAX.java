@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import de.vt.cantstop.messageutils.MessageHelper;
 import de.vt.cantstop.model.GameState;
 import de.vt.cantstop.model.GameTransferObject;
 import de.vt.cantstop.service.GameException;
 import de.vt.cantstop.service.GameService;
-import de.vt.cantstop.utils.MessageHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

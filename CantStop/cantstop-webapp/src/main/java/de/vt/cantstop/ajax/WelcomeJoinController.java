@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 
+import de.vt.cantstop.messageutils.MessageHelper;
 import de.vt.cantstop.model.GameState;
 import de.vt.cantstop.model.GameTransferObject;
 import de.vt.cantstop.service.GameException;
 import de.vt.cantstop.service.GameService;
-import de.vt.cantstop.utils.MessageHelper;
 
 
 @Controller
@@ -42,7 +42,7 @@ public class WelcomeJoinController implements ApplicationContextAware {
 	 * @return 
 	 * @throws GameException
 	 */
-	@RequestMapping(value = {"","/"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 	public String welcome(Model model, Locale locale) throws GameException {
 		log.info("welcome, locale:"+locale);
 		model.addAttribute("gameInfo", gameService.getAllGameInformation());

@@ -15,7 +15,7 @@ public class WelcomePageTest {
 
 	private StringBuffer verificationErrors = new StringBuffer();
 
-	@Before
+	/*	@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
 		baseUrl = "http://cantstop-refs.rhcloud.com/";
@@ -23,7 +23,7 @@ public class WelcomePageTest {
 		
 		
 	}
-
+ TODO production UI tests are removed
 	@Test
 	public void testAddplayer() throws Exception {
 		driver.get(baseUrl + "CantStop/");
@@ -66,5 +66,5 @@ public class WelcomePageTest {
 			fail(verificationErrorString);
 		}
 	}
-
+*/
 }

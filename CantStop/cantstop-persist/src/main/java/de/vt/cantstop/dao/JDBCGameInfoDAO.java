@@ -53,7 +53,7 @@ public class JDBCGameInfoDAO implements GameInfoDao {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.dao.GameInfoDao#readAllShortGameInfo()
+	 * @see de.vt.cantstop.dao.GameInfoDao#readAllShortGameInfo()
 	 */
 	public List<GameInfoShortTO> readAllShortGameInfo() {
 		String sql = "SELECT distinct GAME_ID, DESCRIPTION FROM GAMEINFO";

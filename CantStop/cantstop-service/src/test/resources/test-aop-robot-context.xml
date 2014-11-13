@@ -15,7 +15,7 @@
 	<import resource="classpath:test-database-context.xml"/>
 	<import resource="classpath:test-model-context.xml"/>
 	
-	<context:component-scan base-package="de.buxi.cantstop.service,de.buxi.cantstop.aop"/>
+	<context:component-scan base-package="de.vt.cantstop.service,de.vt.cantstop.aop"/>
 	  
 	<aop:aspectj-autoproxy/>
 	

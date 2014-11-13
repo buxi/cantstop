@@ -11,7 +11,7 @@
 	http://www.springframework.org/schema/util 
 	http://www.springframework.org/schema/util/spring-util-3.0.xsd
 	">
-
+	
 	<import resource="messageContext.xml"/>
 
 	<!-- Factory beans -->
@@ -86,9 +86,6 @@
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="BLUE"/>
 	</bean>
 	
-	<bean id="gameServices" class="de.vt.cantstop.service.GameServicesConsole">
-		<constructor-arg name="gameController" ref="gameController"/>
-	</bean>
 	
 	<!-- TODO only because of tests is prototype  -->
  	<bean id="gameController" scope="prototype" class="de.vt.cantstop.model.GameController">

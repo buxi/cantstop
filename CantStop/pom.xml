@@ -27,13 +27,27 @@
 		<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>3.2</version>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<plugin>
+            <groupId>org.apache.tomcat.maven</groupId>
+            <artifactId>tomcat7-maven-plugin</artifactId>
+            <version>2.1</version>
+            <configuration>
+                <url>http://localhost:8080/manager/text</url>
+                <server>cantstop</server>
+                <path>/cantstop</path>
+                <username>tomcat</username>
+                <password>tomcat</password>
+            </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
-	
 </project>

@@ -36,7 +36,7 @@ public class GameRecordAspect implements ApplicationContextAware {
 
 	private ApplicationContext ac; 
 	
-	@Around("execution(* de.buxi.cantstop.service.GameService.finishTurn(..))")
+	@Around("execution(* de.vt.cantstop.service.GameService.finishTurn(..))")
 	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
 		//fix for bug 17: Wrong playerId when finishTurn called
 		Object[] args = joinPoint.getArgs();
@@ -56,14 +56,14 @@ public class GameRecordAspect implements ApplicationContextAware {
 		}
 	}
 
-	@AfterReturning(pointcut="execution(* de.buxi.cantstop.service.GameService.throwDices(..))", returning="returnValue")
+	@AfterReturning(pointcut="execution(* de.vt.cantstop.service.GameService.throwDices(..))", returning="returnValue")
 	public void recordThrowDices(JoinPoint joinPoint, Object returnValue) {
 		log.info("recordThrowDices called");
 		GameTransferObject to = (GameTransferObject)returnValue;
 		storeGameInfoCommon(joinPoint, to.actualPlayer.getOrder(), to);
 	}
 	
-	@AfterReturning(pointcut="execution(* de.buxi.cantstop.service.GameService.executePairs(..))", returning="returnValue")
+	@AfterReturning(pointcut="execution(* de.vt.cantstop.service.GameService.executePairs(..))", returning="returnValue")
 	public void recordExecutePairs(JoinPoint joinPoint, Object returnValue) {
 		log.info("recordExecutePairs called");
 		GameTransferObject to = (GameTransferObject)returnValue;

@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	
-	<context:component-scan base-package="de.buxi.cantstop.service,de.buxi.cantstop.aop"/>
+	<context:component-scan base-package="de.vt.cantstop.service,de.vt.cantstop.aop"/>
 	  
 	<aop:aspectj-autoproxy/>
 	

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.buxi.cantstop.ui.console;
+package de.vt.cantstop.ui.console;
 
 import java.util.Collection;
 import java.util.HashMap;

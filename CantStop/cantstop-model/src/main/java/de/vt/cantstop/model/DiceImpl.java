@@ -54,7 +54,7 @@ public class DiceImpl implements Dice, Serializable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.model.Dice#isThrown()
+	 * @see de.vt.cantstop.model.Dice#isThrown()
 	 */
 	@Override
 	public boolean isThrown() {
@@ -62,7 +62,7 @@ public class DiceImpl implements Dice, Serializable {
 	}
 	
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.model.Dice#getDiceValue()
+	 * @see de.vt.cantstop.model.Dice#getDiceValue()
 	 */
 	@Override
 	public int getDiceValue() {
@@ -73,7 +73,7 @@ public class DiceImpl implements Dice, Serializable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.model.Dice#throwDice()
+	 * @see de.vt.cantstop.model.Dice#throwDice()
 	 */
 	@Override
 	public void throwDice() {
@@ -85,7 +85,7 @@ public class DiceImpl implements Dice, Serializable {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.buxi.cantstop.model.Dice#reset()
+	 * @see de.vt.cantstop.model.Dice#reset()
 	 */
 	@Override
 	public void reset() {

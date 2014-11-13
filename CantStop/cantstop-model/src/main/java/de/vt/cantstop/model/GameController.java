@@ -19,7 +19,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-//import de.buxi.cantstop.aop.AutoPlayerRobot;
+//import de.vt.cantstop.aop.AutoPlayerRobot;
 
 /**
  * It controls the whole game
