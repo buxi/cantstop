@@ -1,17 +1,12 @@
 /**
  * 
  */
-package de.vt.cantstop.aop;
+package de.vt.cantstop.model;
 
-import java.util.Set;
-
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import de.vt.cantstop.model.GameTransferObject;
-import de.vt.cantstop.service.GameException;
-import de.vt.cantstop.service.GameService;
 
 /**
  * @author buxi
@@ -23,14 +18,14 @@ public class AutoPlayerRobot implements Runnable{
 	private String playerId;
 	
 	@Autowired
-	private GameService gameService;
+	private GameController gameController;
 
 	/**
 	 * @param gameService
 	 */
-	public AutoPlayerRobot(GameService gameService) {
+	public AutoPlayerRobot(GameController gameController) {
 		super();
-		this.gameService = gameService;
+		this.gameController = gameController;
 	}
 
 	/**
@@ -48,25 +43,24 @@ public class AutoPlayerRobot implements Runnable{
 	}
 
 	public void play() {
-		GameTransferObject toThrow;
 		try {
-			toThrow = gameService.throwDices();
+			gameController.doThrowDices();
 			try {
 				Thread.sleep(1000l);
 			} catch (InterruptedException e) {
 				log.warn(e);
 			}
 			
-			Set<String> pairIds = toThrow.getChoosablePairsWithId().keySet();
-			gameService.executePairs(pairIds.iterator().next(), -1);
+			List<TwoDicesPair> pairs = gameController.getPairsToChoose();
+			gameController.doExecutePairs(pairs.get(0), -1);
 			try {
 				Thread.sleep(1000l);
 			} catch (InterruptedException e) {
 				log.warn(e);
 			}
 
-			gameService.finishTurn(playerId);
-		} catch (GameException e) {
+			gameController.doEndGameTurn();
+		} catch ( DiceNotThrownException | RopePointInvalidUsageException | NotAvailableClimberException | InvalidWayNumberException | InvalidClimberMovementException | NoMarkerIsAvailableException | NullClimberException | NoClimberOnWayException e) {
 			log.error("Robot player failed:" +e);
 		}
 	}

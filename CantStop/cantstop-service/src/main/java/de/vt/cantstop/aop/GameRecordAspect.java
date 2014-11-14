@@ -47,13 +47,13 @@ public class GameRecordAspect implements ApplicationContextAware {
 		storeGameInfoCommon(joinPoint, playerId, to);
 		
 		// launch auto-player if it is needed
-		if (to.actualPlayer.getAutoPlayer()) {
+		/*if (to.actualPlayer.getAutoPlayer()) {
 			log.info("Starting Autoplayer: " + to.actualPlayerNumber);
 			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
 			robot.setPlayerId(Integer.toString(to.actualPlayerNumber));
 			Thread robotThread = new Thread(robot);
 			robotThread.start();
-		}
+		}*/
 	}
 
 	@AfterReturning(pointcut="execution(* de.vt.cantstop.service.GameService.throwDices(..))", returning="returnValue")

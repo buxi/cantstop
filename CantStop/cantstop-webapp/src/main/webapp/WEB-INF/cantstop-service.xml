@@ -18,7 +18,5 @@
 		<constructor-arg name="gameController" ref="gameController" />
 	</bean>
 	
-	<bean id="autoplayerRobot" class="de.vt.cantstop.aop.AutoPlayerRobot">
-		<constructor-arg name="gameService" ref="gameService"/>
-	</bean>
+	
 </beans>

@@ -85,7 +85,7 @@
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="BLUE"/>
 	</bean>
 	
- 	<bean id="gameController" scope="prototype" class="de.vt.cantstop.model.GameController">
+ 	<bean id="gameController" class="de.vt.cantstop.model.GameController">
  		<constructor-arg name="players">
  			<util:map key-type="de.vt.cantstop.model.Color">
  				<!-- 				<entry key="BLUE"  value-ref="BluePlayer"/>
@@ -127,5 +127,7 @@
 			</map>
 		</constructor-arg>
 	</bean>
-	
+	<bean id="autoplayerRobot" class="de.vt.cantstop.model.AutoPlayerRobot">
+		<constructor-arg name="gameController" ref="gameController"/>
+	</bean>
 </beans>

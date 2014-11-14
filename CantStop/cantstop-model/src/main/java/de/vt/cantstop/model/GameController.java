@@ -273,14 +273,13 @@ public class GameController implements Serializable, ApplicationContextAware{
 		this.diceManager.reset();
 		
 		// calling autoplayer if it is in turn
-		//TODO uncomment Robot activation
-		/*if (GameState.NO_OTHER_PAIR_AVAILABLE_ROUND_FINISHED.equals(gameState) && this.getActualPlayer().getAutoPlayer() ) {
+		if (this.getActualPlayer().getAutoPlayer() ) {
 			log.info("Starting Autoplayer: " + actualPlayerNumber);
 			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
 			robot.setPlayerId(Integer.toString(actualPlayerNumber));
 			Thread robotThread = new Thread(robot);
 			robotThread.start();
-		}*/
+		}
 		
 
 		this.gameState = GameState.IN_ROUND;
