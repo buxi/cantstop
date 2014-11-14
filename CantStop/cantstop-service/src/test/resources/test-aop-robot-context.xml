@@ -13,7 +13,6 @@
 
 	<!-- importing the game beans too, to use proper GameTransferObject -->
 	<import resource="classpath:test-database-context.xml"/>
-	<import resource="classpath:test-model-context.xml"/>
 	
 	<context:component-scan base-package="de.vt.cantstop.service,de.vt.cantstop.aop"/>
 	  
@@ -22,8 +21,7 @@
 	<bean id="gameService" class="de.vt.cantstop.service.GameServicesWeb">
 		<constructor-arg name="gameController" ref="gameController" />
 	</bean>
-	
-	<bean id="autoplayerRobot" class="de.vt.cantstop.model.AutoPlayerRobot">
-		<constructor-arg name="gameService" ref="gameService"/>
+	<bean id="gameServicePrototype" scope="prototype"  class="de.vt.cantstop.service.GameServicesWeb">
+		<constructor-arg name="gameController" ref="testGameController" />
 	</bean>
 </beans>

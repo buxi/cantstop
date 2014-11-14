@@ -25,7 +25,7 @@ public class GameTransferObjectTest extends SpringLoaderSuperClassWebUITests{
 	
 	@Test
 	public void testGetJoinedPlayersListAJAX() throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException {
-		GameController gameController = (GameController)ac.getBean("gameController");
+		GameController gameController = (GameController)ac.getBean("testGameController");
 		GameTransferObject to = gameController.doGetTransferObject();
 		
 		String joinedPlayers = to.getJoinedPlayersList();
@@ -46,7 +46,7 @@ public class GameTransferObjectTest extends SpringLoaderSuperClassWebUITests{
 	
 	@Test
 	public void testGetDescription() throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException {
-		GameController gameController = (GameController)ac.getBean("gameController");
+		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doAddPlayer("aaa");
 		gameController.doAddPlayer("bbb");
 		GameTransferObject to = gameController.doGameStart();
@@ -55,7 +55,7 @@ public class GameTransferObjectTest extends SpringLoaderSuperClassWebUITests{
 	
 	@Test
 	public void testSerializable() throws TooManyPlayerException, DiceNotThrownException, InvalidWayNumberException, IOException  {
-		GameController gameController = (GameController)ac.getBean("gameController");
+		GameController gameController = (GameController)ac.getBean("testGameController");
 		gameController.doAddPlayer("aaa");
 		gameController.doAddPlayer("bbb");
 		GameTransferObject to = gameController.doGameStart();

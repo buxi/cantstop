@@ -30,7 +30,7 @@ public class AutoPlayerRobotTest {
 	protected ApplicationContext ac;
 		
 	@Test
-	public void testAutoplayerStartInAspect() throws GameException {
+	public void testAutoplayerStartInAspect() throws GameException, InterruptedException {
 		GameService gameService = (GameService)ac.getBean("gameService");
 		gameService.addAutoPlayer();
 		
@@ -38,7 +38,7 @@ public class AutoPlayerRobotTest {
 		gameService.startTurn();
 		gameService.finishTurn(Integer.toString(to.actualPlayer.getOrder()));
 		gameService.finishTurn(Integer.toString(to.actualPlayer.getOrder()));
-		
+		Thread.sleep(3000);
 		// 3. player is autoplayer, at the end of its activity the 1. player should be in turn
 		GameTransferObject to4 = gameService.getAllGameInformation();
 		assertEquals("Player 0 should be in turn after autoplayer", "0", to4.getActualPlayerId());

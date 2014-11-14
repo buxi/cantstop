@@ -10,11 +10,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 
 import de.vt.cantstop.dao.GameInfoDao;
 import de.vt.cantstop.model.GameTransferObject;
@@ -27,14 +26,14 @@ import de.vt.cantstop.utils.ObjectManipulationHelper;
  * @author buxi
  *
  */
+//@Component
 @Aspect
-public class GameRecordAspect implements ApplicationContextAware {
+public class GameRecordAspect {
 	private Log log = LogFactory.getLog(GameRecordAspect.class);
 	
 	@Autowired
 	private GameInfoDao dao;
 
-	private ApplicationContext ac; 
 	
 	@Around("execution(* de.vt.cantstop.service.GameService.finishTurn(..))")
 	public void recordFinishTurn(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -45,15 +44,6 @@ public class GameRecordAspect implements ApplicationContextAware {
 		Object returnValue = joinPoint.proceed();
 		GameTransferObject to = (GameTransferObject)returnValue;
 		storeGameInfoCommon(joinPoint, playerId, to);
-		
-		// launch auto-player if it is needed
-		/*if (to.actualPlayer.getAutoPlayer()) {
-			log.info("Starting Autoplayer: " + to.actualPlayerNumber);
-			AutoPlayerRobot robot = (AutoPlayerRobot)ac.getBean("autoplayerRobot");
-			robot.setPlayerId(Integer.toString(to.actualPlayerNumber));
-			Thread robotThread = new Thread(robot);
-			robotThread.start();
-		}*/
 	}
 
 	@AfterReturning(pointcut="execution(* de.vt.cantstop.service.GameService.throwDices(..))", returning="returnValue")
@@ -93,11 +83,5 @@ public class GameRecordAspect implements ApplicationContextAware {
 	 */
 	public void setDao(GameInfoDao dao) {
 		this.dao = dao;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		ac = applicationContext;
 	}
 }

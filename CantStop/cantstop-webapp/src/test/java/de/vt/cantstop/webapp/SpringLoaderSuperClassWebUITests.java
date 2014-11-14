@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * the web UI and model
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:cantstop-model.xml")
+@ContextConfiguration("classpath:test-model-context.xml")
 public class SpringLoaderSuperClassWebUITests {
 	@Autowired
 	protected ApplicationContext ac;

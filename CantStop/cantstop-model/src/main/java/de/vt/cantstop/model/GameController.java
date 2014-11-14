@@ -302,7 +302,10 @@ public class GameController implements Serializable, ApplicationContextAware{
 	 * @return actual Player
 	 */
 	public Player getActualPlayer() {
-		return playersInOrder.get(this.actualPlayerNumber);
+		if (playersInOrder.size() >0 ) {
+			return playersInOrder.get(this.actualPlayerNumber);
+		}
+		return null;
 	}
 	
 	/**

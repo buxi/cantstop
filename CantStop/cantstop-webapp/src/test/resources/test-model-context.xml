@@ -147,8 +147,6 @@
 	<bean id="testGameController" scope="prototype" class="de.vt.cantstop.model.GameController">
  		<constructor-arg name="players">
  			<util:map key-type="de.vt.cantstop.model.Color">
- 				<entry key="BLUE"  value-ref="BlueTestPlayer"/>
- 				<entry key="RED"  value-ref="RedTestPlayer"/>
  			</util:map>
  		</constructor-arg>
  		<constructor-arg name="board" ref="smallBoard"/>
