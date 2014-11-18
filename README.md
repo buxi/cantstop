@@ -7,7 +7,7 @@ More info regarding to the board game: http://en.wikipedia.org/wiki/Can%27t_Stop
 
 Online version
 --------------
-http://cantstop-refs.rhcloud.com/CantStop/
+http://cantstop-refs.rhcloud.com/cantstop-webapp
 
 Architecture
 ------------
