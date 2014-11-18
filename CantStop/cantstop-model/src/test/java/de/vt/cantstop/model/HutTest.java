@@ -53,8 +53,10 @@ public class HutTest {
 		Hut hut = new Hut(0);
 		Marker marker = new Marker(Color.BLUE);
 		hut.mark(marker);
-		hut.unmark();
+		Marker result = hut.unmark();
+		assertNotNull("returned marker can't be null", result);
 		assertNull("yet not marked with BLUE ", hut.getMarker());
+		assertEquals("returned marker should be the same as original", marker, result );
 	}
 	
 	@Test()

@@ -28,6 +28,9 @@ function doAjaxPost() {
 	      	  	$('#json_errorMessage').html(response.errorMessage);
 	      	  	$('#game_messages').html(refreshMessages(response.gto.messages));
 	      	    $('#playerId').val(response.methodResult);
+	      	  	$('#playerIdRobot').val(response.methodResult);
+	      		$('#playerIdStart').val(response.methodResult);
+	      	  	$('#globalPlayerId').val(response.methodResult);
 	      	  	$('#addPlayer').hide();
 	      	  	$('#waitingForOthers').show();
 	      	  	$('#inviteRobot').show();
@@ -54,7 +57,7 @@ function doAjaxPost() {
 	        $('#gameState').html(response.gameState);
 	        $('#game_messages').html(refreshMessages(response.messages));
 	        $('#joinedPlayersList').html(response.joinedPlayersList);
-			if ($('#playerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
+			if ($('#globalPlayerId').val()!='' && response.gameState == 'ENOUGH_PLAYER' ) {
 				$('#startGame').show();
 			}
 			if (!response.gameFull) {
@@ -63,7 +66,7 @@ function doAjaxPost() {
 			else {
 				$('#waitingForOthers').hide();
 			}
-			if ($('#playerId').val()=='' && !response.gameFull) {
+			if ($('#globalPlayerId').val()=='' && !response.gameFull) {
 				$('#addPlayer').show();
 			}
 			else {
@@ -71,7 +74,7 @@ function doAjaxPost() {
 			}
 			
 			if (response.gameState == 'IN_SPIEL' || response.gameState == 'IN_ROUND' ) {
-				window.location = "playAJAX?playerId=" + $('#playerId').val();
+				window.location = "playAJAX?playerId=" + $('#globalPlayerId').val();
 			}
 			
 	        //Setup the next poll recursively
@@ -89,7 +92,7 @@ function doAjaxPost() {
 <!-- language selection -->
 <jsp:include page="langSelectionIncl.jsp"/>
 
-
+<input type="hidden" id="globalPlayerId" value="${playerId}" />
 <div id="welcomeBlock">
 <h2><s:message code="WELCOME.HEADER" /></h2>
 <img alt="" width="200" src="resources/images/cantstop.jpg">
@@ -112,14 +115,14 @@ function doAjaxPost() {
 <div style="display: none;" id="inviteRobot">
  	<form action="do.inviteRobot" method="post">
 		<input name="inviteRobotButton" type="submit" value="<s:message code="ACTION.INVITEROBOT"/>" />
-		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
+		<input id="playerIdRobot" type="hidden" name="playerId" value="${playerId}" />
 	</form>
 </div>
 
 <div style="display: none;" id="startGame">
  	<form action="do.startgame" method="post">
 		<input name="startGameButton" type="submit" value="<s:message code="ACTION.STARTGAME"/>" />
-		<input id="playerId" type="hidden" name="playerId" value="${playerId}" />
+		<input id="playerIdStart" type="hidden" name="playerId" value="${playerId}" />
 	</form>
 </div>
 

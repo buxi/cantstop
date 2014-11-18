@@ -52,11 +52,13 @@ public class Hut extends AbstractRopePoint implements Serializable {
 		this.marker = marker;
 	}
 
-	public void unmark() throws RopePointInvalidUsageException {
+	public Marker unmark() throws RopePointInvalidUsageException {
+		Marker result = this.marker;
 		if (this.marker == null) {
 			throw new RopePointInvalidUsageException("RopePoint not marked");
 		}
 		this.marker = null;
+		return result;
 	}
 	
 	public String display() {
@@ -72,5 +74,19 @@ public class Hut extends AbstractRopePoint implements Serializable {
 		}
 		result.append(") ");
 		return StringUtils.center(result.toString(), 6);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Hut [marker=");
+		builder.append(marker);
+		builder.append(", wayNumber=");
+		builder.append(wayNumber);
+		builder.append("]");
+		return builder.toString();
 	}
 }

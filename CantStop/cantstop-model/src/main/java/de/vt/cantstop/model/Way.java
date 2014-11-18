@@ -301,4 +301,20 @@ public class Way implements Serializable{
 		}
 		return false;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Way [number=");
+		builder.append(number);
+		builder.append(", hut=");
+		builder.append(hut);
+		builder.append(", ropePoints=");
+		builder.append(ropePoints);
+		builder.append("]");
+		return builder.toString();
+	}
 }

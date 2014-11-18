@@ -24,13 +24,6 @@ public class Player implements Serializable{
 	
 	private Collection<Climber>climbers;
 
-	/**
-	 * @param name
-	 * @param color
-	 * @param steine
-	 * @param order
-	 * @param climbers
-	 */
 	public Player(String name, Color color) {
 		super();
 		this.name = name;
@@ -79,7 +72,8 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @param add climbers to ClimberList
+	 * removes climbers from player
+	 * @return removed climbers oder empty collection
 	 */
 	public Collection<Climber> removeClimbers() {
 		Collection<Climber> oldClimbers = this.climbers;
@@ -197,5 +191,18 @@ public class Player implements Serializable{
 	 */
 	public void setAutoPlayer(boolean autoPlayer) {
 		this.autoPlayer = autoPlayer;
+	}
+
+	/**
+	 * Removes all marker from player
+	 * @return removed markers
+	 */
+	public Collection<Marker> removeAllMarkers() {
+		ArrayList<Marker> removedMarkers = new ArrayList<>();
+		for (Marker marker : this.getMarkers()) {
+			removedMarkers.add(marker);
+		}
+		this.markers.clear();
+		return removedMarkers;
 	}
 }

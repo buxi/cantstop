@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:test-database-context.xml")
+@ContextConfiguration("classpath:test-persist-database-context.xml")
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class })
 public class JDBCGameInfoDAOTest {
 	@Autowired

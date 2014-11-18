@@ -20,7 +20,7 @@ import de.vt.cantstop.model.InvalidWayNumberException;
 import de.vt.cantstop.model.TooManyPlayerException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:test-model-context.xml")
+@ContextConfiguration("classpath:test-webapp-context.xml")
 public class MessageHelperTest {
 	@Autowired
 	protected ApplicationContext ac;

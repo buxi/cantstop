@@ -91,4 +91,25 @@ public class RopePoint extends AbstractRopePoint implements Serializable {
 		
 		return StringUtils.center(result.toString(), 6);
 	}
+
+	public Collection<Marker> removeMarkers() {
+		Collection<Marker> result = new ArrayList<>();
+		for (Marker marker : this.getMarkers()) {
+			result.add(marker);
+		}
+		this.getMarkers().clear();
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RopePoint [markers=");
+		builder.append(markers);
+		builder.append("]");
+		return builder.toString();
+	}
 }

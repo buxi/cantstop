@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 	<!-- importing the game beans too, to use proper GameTransferObject -->
-	<import resource="classpath:test-model-context.xml"/>
+	<import resource="classpath:test-persist-context.xml"/>
 
 	<!-- initialize the db with the tables -->
 	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">

@@ -1,6 +1,6 @@
 package de.vt.cantstop.selenium;
 
-import java.util.concurrent.TimeUnit;
+/*import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 
@@ -8,14 +8,14 @@ import static org.junit.Assert.*;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
+*/
 public class WelcomePageTest {
-	private WebDriver driver;
+	/*private WebDriver driver;
 	private String baseUrl;
 
 	private StringBuffer verificationErrors = new StringBuffer();
 
-	/*	@Before
+		@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
 		baseUrl = "http://cantstop-refs.rhcloud.com/";

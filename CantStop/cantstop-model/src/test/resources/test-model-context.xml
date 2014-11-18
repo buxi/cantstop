@@ -63,23 +63,23 @@
  		<constructor-arg name="number" value="3"/>
  	</bean>
 
-	<bean id="RedPlayer" class="de.vt.cantstop.model.Player">
+	<bean id="RedPlayer" scope="prototype"  class="de.vt.cantstop.model.Player">
 		<constructor-arg name="name" value="Barbi"/>
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="RED"/>
 	</bean>
 
-	<bean id="YellowPlayer" class="de.vt.cantstop.model.Player">
+	<bean id="YellowPlayer" scope="prototype"  class="de.vt.cantstop.model.Player">
 		<constructor-arg name="name" value="Joska"/>
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="YELLOW"/>
 	</bean>
 
-	<bean id="GreenPlayer" class="de.vt.cantstop.model.Player">
+	<bean id="GreenPlayer" scope="prototype" class="de.vt.cantstop.model.Player">
 		<constructor-arg name="name" value="Judit"/>
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="GREEN"/>
 	</bean>
 
 
-	<bean id="BluePlayer" class="de.vt.cantstop.model.Player">
+	<bean id="BluePlayer" scope="prototype" class="de.vt.cantstop.model.Player">
 		<constructor-arg name="name" value="Tibi"/>
 		<constructor-arg name="color" type="de.vt.cantstop.model.Color" value="BLUE"/>
 	</bean>
@@ -110,7 +110,7 @@
  	</bean> 
 
 	<!-- Board settings -->
-	<bean id="gameBoard" factory-bean="gameFactory" factory-method="createBoard">
+	<bean id="gameBoard" scope="prototype" factory-bean="gameFactory" factory-method="createBoard">
 		<constructor-arg name="wayDefinitions">
 			<map>
 				<!-- <HutsNumber, RopePointAnnumber> -->

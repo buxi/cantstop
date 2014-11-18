@@ -124,4 +124,15 @@ public class RopePointTest {
 		
 		assertFalse("marked with blue",ropePoint.isMarkerForColor(Color.GREEN));
 	}
+	
+	@Test
+	public void testRemoveMarkers() throws RopePointInvalidUsageException {
+		RopePoint ropePoint = new RopePoint();
+		ropePoint.mark(new Marker(Color.BLUE));
+		ropePoint.mark(new Marker(Color.RED));
+		
+		Collection<Marker> removedMarkers = ropePoint.removeMarkers();
+		assertEquals("2 markers should be in result", 2, removedMarkers.size());
+		assertEquals("RopePoint should have 0 markers ", 0, ropePoint.getMarkers().size());		
+	}
 }

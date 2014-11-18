@@ -73,13 +73,26 @@ public class PlayerTest {
 	@Test(expected=NoMarkerIsAvailableException.class)
 	public void testGetOneMarkerWith2Markers() throws NoMarkerIsAvailableException {
 		Player player = new Player(1, "testPlayer", Color.BLUE);
-		Collection<Marker> steine = new ArrayList<>(2);
-		steine.add(new Marker(Color.BLUE));
-		steine.add(new Marker(Color.BLUE));
-		player.addMarkers(steine);
+		Collection<Marker> markers = new ArrayList<>(2);
+		markers.add(new Marker(Color.BLUE));
+		markers.add(new Marker(Color.BLUE));
+		player.addMarkers(markers);
 		
 		assertNotNull("he has Marker",player.aquireOneMarker());
 		assertNotNull("he has Marker",player.aquireOneMarker());
 		assertNull("he has keinen Marker",player.aquireOneMarker());
+	}
+	
+	@Test
+	public void testRemoveAllMarkers(){
+		Player player = new Player(1, "testPlayer", Color.BLUE);
+		Collection<Marker> markers = new ArrayList<>(2);
+		markers.add(new Marker(Color.BLUE));
+		markers.add(new Marker(Color.BLUE));
+		player.addMarkers(markers);
+		
+		Collection<Marker> removedMarkers = player.removeAllMarkers();
+		assertEquals("player should have 0 markers", 0, player.getMarkers().size());
+		assertEquals("2 markers should be in removed collection", 2, removedMarkers.size());
 	}
 }

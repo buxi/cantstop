@@ -12,7 +12,7 @@
 	
 
 	<!-- importing the game beans too, to use proper GameTransferObject -->
-	<import resource="classpath:test-database-context.xml"/>
+	<import resource="classpath:test-service-database-context.xml"/>
 	
 	<context:component-scan base-package="de.vt.cantstop.service,de.vt.cantstop.aop"/>
 	  

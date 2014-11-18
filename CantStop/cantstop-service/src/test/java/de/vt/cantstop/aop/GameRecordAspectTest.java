@@ -4,10 +4,9 @@
 package de.vt.cantstop.aop;
 
 
-import java.util.List;
-
+/*import java.util.List;
 import java.util.Set;
-
+*/
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
-
+/*
 import de.vt.cantstop.dao.GameInfoFullTO;
 import de.vt.cantstop.dao.JDBCGameInfoDAO;
 import de.vt.cantstop.model.GameTransferObject;
 import de.vt.cantstop.service.GameException;
 import de.vt.cantstop.service.GameService;
 import static org.junit.Assert.*;
-
+*/
 /**
  * @author buxi
  *

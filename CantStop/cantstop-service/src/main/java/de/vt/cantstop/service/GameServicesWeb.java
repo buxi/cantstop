@@ -5,11 +5,7 @@ package de.vt.cantstop.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
 import de.vt.cantstop.model.DiceNotThrownException;
 import de.vt.cantstop.model.GameController;
 import de.vt.cantstop.model.GameTransferObject;
@@ -25,11 +21,9 @@ import de.vt.cantstop.model.TooManyPlayerException;
  * @author buxi
  *
  */
-public class GameServicesWeb implements GameService, ApplicationContextAware {
+public class GameServicesWeb implements GameService {
 	private GameController gameController;
 	private Log log = LogFactory.getLog(GameServicesWeb.class);
-	private ApplicationContext context;
-	
 	
 	@Autowired
 	public GameServicesWeb(GameController gameController) {
@@ -39,11 +33,9 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 	
 	@Override
 	public GameTransferObject reinitializeGame() throws GameException {
-		log.debug("Reinitializing GameController and loading a new instance");
-		this.gameController = (GameController) context.getBean("gameController");
 		try {
-			return gameController.doGetTransferObject();
-		} catch (DiceNotThrownException | InvalidWayNumberException e) {
+			return gameController.doReinitialize();
+		} catch (DiceNotThrownException | RopePointInvalidUsageException | NoMarkerIsAvailableException | InvalidClimberMovementException | InvalidWayNumberException e) {
 			log.error(e.toString());
 			throw new GameException(e);
 		}
@@ -159,10 +151,4 @@ public class GameServicesWeb implements GameService, ApplicationContextAware {
 			throw new GameException(e);
 		}
 	}
-
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.context = applicationContext;
-	}
-	
 }

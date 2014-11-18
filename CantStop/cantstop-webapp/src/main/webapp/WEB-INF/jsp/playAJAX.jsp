@@ -32,7 +32,7 @@ function poll(){
 		        $('#gameState').html(response.gameState);
 		        $('#game_messages').html(refreshMessages(response.messages));
 				if (response.gameState == 'INIT' ) {
-					window.location = "do.showGameOver?playerId=" + $('#playerId').val();
+					window.location = "do.showGameOver?playerId=" + $('#globalPlayerId').val();
 				}
 				refreshPage($('#globalPlayerId').val(), response);
 				

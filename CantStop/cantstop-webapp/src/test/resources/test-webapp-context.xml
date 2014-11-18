@@ -12,7 +12,7 @@
 	http://www.springframework.org/schema/util/spring-util-3.0.xsd
 	">
 	
-	<import resource="messageContext.xml"/>
+	<import resource="test-webapp-messageContext.xml"/>
 
 	<!-- Factory beans -->
  	<bean id="diceFactory" class="de.vt.cantstop.model.DiceFactory"/>

@@ -8,5 +8,7 @@
 <h2><s:message code="BYE.HEAD"/></h2>
 
 <s:message code="BYE.MSG"/>
+<br>
+
 </body>
 </html>

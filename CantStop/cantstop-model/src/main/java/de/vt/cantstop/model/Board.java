@@ -198,4 +198,41 @@ public class Board implements Serializable {
 		}
 		return freeMarkers;
 	}
+	
+	/**
+	 * Removing all markers (from all huts and rope points) 
+	 * @return removed markers
+	 * @throws RopePointInvalidUsageException
+	 */
+	public Map<Color, Collection<Marker>> clearBoardFromMarkers() throws RopePointInvalidUsageException  {
+		Map<Color, Collection<Marker>> clearedMarkers = new HashMap<>();
+		for (Way way : this.getWays()) {
+			if (way.getHut().getMarker() != null) {
+				addToMarkerCollection(clearedMarkers, way.getHut().unmark());
+			}
+			for (RopePoint ropePoint : way.getRopePoints()) {
+				addToMarkerCollection(clearedMarkers, ropePoint.removeMarkers());
+			}
+		}
+		return clearedMarkers;
+		
+	}
+
+	private void addToMarkerCollection(
+		Map<Color, Collection<Marker>> clearedMarkers, Marker marker) {
+		Collection<Marker> markers = clearedMarkers.get(marker.getColor());
+		if (markers == null) {
+			markers = new ArrayList<>();
+			
+		}
+		markers.add(marker);
+		clearedMarkers.put(marker.getColor(), markers);
+	}
+	
+	private void addToMarkerCollection(
+			Map<Color, Collection<Marker>> clearedMarkers,  Collection<Marker> markers) {
+		for (Marker marker : markers) {
+			addToMarkerCollection(clearedMarkers, marker);
+		}		
+	}
 }

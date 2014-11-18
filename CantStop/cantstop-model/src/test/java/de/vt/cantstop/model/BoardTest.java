@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -199,11 +200,52 @@ public class BoardTest extends SpringLoaderSuperClassModelTests{
 		
 		assertFalse("Green not plays", removedMarkers.containsKey(Color.GREEN));
 	}
+	
+	@Test
 	public void testFindLongestWay() {
 		Board board = (Board)ac.getBean("smallBoard");
 		assertEquals("On smallboard there is only ways with 1 ropepoint", 1, board.findLongestWay());
 		
 		Board gameBoard = (Board)ac.getBean("gameBoard");
 		assertEquals("On gameBoard longest way has 12 rope point", 12, gameBoard.findLongestWay());
+	}
+	
+	@Test
+	public void testClearBoardFromMarkers() throws InvalidWayNumberException, RopePointInvalidUsageException, NullClimberException, NoMarkerIsAvailableException, NoClimberOnWayException {
+		Board board = (Board)ac.getBean("smallBoard");
+		Collection<Integer> wayNumberList = new ArrayList<>(Arrays.asList(2,3,4));
+		
+		// marks the Ways next to the hut with BLUE
+		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);
+		Player playerBLAU = new Player(1, "1", Color.BLUE);
+		playerBLAU.addMarkers(GameFactory.createMarkersStatic(3, Color.BLUE));
+		board.markClimbers(playerBLAU);
+		
+		// marks the Ways next to the hut with RED
+		BoardTestHelper.placeClimbersOnTheWayAllNextToTheHut(board, wayNumberList);
+		Player playerRED = new Player(2, "2", Color.RED);
+		playerRED.addMarkers(GameFactory.createMarkersStatic(3, Color.RED));
+		board.markClimbers(playerRED);
+		
+		// marks the Ways next to the hut with YELLOW
+		BoardTestHelper.placeClimbersOnTheWayAllInHut(board, wayNumberList);
+		Player playerYELLOW = new Player(3, "3", Color.YELLOW);
+		playerYELLOW.addMarkers(GameFactory.createMarkersStatic(3, Color.YELLOW));
+		board.markClimbers(playerYELLOW);
+				
+		//checking result
+		Map<Color, Collection<Marker>> clearedMarkers = board.clearBoardFromMarkers();
+		assertEquals("3 marker collection should be in clearedMarkers", 3, clearedMarkers.keySet().size());
+		for (Entry<Color, Collection<Marker>> entry : clearedMarkers.entrySet()) {
+			assertEquals(entry.getKey() + " should have 3 markers", 3, entry.getValue().size());
+		}
+		
+		//checking board
+		for (Way way : board.getWays()) {
+			assertNull("way "+way.getNumber() + " should be not marked", way.getHut().getMarker());
+			for (RopePoint ropePoint : way.getRopePoints()) {
+				assertEquals(ropePoint + " should be not marked", 0, ropePoint.getMarkers().size());
+			}
+		}
 	}
 }

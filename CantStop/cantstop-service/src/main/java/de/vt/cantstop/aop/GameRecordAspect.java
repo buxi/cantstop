@@ -11,10 +11,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Component;
-
 import de.vt.cantstop.dao.GameInfoDao;
 import de.vt.cantstop.model.GameTransferObject;
 import de.vt.cantstop.utils.ObjectManipulationHelper;

@@ -77,7 +77,38 @@ public class GameController implements Serializable, ApplicationContextAware{
 	public List<Dice> getLastThrow() {
 		return diceManager.getLastThrow();
 	}
+	
+	public GameTransferObject doReinitialize() throws RopePointInvalidUsageException, NoMarkerIsAvailableException, InvalidClimberMovementException, DiceNotThrownException, InvalidWayNumberException {
+		log.info("Reinitializing GameController and loading a new instance");
+		// removing all markers from table and giving them back to players
+		Map<Color, Collection<Marker>> markers = this.board.clearBoardFromMarkers();
+		this.distributeMarkers(markers);
+		// removing markers from players, giving back to gameController
+		// gives back markers to gameController
+		for (Player player: playersInOrder) {
+			this.allMarkers.put(player.getColor(), player.removeAllMarkers());
+		}
 
+		//removing climbers from players
+		for (Player player: playersInOrder) {
+			Collection<Climber> removedClimbers = player.removeClimbers();
+			if (removedClimbers.size() > 0) {
+				this.climbers.addAll(removedClimbers);
+			}
+		}
+		
+		//destroying players
+		this.playerMap = new HashMap<>();
+		this.playersInOrder = new ArrayList<>(4);
+		
+		this.startTimestamp = 0;
+		this.startTime = null;
+		this.gameState = GameState.INIT;
+		this.wrongPairs = new ArrayList<>(3);
+		messageHandler = new GameMessageHandler(MAX_MESSAGES_COUNT);
+		return this.doGetTransferObject();
+	}
+	
 	public GameController(Map<Color, Player>players, Board board,
 			DiceManager diceManager,
 			Map<Color, Collection<Marker>> markers,
